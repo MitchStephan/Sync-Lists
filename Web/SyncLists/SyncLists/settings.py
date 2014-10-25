@@ -1,5 +1,5 @@
 """
-Django settings for SyncList project.
+Django settings for SyncLists project.
 
 For more information on this file, see
 https://docs.djangoproject.com/en/1.6/topics/settings/
@@ -17,7 +17,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 # See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '=khe@7kmlm_)77p5)rsviv!c6inlrh0w&mty2q54zw2sx5$$5a'
+SECRET_KEY = '7xbygi+ul3y#e+r=guzl&juw$28uaha6=1oqi2^jd=uoc=&vav'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -36,7 +36,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'SL',
+    'sl',
 )
 
 MIDDLEWARE_CLASSES = (
