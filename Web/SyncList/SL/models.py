@@ -6,19 +6,18 @@ class User(models.Model):
     email = models.CharField(max_length=255)
     # should we have a password in alpha?
     password = models.CharField(max_length=255)
-    
+    date_created = models.DateTimeField()
 
 
 class Task(models.Model):
     # id (pk)
     name = models.CharField(max_length=225)
     # order of task in list
-    order = models.ImageField()
+    # order = models.ImageField()
     list = models.ForeignKey(List)
-    date_created = models.DateTimeField()
     completed = models.BooleanField()
     visible = models.BooleanField()
-
+    date_created = models.DateTimeField()
 
 
 class List(models.Model):
@@ -27,4 +26,5 @@ class List(models.Model):
     name = models.CharField(max_length=225)
     owner = models.ForeignKey(User)
     shared_users = models.ManyToManyField('User')
+    date_due = models.DateTimeField()
     date_created = models.DateTimeField()
