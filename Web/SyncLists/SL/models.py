@@ -9,6 +9,16 @@ class User(models.Model):
     date_created = models.DateTimeField()
 
 
+class List(models.Model):
+    # id (pk)
+    # list of users shared
+    name = models.CharField(max_length=225)
+    owner = models.ForeignKey(User)
+    shared_users = models.ManyToManyField('User')
+    # date_due = models.DateTimeField()
+    date_created = models.DateTimeField()
+
+
 class Task(models.Model):
     # id (pk)
     name = models.CharField(max_length=225)
@@ -17,14 +27,6 @@ class Task(models.Model):
     list = models.ForeignKey(List)
     completed = models.BooleanField()
     visible = models.BooleanField()
-    date_created = models.DateTimeField()
-
-
-class List(models.Model):
-    # id (pk)
-    # list of users shared
-    name = models.CharField(max_length=225)
-    owner = models.ForeignKey(User)
-    shared_users = models.ManyToManyField('User')
     # date_due = models.DateTimeField()
+    owner = models.ForeignKey(User)
     date_created = models.DateTimeField()
