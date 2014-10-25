@@ -26,5 +26,5 @@ class List(models.Model):
     name = models.CharField(max_length=225)
     owner = models.ForeignKey(User)
     shared_users = models.ManyToManyField('User')
-    date_due = models.DateTimeField()
+    # date_due = models.DateTimeField()
     date_created = models.DateTimeField()
