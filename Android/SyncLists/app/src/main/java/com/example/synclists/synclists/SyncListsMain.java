@@ -1,6 +1,7 @@
 package com.example.synclists.synclists;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -37,6 +38,8 @@ public class SyncListsMain extends Activity {
         if(authenticate(mEmail.getText().toString(), mPassword.getText().toString())) {
             Toast.makeText(getApplicationContext(), "You did it",
                     Toast.LENGTH_SHORT).show();
+                    Intent lists = new Intent(this, ListsActivity.class);
+                    startActivity(lists);
         }
         else {
             Toast.makeText(getApplicationContext(), "DUMBMBMBY",
