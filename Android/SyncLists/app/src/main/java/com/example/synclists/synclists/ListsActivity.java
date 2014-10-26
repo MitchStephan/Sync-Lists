@@ -4,6 +4,9 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
@@ -31,6 +34,7 @@ public class ListsActivity extends Activity{
     private ExpandableListView mExpandableListView;
     private List<String> mListDataHeader;
     private HashMap<String, List<String>> mListDataChild;
+    private boolean mCanAddList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +44,7 @@ public class ListsActivity extends Activity{
         mExpandableListView = (ExpandableListView) findViewById(R.id.lists);
         mListDataHeader = new ArrayList<String>();
         mListDataChild = new HashMap<String, List<String>>();
-
+        mCanAddList = true;
 
         populateLists();
 
@@ -53,6 +57,7 @@ public class ListsActivity extends Activity{
     private void createList(String name, List<String> tasks) {
         mListDataHeader.add(name);
         mListDataChild.put(name, tasks);
+        mListAdapter.notifyDataSetChanged();
     }
 
     private void populateLists() {
@@ -74,7 +79,8 @@ public class ListsActivity extends Activity{
         mListDataChild.put(mListDataHeader.get(1), list2);
     }
 
-    public void addList(View view) {
+    public void addList(MenuItem item) {
+        setCanAddList(false);
 
         final LinearLayout layout = (LinearLayout) findViewById(R.id.lists_layout);
         final EditText newList = new EditText(this);
@@ -94,7 +100,7 @@ public class ListsActivity extends Activity{
                     String newListName = newList.getText().toString();
                     layout.removeView(newList);
                     createList(newListName, new ArrayList<String>());
-
+                    setCanAddList(true);
                     return true;
                 }
                 return false;
@@ -102,6 +108,26 @@ public class ListsActivity extends Activity{
         });
 
 
+    }
+
+    private void setCanAddList(boolean canAddList) {
+        mCanAddList = canAddList;
+        invalidateOptionsMenu();
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu (Menu menu) {
+        menu.getItem(0).setEnabled(mCanAddList);
+        return true;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.sync_lists_lists, menu);
+        return true;
     }
 
     private void setEditTextFocus(EditText et, boolean isFocused){
