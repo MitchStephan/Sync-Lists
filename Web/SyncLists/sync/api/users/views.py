@@ -3,20 +3,23 @@ import sys
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
-from sync.api.utils import request_body_to_dict
+from sync.api.utils import request_body_to_dict, validate_user_context
 from sync.models import User
 
 
 @csrf_exempt
 def user_id(request, u_id):
-    if request.method == 'GET':
-        response = get_user_by_id(request, u_id)
-    elif request.method == 'PUT':
-        response = edit_user(request, u_id)
-    elif request.method == 'DELETE':
-        response = delete_user(request, u_id)
+    if validate_user_context(request, u_id):
+        if request.method == 'GET':
+            response = get_user(request, u_id)
+        elif request.method == 'PUT':
+            response = edit_user(request, u_id)
+        elif request.method == 'DELETE':
+            response = delete_user(request, u_id)
+        else:
+            response = HttpResponse("Invalid request method of type {0}".format(request.method), status=400)
     else:
-        response = HttpResponse("Invalid request method of type {0}".format(request.method), status=400)
+        response = HttpResponse("Invalid user context", status=400)
     return response
 
 
@@ -46,11 +49,11 @@ def login_user(request):
     if request.method == 'POST':
         try:
             request_body = request_body_to_dict(request)
-            if User.is_valid_login(**request_body):
+            user = User.login_user(**request_body)
+            response = 'Invalid login (email exists)'
+            if user:
                 status_code = 200
-                response = 'Valid login'
-            else:
-                response = 'Invalid login'
+                response = user.single_to_json()
         except ObjectDoesNotExist:
             response = 'Account with email {0} does not exist.'.format(request_body['email'])
         except (TypeError, SyntaxError):
@@ -63,7 +66,7 @@ def login_user(request):
     return HttpResponse(response, status=status_code)
 
 
-def get_user_by_id(request, u_id):
+def get_user(request, u_id):
     status_code = 400
     try:
         response = User.get_by_id(u_id).single_to_json()

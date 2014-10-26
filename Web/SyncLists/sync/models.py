@@ -29,12 +29,12 @@ class User(models.Model):
         return self
 
     @staticmethod
-    def is_valid_login(email, password):
+    def login_user(email, password):
         user = User.get_by_email(email)
         if user.email == email and user.password == password:
-            return True
+            return user
         else:
-            return False
+            return None
 
     def __unicode__(self):
         return 'User; pk:{0}, email:{1}, date_created:{2}'.format(self.pk, self.email, self.date_created)
@@ -66,26 +66,30 @@ class List(models.Model):
         return List.objects.get(pk=pk)
 
     @staticmethod
-    def create(name, list_owner, shared_user):
-        new_list = List.objects.create(name=name, list_owner=list_owner, shared_user=shared_user)
+    def create(name, list_owner):
+        if not isinstance(list_owner, User):
+            list_owner = User.get_by_id(list_owner)
+        new_list = List.objects.create(name=name, list_owner=list_owner)
         new_list.save()
         return new_list
 
-    def edit(self, name, list_owner, shared_user):
+    def edit(self, name):
         self.name = name
-        self.list_owner = list_owner
-        self.shared_users = shared_user
         self.save()
+        return self
 
     def __unicode__(self):
         return 'List; pk:{0}, name:{1}, list_owner:{2}, date_created:{3} '.format(self.pk, self.name, self.list_owner,
                                                                                   self.date_created)
 
     def get_all_users(self):
-        return [User.get_by_id(pk=self.list_owner)] + self.get_shared_users()
+        return [self.list_owner] + list(self.shared_users.all())
 
-    def get_shared_users(self):
-        return [user for user in self.shared_users]
+    def is_list_user(self, u_id):
+        return User.get_by_id(u_id) in self.get_all_users()
+
+    def get_tasks(self):
+        return Task.objects.filter(list=self)
 
     # noinspection PyRedundantParentheses
     def single_to_json(self):
@@ -127,6 +131,7 @@ class Task(models.Model):
         self.visible = visible
         self.task_owner = task_owner
         self.save()
+        return self
 
     def __unicode__(self):
         return 'Task; pk:{0}, name:{1}, list:{2}, completed:{3}, visible:{4}, task_owner:{5}, date_created:{6}'.format(
