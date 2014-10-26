@@ -4,8 +4,24 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ExpandableListView
-        android:id="@+id/lists"
+
+    <ScrollView
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_width="match_parent"/>
+        android:fadingEdge="none"
+        android:fillViewport="true">
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:id="@+id/lists_layout">
+
+        <ExpandableListView
+            android:id="@+id/lists"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"/>
+
+    </LinearLayout>
+    </ScrollView>
+
 </LinearLayout>
