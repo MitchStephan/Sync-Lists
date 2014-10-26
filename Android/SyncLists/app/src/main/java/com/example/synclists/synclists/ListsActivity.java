@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.SimpleExpandableListAdapter;
 import android.widget.TableRow;
@@ -30,7 +31,6 @@ public class ListsActivity extends Activity{
     private ExpandableListView mExpandableListView;
     private List<String> mListDataHeader;
     private HashMap<String, List<String>> mListDataChild;
-    private Button mButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +38,6 @@ public class ListsActivity extends Activity{
         setContentView(R.layout.activity_sync_lists_lists);
 
         mExpandableListView = (ExpandableListView) findViewById(R.id.lists);
-        mButton = (Button) findViewById(R.id.addListButton);
         mListDataHeader = new ArrayList<String>();
         mListDataChild = new HashMap<String, List<String>>();
 
@@ -76,11 +75,10 @@ public class ListsActivity extends Activity{
     }
 
     public void addList(View view) {
-        mButton.setEnabled(false);
 
         final LinearLayout layout = (LinearLayout) findViewById(R.id.lists_layout);
         final EditText newList = new EditText(this);
-        newList.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+        newList.setLayoutParams(new ListView.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, ListView.LayoutParams.WRAP_CONTENT));
 
         // set focus on newList
         setEditTextFocus(newList, true);
@@ -96,7 +94,7 @@ public class ListsActivity extends Activity{
                     String newListName = newList.getText().toString();
                     layout.removeView(newList);
                     createList(newListName, new ArrayList<String>());
-                    mButton.setEnabled(true);
+
                     return true;
                 }
                 return false;
