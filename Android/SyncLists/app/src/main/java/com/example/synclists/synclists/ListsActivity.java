@@ -79,7 +79,6 @@ public class ListsActivity extends Activity{
         list2.add("Task 1");
         list2.add("Task 2");
 
-        //
         mListDataChild.put(mListDataHeader.get(0), list1);
         mListDataChild.put(mListDataHeader.get(1), list2);
     }
@@ -102,15 +101,13 @@ public class ListsActivity extends Activity{
                 // If the event is a key-down event on the "enter" button
                 if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
                         (keyCode == KeyEvent.KEYCODE_ENTER)) {
-                    // Perform action on key press
 
-                    String newListName = newList.getText().toString();
-                    layout.removeView(newList);
+                    Log.d(TAG, "ENTER PRESSED");
 
-                    if(validateListName(newListName))
-                        createList(newListName, new ArrayList<String>());
+                    // create new list
+                    if (!mCanAddList)
+                        validateOnCreateList(newList, layout);
 
-                    setCanAddList(true);
                     return true;
                 }
                 return false;
@@ -122,15 +119,31 @@ public class ListsActivity extends Activity{
             public void onFocusChange(View v, boolean hasFocus) {
                 Log.d(TAG, "Focus Changed");
 
-                if(hasFocus) {
+                if (hasFocus) {
                     Log.d(TAG, "newList has focus");
                     showKeyboard(v);
                 }
                 else {
+                    Log.d(TAG, "NO FOCUS");
+                    //if the new list has not already been added
+                    if (!mCanAddList)
+                        validateOnCreateList(newList, layout);
+
                     hideKeyboard(v);
                 }
             }
         });
+    }
+
+    // handles list creation and validation so that different listeners can use it
+    public void validateOnCreateList(EditText newList, LinearLayout layout) {
+        setCanAddList(true);
+
+        String newListName = newList.getText().toString();
+        layout.removeView(newList);
+
+        if (validateListName(newListName))
+            createList(newListName, new ArrayList<String>());
     }
 
     private boolean validateListName(String newListName) {
@@ -171,11 +184,18 @@ public class ListsActivity extends Activity{
 
     private void showKeyboard(View v) {
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+
+        if(imm != null){
+            imm.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0);
+        }
     }
 
     private void hideKeyboard(View v) {
+        Log.d(TAG, "IN HIDE KEYBOARD");
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+
+        if(imm != null){
+            imm.toggleSoftInput(0, InputMethodManager.HIDE_IMPLICIT_ONLY);
+        }
     }
 }
