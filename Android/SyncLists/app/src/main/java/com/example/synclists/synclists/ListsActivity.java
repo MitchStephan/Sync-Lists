@@ -134,7 +134,7 @@ public class ListsActivity extends Activity{
     }
 
     private boolean validateListName(String newListName) {
-        return !newListName.equals("") && !newListName.matches("^\\s+$");
+        return newListName != null && !newListName.equals("") && !newListName.matches("^\\s*$");
     }
 
     private void setCanAddList(boolean canAddList) {
