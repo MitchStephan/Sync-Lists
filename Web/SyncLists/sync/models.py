@@ -118,18 +118,20 @@ class Task(models.Model):
         return Task.objects.get(pk=pk)
 
     @staticmethod
-    def create(name, list, completed, visible, task_owner):
-        new_task = Task.objects.create(name=name, list=list, completed=completed, visible=visible,
+    def create(name, list, task_owner):
+        if not isinstance(list, List):
+            list = List.get_by_id(list)
+        if not isinstance(task_owner, User):
+            task_owner = User.get_by_id(task_owner)
+        new_task = Task.objects.create(name=name, list=list, completed=False, visible=True,
                                        task_owner=task_owner)
         new_task.save()
         return new_task
 
-    def edit(self, name, list, completed, visible, task_owner):
+    def edit(self, name, completed, visible):
         self.name = name
-        self.list = list
         self.completed = completed
         self.visible = visible
-        self.task_owner = task_owner
         self.save()
         return self
 

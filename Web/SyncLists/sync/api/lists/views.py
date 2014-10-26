@@ -90,7 +90,7 @@ def delete_list(request, l_id):
         list = List.get_by_id(l_id)
         if validate_user_list_context(request, list):
             list.delete()
-            response = 'User id {0} has been deleted.'.format(l_id)
+            response = 'List id {0} has been deleted.'.format(l_id)
             status_code = 200
         else:
             response = 'Invalid user context'
@@ -107,22 +107,6 @@ def get_list_users(request, l_id):
         list = List.get_by_id(l_id)
         if validate_user_list_context(request, list):
             response = List.to_json(list.get_all_users())
-            status_code = 200
-        else:
-            response = 'Invalid user context'
-    except ObjectDoesNotExist:
-        response = 'List id {0} does not exist.'.format(l_id)
-    except:
-        response = 'Unexpected exception!\n{0}'.format(sys.exc_info())
-    return HttpResponse(response, status=status_code)
-
-
-def get_list_tasks(request, l_id):
-    status_code = 400
-    try:
-        list = List.get_by_id(l_id)
-        if validate_user_list_context(request, list):
-            response = Task.to_json(list.get_tasks())
             status_code = 200
         else:
             response = 'Invalid user context'
