@@ -1,11 +1,6 @@
 from django.http import HttpResponse
 
 
-# Create your views here.
-def index(request):
-    return HttpResponse('list index')
-
-
 def list_id(request, l_id):
     response = 0
     if request.method == 'GET':
