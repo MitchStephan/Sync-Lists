@@ -11,7 +11,7 @@ def get_user_context(request):
 
 
 def validate_user_context(request, u_id):
-    get_user_context(request) == u_id
+    return get_user_context(request) == u_id
 
 
 def validate_user_list_context(request, list):
