@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.synclists.synclists" >
+    <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
         android:allowBackup="true"
@@ -19,5 +20,4 @@
         </activity>
         <activity android:name=".ListsActivity" android:label="My Lists"></activity>
     </application>
-
 </manifest>
