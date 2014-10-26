@@ -5,7 +5,7 @@ urlpatterns = patterns(
     '',
 
     # users
-    url(r'^user/(\d+)/lists/?', 'sync.api.users.views.get_user_lists', name='user lists'),
+    url(r'^users/(\d+)/lists/?', 'sync.api.users.views.get_user_lists', name='user lists'),
     url(r'^users/(\d+)/?', 'sync.api.users.views.user_id', name='user id'),
     url(r'^users/login/?', 'sync.api.users.views.login_user', name="login"),
     url(r'^users/?', 'sync.api.users.views.create_user', name='create user'),
