@@ -79,7 +79,6 @@ public class ListsActivity extends Activity{
         list2.add("Task 1");
         list2.add("Task 2");
 
-        //
         mListDataChild.put(mListDataHeader.get(0), list1);
         mListDataChild.put(mListDataHeader.get(1), list2);
     }
@@ -185,8 +184,6 @@ public class ListsActivity extends Activity{
 
     private void showKeyboard(View v) {
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        //imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
-        //imm.showSoftInput(v, 0);
 
         if(imm != null){
             imm.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0);
@@ -196,7 +193,6 @@ public class ListsActivity extends Activity{
     private void hideKeyboard(View v) {
         Log.d(TAG, "IN HIDE KEYBOARD");
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        //imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
 
         if(imm != null){
             imm.toggleSoftInput(0, InputMethodManager.HIDE_IMPLICIT_ONLY);
