@@ -123,7 +123,8 @@ public class ListsActivity extends Activity{
                 if (hasFocus) {
                     Log.d(TAG, "newList has focus");
                     showKeyboard(v);
-                } else {
+                }
+                else {
                     Log.d(TAG, "NO FOCUS");
                     //if the new list has not already been added
                     if (!mCanAddList)
@@ -184,11 +185,21 @@ public class ListsActivity extends Activity{
 
     private void showKeyboard(View v) {
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+        //imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+        //imm.showSoftInput(v, 0);
+
+        if(imm != null){
+            imm.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0);
+        }
     }
 
     private void hideKeyboard(View v) {
+        Log.d(TAG, "IN HIDE KEYBOARD");
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+        //imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+
+        if(imm != null){
+            imm.toggleSoftInput(0, InputMethodManager.HIDE_IMPLICIT_ONLY);
+        }
     }
 }
