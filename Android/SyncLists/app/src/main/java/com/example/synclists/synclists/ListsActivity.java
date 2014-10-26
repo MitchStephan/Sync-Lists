@@ -102,8 +102,13 @@ public class ListsActivity extends Activity{
                 // If the event is a key-down event on the "enter" button
                 if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
                         (keyCode == KeyEvent.KEYCODE_ENTER)) {
+
+                    Log.d(TAG, "ENTER PRESSED");
+
                     // create new list
-                    validateOnCreateList(newList, layout);
+                    if (!mCanAddList)
+                        validateOnCreateList(newList, layout);
+
                     return true;
                 }
                 return false;
@@ -115,12 +120,15 @@ public class ListsActivity extends Activity{
             public void onFocusChange(View v, boolean hasFocus) {
                 Log.d(TAG, "Focus Changed");
 
-                if(hasFocus) {
+                if (hasFocus) {
                     Log.d(TAG, "newList has focus");
                     showKeyboard(v);
-                }
-                else {
-                    validateOnCreateList(newList, layout);
+                } else {
+                    Log.d(TAG, "NO FOCUS");
+                    //if the new list has not already been added
+                    if (!mCanAddList)
+                        validateOnCreateList(newList, layout);
+
                     hideKeyboard(v);
                 }
             }
@@ -129,13 +137,13 @@ public class ListsActivity extends Activity{
 
     // handles list creation and validation so that different listeners can use it
     public void validateOnCreateList(EditText newList, LinearLayout layout) {
+        setCanAddList(true);
+
         String newListName = newList.getText().toString();
         layout.removeView(newList);
 
-        if(validateListName(newListName))
+        if (validateListName(newListName))
             createList(newListName, new ArrayList<String>());
-
-        setCanAddList(true);
     }
 
     private boolean validateListName(String newListName) {
