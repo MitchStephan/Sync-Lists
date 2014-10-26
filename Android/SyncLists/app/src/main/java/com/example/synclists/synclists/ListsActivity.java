@@ -120,6 +120,7 @@ public class ListsActivity extends Activity{
                     showKeyboard(v);
                 }
                 else {
+                    validateOnCreateList(newList, layout);
                     hideKeyboard(v);
                 }
             }
