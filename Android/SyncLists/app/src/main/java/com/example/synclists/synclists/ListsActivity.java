@@ -102,15 +102,8 @@ public class ListsActivity extends Activity{
                 // If the event is a key-down event on the "enter" button
                 if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
                         (keyCode == KeyEvent.KEYCODE_ENTER)) {
-                    // Perform action on key press
-
-                    String newListName = newList.getText().toString();
-                    layout.removeView(newList);
-
-                    if(validateListName(newListName))
-                        createList(newListName, new ArrayList<String>());
-
-                    setCanAddList(true);
+                    // create new list
+                    validateOnCreateList(newList, layout);
                     return true;
                 }
                 return false;
@@ -131,6 +124,17 @@ public class ListsActivity extends Activity{
                 }
             }
         });
+    }
+
+    // handles list creation and validation so that different listeners can use it
+    public void validateOnCreateList(EditText newList, LinearLayout layout) {
+        String newListName = newList.getText().toString();
+        layout.removeView(newList);
+
+        if(validateListName(newListName))
+            createList(newListName, new ArrayList<String>());
+
+        setCanAddList(true);
     }
 
     private boolean validateListName(String newListName) {
