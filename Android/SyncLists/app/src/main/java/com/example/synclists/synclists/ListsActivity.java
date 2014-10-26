@@ -3,6 +3,7 @@ package com.example.synclists.synclists;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
@@ -13,6 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SimpleExpandableListAdapter;
 import android.widget.TableRow;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -49,6 +51,11 @@ public class ListsActivity extends Activity{
         mExpandableListView.setAdapter(mListAdapter);
     }
 
+    private void createList(String name, List<String> tasks) {
+        mListDataHeader.add(name);
+        mListDataChild.put(name, tasks);
+    }
+
     private void populateLists() {
         // get list from API class?
 
@@ -63,6 +70,7 @@ public class ListsActivity extends Activity{
         list2.add("Task 1");
         list2.add("Task 2");
 
+        //
         mListDataChild.put(mListDataHeader.get(0), list1);
         mListDataChild.put(mListDataHeader.get(1), list2);
     }
@@ -70,14 +78,32 @@ public class ListsActivity extends Activity{
     public void addList(View view) {
         mButton.setEnabled(false);
 
-        LinearLayout layout = (LinearLayout) findViewById(R.id.lists_layout);
-        EditText newList = new EditText(this);
+        final LinearLayout layout = (LinearLayout) findViewById(R.id.lists_layout);
+        final EditText newList = new EditText(this);
         newList.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
 
         // set focus on newList
         setEditTextFocus(newList, true);
 
         layout.addView(newList);
+
+        newList.setOnKeyListener(new View.OnKeyListener() {
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                // If the event is a key-down event on the "enter" button
+                if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
+                        (keyCode == KeyEvent.KEYCODE_ENTER)) {
+                    // Perform action on key press
+                    String newListName = newList.getText().toString();
+                    layout.removeView(newList);
+                    createList(newListName, new ArrayList<String>());
+                    mButton.setEnabled(true);
+                    return true;
+                }
+                return false;
+            }
+        });
+
+
     }
 
     private void setEditTextFocus(EditText et, boolean isFocused){
