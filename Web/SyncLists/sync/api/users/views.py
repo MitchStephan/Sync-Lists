@@ -35,7 +35,7 @@ def create_user(request):
             response = 'Unexpected exception!\nrequest_body:\n{0}\nexception:{1}'.format(request_body,
                                                                                          sys.exc_info())
     else:
-        response = "Invalid request mothod of type {0}".format(request.method)
+        response = "Invalid request method of type {0}".format(request.method)
     return HttpResponse(response, status=status_code)
 
 
@@ -59,7 +59,7 @@ def login_user(request):
             response = 'Unexpected exception!\nrequest_body:\n{0}\nexception:{1}'.format(request_body,
                                                                                          sys.exc_info())
     else:
-        response = "Invalid request mothod of type {0}".format(request.method)
+        response = "Invalid request method of type {0}".format(request.method)
     return HttpResponse(response, status=status_code)
 
 
@@ -107,11 +107,14 @@ def delete_user(request, u_id):
 
 def get_user_lists(request, u_id):
     status_code = 400
-    try:
-        user = User.get_by_id(u_id)
-        response = User.to_json(user.get_lists())
-    except ObjectDoesNotExist:
-        response = 'User id {0} does not exist.'.format(u_id)
-    except:
-        response = 'Unexpected exception!\n{0}'.format(sys.exc_info())
+    if request.method == 'GET':
+        try:
+            user = User.get_by_id(u_id)
+            response = User.to_json(user.get_lists())
+        except ObjectDoesNotExist:
+            response = 'User id {0} does not exist.'.format(u_id)
+        except:
+            response = 'Unexpected exception!\n{0}'.format(sys.exc_info())
+    else:
+        response = "Invalid request method of type {0}".format(request.method)
     return HttpResponse(response, status=status_code)
