@@ -1,5 +1,3 @@
-from ast import literal_eval
-
 from django.core import serializers
 from django.db import models
 
@@ -7,9 +5,7 @@ from django.db import models
 class User(models.Model):
     # id (pk)
     email = models.CharField(max_length=255)
-    # should we have a password in alpha?
     password = models.CharField(max_length=255)
-    # list_lists = models.ManyToManyField('Lists')
     date_created = models.DateTimeField(auto_now_add=True)
 
     @staticmethod
@@ -84,6 +80,12 @@ class List(models.Model):
     def __unicode__(self):
         return 'List; pk:{0}, name:{1}, list_owner:{2}, date_created:{3} '.format(self.pk, self.name, self.list_owner,
                                                                                   self.date_created)
+
+    def get_all_users(self):
+        return [User.get_by_id(pk=self.list_owner)] + self.get_shared_users()
+
+    def get_shared_users(self):
+        return [user for user in self.shared_users]
 
     # noinspection PyRedundantParentheses
     def single_to_json(self):

@@ -79,7 +79,6 @@ public class ListsActivity extends Activity{
         list2.add("Task 1");
         list2.add("Task 2");
 
-        //
         mListDataChild.put(mListDataHeader.get(0), list1);
         mListDataChild.put(mListDataHeader.get(1), list2);
     }
