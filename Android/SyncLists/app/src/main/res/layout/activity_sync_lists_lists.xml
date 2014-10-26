@@ -4,8 +4,24 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ExpandableListView
-        android:id="@+id/lists"
-        android:layout_height="match_parent"
-        android:layout_width="match_parent"/>
+    <LinearLayout
+        android:layout_height="300dp"
+        android:layout_width="match_parent"
+        android:id="@+id/lists_layout">
+
+        <ExpandableListView
+            android:id="@+id/lists"
+            android:layout_height="200dp"
+            android:layout_width="match_parent"/>
+
+    </LinearLayout>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_gravity="bottom"
+        android:text="@string/add_list"
+        android:id="@+id/addListButton"
+        android:onClick="addList"/>
+
 </LinearLayout>

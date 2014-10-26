@@ -9,5 +9,8 @@
     <string name="email_hint">Email</string>
     <string name="password_hint">Password</string>
 
+    <string name="add_list">Add List</string>
+
+
 
 </resources>
