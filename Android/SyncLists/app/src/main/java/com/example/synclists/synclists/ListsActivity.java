@@ -2,13 +2,16 @@ package com.example.synclists.synclists;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -29,6 +32,8 @@ import java.util.List;
  * Created by ethan on 10/25/14.
  */
 public class ListsActivity extends Activity{
+
+    private final String TAG = "SyncLists";
 
     private ExpandableListAdapter mListAdapter;
     private ExpandableListView mExpandableListView;
@@ -90,6 +95,7 @@ public class ListsActivity extends Activity{
         setEditTextFocus(newList, true);
 
         layout.addView(newList);
+        showKeyboard(newList);
 
         newList.setOnKeyListener(new View.OnKeyListener() {
             public boolean onKey(View v, int keyCode, KeyEvent event) {
@@ -97,9 +103,13 @@ public class ListsActivity extends Activity{
                 if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
                         (keyCode == KeyEvent.KEYCODE_ENTER)) {
                     // Perform action on key press
+
                     String newListName = newList.getText().toString();
                     layout.removeView(newList);
-                    createList(newListName, new ArrayList<String>());
+
+                    if(validateListName(newListName))
+                        createList(newListName, new ArrayList<String>());
+
                     setCanAddList(true);
                     return true;
                 }
@@ -107,7 +117,24 @@ public class ListsActivity extends Activity{
             }
         });
 
+        newList.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                Log.d(TAG, "Focus Changed");
 
+                if(hasFocus) {
+                    Log.d(TAG, "newList has focus");
+                    showKeyboard(v);
+                }
+                else {
+                    hideKeyboard(v);
+                }
+            }
+        });
+    }
+
+    private boolean validateListName(String newListName) {
+        return !newListName.equals("") && !newListName.matches("^\\s+$");
     }
 
     private void setCanAddList(boolean canAddList) {
@@ -130,13 +157,25 @@ public class ListsActivity extends Activity{
         return true;
     }
 
-    private void setEditTextFocus(EditText et, boolean isFocused){
-        et.setCursorVisible(isFocused);
-        et.setFocusable(isFocused);
-        et.setFocusableInTouchMode(isFocused);
+    private void setEditTextFocus(EditText editText, boolean isFocused){
+        editText.setCursorVisible(isFocused);
+        editText.setFocusable(isFocused);
+        editText.setFocusableInTouchMode(isFocused);
 
         if (isFocused){
-            et.requestFocus();
+            editText.requestFocus();
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.showSoftInput(editText, InputMethodManager.SHOW_FORCED);
         }
+    }
+
+    private void showKeyboard(View v) {
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+    }
+
+    private void hideKeyboard(View v) {
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
     }
 }
