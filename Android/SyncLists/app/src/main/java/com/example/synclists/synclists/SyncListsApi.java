@@ -16,8 +16,19 @@ public class SyncListsApi {
         json.put("password", password);
 
         SyncListsRequest request = new SyncListsRequest(
-                        SyncListsRequest.SyncListsRequestMethod.POST, "users/login", json);
+                        SyncListsRequest.SyncListsRequestMethod.POST, "user/login", json);
 
         new SyncListsLoginAsyncTask(activity).execute(request);
+    }
+
+    protected static void createUser(Activity activity, String email, String password) {
+        Map<String, Object> json = new HashMap<String, Object>();
+        json.put("email", email);
+        json.put("password", password);
+
+        SyncListsRequest request = new SyncListsRequest(
+                SyncListsRequest.SyncListsRequestMethod.POST, "user", json);
+
+        new SyncListsCreateUserAsyncTask(activity).execute(request);
     }
 }

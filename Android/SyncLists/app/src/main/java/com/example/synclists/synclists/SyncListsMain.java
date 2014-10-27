@@ -27,7 +27,6 @@ public class SyncListsMain extends Activity {
         //login(null);
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -36,8 +35,12 @@ public class SyncListsMain extends Activity {
     }
 
     public void login(View view) {
-        SyncListsApi.login(this, "mitch@bitch.com", "password");
-        //SyncListsApi.login(this, mEmail.getText().toString(), mPassword.getText().toString());
+        //SyncListsApi.login(this, "mitch@bitch.com", "password");
+        SyncListsApi.login(this, mEmail.getText().toString(), mPassword.getText().toString());
+    }
+
+    public void createUser(View view) {
+        SyncListsApi.createUser(this, mEmail.getText().toString(), mPassword.getText().toString());
     }
 
     @Override
