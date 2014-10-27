@@ -16,7 +16,6 @@ public class SyncListsMain extends Activity {
 
     private EditText mEmail = null;
     private EditText mPassword = null;
-    private Button mLogin;
     protected static SharedPreferences mPrefs;
     private final String PREF_FILE_NAME = "SyncListsPrefs";
 
