@@ -4,7 +4,7 @@ from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 
 from sync.api.utils import request_body_to_dict, get_user_context, invalid_method, \
-    unexpected_exception, invalid_request, does_not_exist, delete_response
+    unexpected_exception, invalid_request, does_not_exist, delete_response, invalid_user_context
 
 from sync.models import User, List
 
@@ -67,13 +67,17 @@ def get_user(request):
     status_code = 400
     request_body = {}
     u_id = get_user_context(request)
-    try:
-        response = User.get_by_id(u_id).single_to_json()
-        status_code = 200
-    except ObjectDoesNotExist:
-        response = does_not_exist('User', u_id)
-    except:
-        response = unexpected_exception(request, request_body)
+    if u_id:
+        try:
+
+            response = User.get_by_id(u_id).single_to_json()
+            status_code = 200
+        except ObjectDoesNotExist:
+            response = does_not_exist('User', u_id)
+        except:
+            response = unexpected_exception(request, request_body)
+    else:
+        response = invalid_user_context(request)
     return HttpResponse(response, status=status_code)
 
 
@@ -81,17 +85,20 @@ def edit_user(request):
     status_code = 400
     request_body = {}
     u_id = get_user_context(request)
-    try:
-        request_body = request_body_to_dict(request)
-        u = User.get_by_id(u_id)
-        response = u.edit(**request_body).single_to_json()
-        status_code = 200
-    except ObjectDoesNotExist:
-        response = does_not_exist('User', u_id)
-    except (TypeError, SyntaxError):
-        response = invalid_request(request, request_body)
-    except:
-        response = unexpected_exception(request, request_body)
+    if u_id:
+        try:
+            request_body = request_body_to_dict(request)
+            u = User.get_by_id(u_id)
+            response = u.edit(**request_body).single_to_json()
+            status_code = 200
+        except ObjectDoesNotExist:
+            response = does_not_exist('User', u_id)
+        except (TypeError, SyntaxError):
+            response = invalid_request(request, request_body)
+        except:
+            response = unexpected_exception(request, request_body)
+    else:
+        response = invalid_user_context(request)
     return HttpResponse(response, status=status_code)
 
 
@@ -99,15 +106,18 @@ def delete_user(request):
     status_code = 400
     request_body = {}
     u_id = get_user_context(request)
-    try:
-        u = User.get_by_id(u_id)
-        u.delete()
-        response = delete_response('User', u_id)
-        status_code = 200
-    except ObjectDoesNotExist:
-        response = does_not_exist('User', u_id)
-    except:
-        response = unexpected_exception(request, request_body)
+    if u_id:
+        try:
+            u = User.get_by_id(u_id)
+            u.delete()
+            response = delete_response('User', u_id)
+            status_code = 200
+        except ObjectDoesNotExist:
+            response = does_not_exist('User', u_id)
+        except:
+            response = unexpected_exception(request, request_body)
+    else:
+        response = invalid_user_context(request)
     return HttpResponse(response, status=status_code)
 
 
@@ -116,13 +126,16 @@ def get_user_lists(request):
     request_body = {}
     if request.method == 'GET':
         u_id = get_user_context(request)
-        try:
-            u = User.get_by_id(u_id)
-            response = List.to_json(u.get_lists())
-        except ObjectDoesNotExist:
-            response = does_not_exist('User', u_id)
-        except:
-            response = unexpected_exception(request, request_body)
+        if u_id:
+            try:
+                u = User.get_by_id(u_id)
+                response = List.to_json(u.get_lists())
+            except ObjectDoesNotExist:
+                response = does_not_exist('User', u_id)
+            except:
+                response = unexpected_exception(request, request_body)
+        else:
+            response = invalid_user_context(request)
     else:
         return invalid_method(request)
     return HttpResponse(response, status=status_code)

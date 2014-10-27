@@ -26,8 +26,8 @@ def invalid_method(request):
 
 def unexpected_exception(request, request_body):
     return 'Unexpected exception!\n\nheaders:\n{0}\n\nrequest body:\n{1}\n\nexception:\n{2}'.format(request.META,
-                                                                                                  request_body,
-                                                                                                  sys.exc_info())
+                                                                                                    request_body,
+                                                                                                    sys.exc_info())
 
 
 def invalid_request(request, request_body):
