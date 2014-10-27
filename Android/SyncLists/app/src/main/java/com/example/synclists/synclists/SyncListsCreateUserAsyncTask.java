@@ -12,22 +12,14 @@ import org.json.JSONObject;
 /**
  * Created by SirChickenHair on 10/26/14.
  */
-public class SyncListsLoginAsyncTask extends SyncListsRequestAsyncTask {
-
-    public SyncListsLoginAsyncTask(Activity activity) {
+public class SyncListsCreateUserAsyncTask extends SyncListsRequestAsyncTask  {
+    public SyncListsCreateUserAsyncTask(Activity activity) {
         super(activity);
     }
 
     protected void onPostExecute(SyncListsResponse result) {
-        //handle valid login
-
-        Log.d("SyncLists", "Result " + result.toString());
-        Log.d("SyncLists", "Response " + result.getHttpResponse());
-        Log.d("SyncLists", "Status Line " + result.getHttpResponse().getStatusLine());
-        Log.d("SyncLists", "Status code " + result.getHttpResponse().getStatusLine().getStatusCode());
-
         if(result.getHttpResponse().getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
-            Toast.makeText(mActivity, "You did it",
+            Toast.makeText(mActivity, "Account created!",
                     Toast.LENGTH_SHORT).show();
 
             try {
@@ -46,8 +38,9 @@ public class SyncListsLoginAsyncTask extends SyncListsRequestAsyncTask {
                 //if exception parsing json, then error loggin in
             }
         }
-
-        Toast.makeText(mActivity, "Invalid login",
-                Toast.LENGTH_SHORT).show();
+        else {
+            Toast.makeText(mActivity, "There was an error signing up",
+                    Toast.LENGTH_SHORT).show();
+        }
     }
 }
