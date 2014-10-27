@@ -8,6 +8,7 @@
         android:id="@+id/listsListViewText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
         android:textAppearance="?android:attr/textAppearanceListItemSmall"
         android:paddingStart="?android:attr/listPreferredItemPaddingStart"
         android:paddingEnd="?android:attr/listPreferredItemPaddingEnd"
@@ -18,8 +19,9 @@
         android:id="@+id/listsListViewSettingsButton"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_gravity="right"
+        android:layout_alignParentRight="true"
         android:src="@drawable/settings"
-        android:onClick="listSettings"/>
+        android:onClick="listSettings"
+        android:scaleType="fitCenter"/>
 
 </RelativeLayout>
