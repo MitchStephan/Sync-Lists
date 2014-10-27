@@ -31,12 +31,10 @@ import java.util.List;
 /**
  * Created by ethan on 10/25/14.
  */
-public class ListsActivity extends Activity implements ExpandableListView.OnGroupExpandListener{
+public class ListsActivity extends Activity {
 
     private final String TAG = "SyncLists";
 
-    private ExpandableListAdapter mListAdapter;
-    private ExpandableListView mExpandableListView;
     private List<String> mListDataHeader;
     private HashMap<String, List<String>> mListDataChild;
     private boolean mCanAddList;
@@ -46,40 +44,18 @@ public class ListsActivity extends Activity implements ExpandableListView.OnGrou
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sync_lists_lists);
 
-        mExpandableListView = (ExpandableListView) findViewById(R.id.lists);
         mListDataHeader = new ArrayList<String>();
         mListDataChild = new HashMap<String, List<String>>();
         mCanAddList = true;
-        mExpandableListView.setOnGroupExpandListener(this);
 
         populateLists();
 
-        mListAdapter = new ExpandableListAdapter(this, mListDataHeader, mListDataChild);
-
-        // setting list adapter
-        mExpandableListView.setAdapter(mListAdapter);
     }
 
-    public void onGroupExpand(int groupPosition) {
-        int len = mExpandableListView.getExpandableListAdapter().getGroupCount();
-
-        for (int i = 0; i < len; i++) {
-            if (i != groupPosition) {
-                mExpandableListView.collapseGroup(i);
-            }
-        }
-    }
-
-    public void addTask(View view) {
-        Log.d(TAG, "Adding new task");
-        mListDataChild.get(mListDataHeader.get(mExpandableListView.getPositionForView(view))).add("taskNEW");
-        mListAdapter.notifyDataSetChanged();
-    }
 
     private void createList(String name, List<String> tasks) {
         mListDataHeader.add(name);
         mListDataChild.put(name, tasks);
-        mListAdapter.notifyDataSetChanged();
     }
 
     private void populateLists() {
@@ -159,8 +135,9 @@ public class ListsActivity extends Activity implements ExpandableListView.OnGrou
         String newListName = newList.getText().toString();
         layout.removeView(newList);
 
-        if (validateListName(newListName))
-            createList(newListName, new ArrayList<String>());
+        if (validateListName(newListName)) {
+            //createList(newListName, new ArrayList<String>());
+        }
     }
 
     private boolean validateListName(String newListName) {
@@ -171,8 +148,6 @@ public class ListsActivity extends Activity implements ExpandableListView.OnGrou
         mCanAddList = canAddList;
         invalidateOptionsMenu();
     }
-
-
 
     @Override
     public boolean onPrepareOptionsMenu (Menu menu) {

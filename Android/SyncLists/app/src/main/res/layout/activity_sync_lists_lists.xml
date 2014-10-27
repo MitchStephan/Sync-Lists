@@ -19,7 +19,7 @@
         android:clickable="true"
         android:id="@+id/lists_layout">
 
-        <ExpandableListView
+        <ListView
             android:id="@+id/lists"
             android:layout_height="wrap_content"
             android:layout_width="match_parent"/>

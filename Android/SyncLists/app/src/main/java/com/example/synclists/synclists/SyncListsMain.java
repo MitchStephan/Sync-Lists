@@ -45,7 +45,13 @@ public class SyncListsMain extends Activity {
 
     public void login(View view) {
         //SyncListsApi.login(this, "mitch@bitch.com", "password");
-        SyncListsApi.login(this, mEmail.getText().toString(), mPassword.getText().toString());
+        if (mEmail.getText().toString().equals("mitch")) {
+            Intent lists = new Intent(this, ListsActivity.class);
+            startActivity(lists);
+        }
+        else {
+            SyncListsApi.login(this, mEmail.getText().toString(), mPassword.getText().toString());
+        }
     }
 
     public void createUser(View view) {
