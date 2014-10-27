@@ -39,7 +39,7 @@ def does_not_exist(obj_str, obj_id):
 
 
 def invalid_user_context(request):
-    return 'User context {0} is invalid.\n\nheaders:\n{1}'.format(get_user_context(request), request.META)
+    return 'User context {0} is invalid.'.format(get_user_context(request))
 
 
 def delete_response(obj_str, obj_id):
