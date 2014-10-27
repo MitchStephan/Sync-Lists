@@ -7,9 +7,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 
 public class SyncListsMain extends Activity {
@@ -33,7 +31,6 @@ public class SyncListsMain extends Activity {
             Intent lists = new Intent(this, ListsActivity.class);
             startActivity(lists);
         }
-        //login(null);
     }
 
     @Override
@@ -44,14 +41,7 @@ public class SyncListsMain extends Activity {
     }
 
     public void login(View view) {
-        //SyncListsApi.login(this, "mitch@bitch.com", "password");
-        if (mEmail.getText().toString().equals("mitch")) {
-            Intent lists = new Intent(this, ListsActivity.class);
-            startActivity(lists);
-        }
-        else {
-            SyncListsApi.login(this, mEmail.getText().toString(), mPassword.getText().toString());
-        }
+        SyncListsApi.login(this, mEmail.getText().toString(), mPassword.getText().toString());
     }
 
     public void createUser(View view) {
