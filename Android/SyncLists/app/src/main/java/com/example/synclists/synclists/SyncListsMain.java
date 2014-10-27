@@ -25,7 +25,6 @@ public class SyncListsMain extends Activity {
         setContentView(R.layout.activity_sync_lists_main);
         mEmail = (EditText)findViewById(R.id.email);
         mPassword = (EditText)findViewById(R.id.password);
-        mLogin = (Button)findViewById(R.id.loginButton);
 
         //set up prefs
         mPrefs = getSharedPreferences(PREF_FILE_NAME, MODE_PRIVATE);
