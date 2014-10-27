@@ -26,8 +26,8 @@ def invalid_method(request):
 
 def unexpected_exception(request, request_body):
     return 'Unexpected exception!\n\nheaders:\n{0}\n\nrequest body:\n{1}\n\nexception:\n{2}'.format(request.META,
-                                                                                                  request_body,
-                                                                                                  sys.exc_info())
+                                                                                                    request_body,
+                                                                                                    sys.exc_info())
 
 
 def invalid_request(request, request_body):
@@ -39,7 +39,7 @@ def does_not_exist(obj_str, obj_id):
 
 
 def invalid_user_context(request):
-    return 'User context {0} is invalid.'.format(get_user_context(request))
+    return 'User context {0} is invalid.\n\nheaders:\n{1}'.format(get_user_context(request), request.META)
 
 
 def delete_response(obj_str, obj_id):
