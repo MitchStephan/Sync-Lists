@@ -31,7 +31,7 @@ import java.util.List;
 /**
  * Created by ethan on 10/25/14.
  */
-public class ListsActivity extends Activity{
+public class ListsActivity extends Activity implements ExpandableListView.OnGroupExpandListener{
 
     private final String TAG = "SyncLists";
 
@@ -50,6 +50,7 @@ public class ListsActivity extends Activity{
         mListDataHeader = new ArrayList<String>();
         mListDataChild = new HashMap<String, List<String>>();
         mCanAddList = true;
+        mExpandableListView.setOnGroupExpandListener(this);
 
         populateLists();
 
@@ -57,6 +58,22 @@ public class ListsActivity extends Activity{
 
         // setting list adapter
         mExpandableListView.setAdapter(mListAdapter);
+    }
+
+    public void onGroupExpand(int groupPosition) {
+        int len = mExpandableListView.getExpandableListAdapter().getGroupCount();
+
+        for (int i = 0; i < len; i++) {
+            if (i != groupPosition) {
+                mExpandableListView.collapseGroup(i);
+            }
+        }
+    }
+
+    public void addTask(View view) {
+        Log.d(TAG, "Adding new task");
+        mListDataChild.get(mListDataHeader.get(mExpandableListView.getPositionForView(view))).add("taskNEW");
+        mListAdapter.notifyDataSetChanged();
     }
 
     private void createList(String name, List<String> tasks) {
@@ -154,6 +171,8 @@ public class ListsActivity extends Activity{
         mCanAddList = canAddList;
         invalidateOptionsMenu();
     }
+
+
 
     @Override
     public boolean onPrepareOptionsMenu (Menu menu) {

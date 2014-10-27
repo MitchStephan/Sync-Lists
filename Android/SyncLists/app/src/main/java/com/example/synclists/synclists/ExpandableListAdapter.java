@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.Button;
 import android.widget.TextView;
 
 /**
@@ -21,8 +22,7 @@ import android.widget.TextView;
 public class ExpandableListAdapter extends BaseExpandableListAdapter {
     private Context mContext;
     private List<String> mListDataHeader; // header titles
-    // child data in format of header title, child title
-    private HashMap<String, List<String>> mListDataChild;
+    private HashMap<String, List<String>> mListDataChild;  // child data in format of header title, child title
 
     public ExpandableListAdapter(Context context, List<String> listDataHeader,
                                  HashMap<String, List<String>> listChildData) {
