@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <string name="app_name">SyncLists</string>
     <string name="login_text">Login</string>
     <string name="sign_up_text">Sign Up</string>
@@ -10,7 +9,5 @@
     <string name="password_hint">Password</string>
 
     <string name="add_list">Add List</string>
-
-
-
+    <string name="settings">Settings</string>
 </resources>
