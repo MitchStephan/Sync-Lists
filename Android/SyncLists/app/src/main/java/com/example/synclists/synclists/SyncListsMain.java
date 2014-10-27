@@ -2,6 +2,7 @@ package com.example.synclists.synclists;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,6 +17,8 @@ public class SyncListsMain extends Activity {
     private EditText mEmail = null;
     private EditText mPassword = null;
     private Button mLogin;
+    protected static SharedPreferences mPrefs;
+    private final String PREF_FILE_NAME = "SyncListsPrefs";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +27,9 @@ public class SyncListsMain extends Activity {
         mEmail = (EditText)findViewById(R.id.email);
         mPassword = (EditText)findViewById(R.id.password);
         mLogin = (Button)findViewById(R.id.loginButton);
+
+        //set up prefs
+        mPrefs = getSharedPreferences(PREF_FILE_NAME, MODE_PRIVATE);
         //login(null);
     }
 
@@ -53,5 +59,9 @@ public class SyncListsMain extends Activity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    protected static SharedPreferences.Editor getPreferencesEditor() {
+        return SyncListsMain.mPrefs.edit();
     }
 }
