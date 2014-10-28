@@ -31,7 +31,7 @@ public class SyncListsCreateListAsyncTask extends SyncListsRequestAsyncTask  {
             }
         }
         else {
-            Toast.makeText(mActivity, "There was an error signing up",
+            Toast.makeText(mActivity, "There was an error creating your list",
                     Toast.LENGTH_SHORT).show();
         }
     }
