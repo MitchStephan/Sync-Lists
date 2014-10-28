@@ -30,7 +30,7 @@ public class SyncListsCreateListAsyncTask extends SyncListsRequestAsyncTask  {
                 //if exception parsing json, then error loggin in
             }
         }
-        
+
         Toast.makeText(mActivity, "There was an error creating your list",
                 Toast.LENGTH_SHORT).show();
     }
