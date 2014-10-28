@@ -29,10 +29,12 @@ public class ListsActivity extends Activity {
     private ListArrayAdapter mAdapter;
     private boolean mCanAddList;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sync_lists_lists);
+
 
         mCanAddList = true;
 
@@ -40,11 +42,10 @@ public class ListsActivity extends Activity {
         SyncListsApi.getLists(new SyncListsRequestAsyncTaskCallback() {
             @Override
             public void onTaskComplete(SyncListsResponse syncListsResponse) {
-                if(syncListsResponse == null) {
+                if (syncListsResponse == null) {
                     Toast.makeText(context, "Error retrieving lists",
                             Toast.LENGTH_SHORT).show();
-                }
-                else {
+                } else {
                     try {
                         mLists = SyncListsApi.parseLists(syncListsResponse.getBody());
 
@@ -52,8 +53,7 @@ public class ListsActivity extends Activity {
 
                         ListView lv = (ListView) findViewById(R.id.listsListView);
                         lv.setAdapter(mAdapter);
-                    }
-                    catch(Exception e) {
+                    } catch (Exception e) {
                         Toast.makeText(context, "Error retrieving lists",
                                 Toast.LENGTH_SHORT).show();
                     }
@@ -177,7 +177,22 @@ public class ListsActivity extends Activity {
 
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.sync_lists_lists, menu);
+
+
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle presses on the action bar items
+        switch (item.getItemId()) {
+            case R.id.settings:
+                Intent settings = new Intent(this, SettingsActivity.class);
+                startActivity(settings);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     private void setEditTextFocus(EditText editText, boolean isFocused){

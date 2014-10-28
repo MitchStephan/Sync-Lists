@@ -3,6 +3,7 @@ package com.example.synclists.synclists;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.Image;
 import android.os.Bundle;
 import android.view.View;
@@ -17,6 +18,7 @@ import java.util.ArrayList;
  * Created by ethan on 10/27/14.
  */
 public class SettingsActivity extends Activity{
+    protected static SharedPreferences mPrefs;
     ImageButton mLogoutButton;
     ImageButton mInstructionsButton;
     ImageButton mChangePasswordButton;
@@ -35,18 +37,20 @@ public class SettingsActivity extends Activity{
     public void addLogoutListner() {
 
         mLogoutButton = (ImageButton) findViewById(R.id.logoutButton);
+        final Intent logout = new Intent(this, SyncListsMain.class);
+
         mLogoutButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
 
                 Toast.makeText(SettingsActivity.this,
-                        "Logout is clicked!", Toast.LENGTH_SHORT).show();
-
+                        "You have logged out", Toast.LENGTH_SHORT).show();
+                SyncListsApi.logout();
+                startActivity(logout);
+                finish();
             }
-
         });
-
     }
 
     public void addShowInstuctionsListener() {
@@ -56,14 +60,10 @@ public class SettingsActivity extends Activity{
 
             @Override
             public void onClick(View v) {
-
                 Toast.makeText(SettingsActivity.this,
                         "Show Instructions is clicked!", Toast.LENGTH_SHORT).show();
-
             }
-
         });
-
     }
 
     public void addSyncWithDatabaseListener() {
@@ -76,11 +76,8 @@ public class SettingsActivity extends Activity{
 
                 Toast.makeText(SettingsActivity.this,
                         "Sync is clicked!", Toast.LENGTH_SHORT).show();
-
             }
-
         });
-
     }
 
     public void addChangePasswordListner() {
@@ -93,10 +90,7 @@ public class SettingsActivity extends Activity{
 
                 Toast.makeText(SettingsActivity.this,
                         "Change Password is clicked!", Toast.LENGTH_SHORT).show();
-
             }
-
         });
-
     }
 }
