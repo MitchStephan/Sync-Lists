@@ -6,7 +6,7 @@ from django.views.decorators.csrf import csrf_exempt
 from sync.api.utils import request_body_to_dict, get_user_context, invalid_method, \
     unexpected_exception, invalid_request, does_not_exist, delete_response, invalid_user_context
 
-from sync.models import User, List
+from sync.models import User, List, Task
 
 
 @csrf_exempt
@@ -23,12 +23,19 @@ def user(request):
         return invalid_method(request)
 
 
+def setup_example_list(new_user):
+    new_list = List.create("Example list", new_user)
+    Task.create("Example task", new_list, new_user)
+
+
 def create_user(request):
     status_code = 400
     request_body = {}
     try:
         request_body = request_body_to_dict(request)
-        response = User.create(**request_body).single_to_json()
+        new_user = User.create(**request_body)
+        response = new_user.single_to_json()
+        setup_example_list(new_user)
         status_code = 200
     except IntegrityError:
         response = 'A user with that email already exists.'
@@ -130,6 +137,7 @@ def get_user_lists(request):
             try:
                 u = User.get_by_id(u_id)
                 response = List.to_json(u.get_lists())
+                status_code = 200;
             except ObjectDoesNotExist:
                 response = does_not_exist('User', u_id)
             except:
