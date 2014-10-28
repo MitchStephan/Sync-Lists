@@ -29,7 +29,7 @@ import java.util.Map;
 public class SyncListsRequest {
     private final String USER_AGENT = "SyncLists-AndroidClient/1.0";
     private final String CONTENT_TYPE = "application/json";
-    private final String API_BASE = "http://10.0.2.2:8000/api/";
+    private final String API_BASE = "http://mitchstephan.pythonanywhere.com/api/";
 
     private String mPath;
 
@@ -93,6 +93,12 @@ public class SyncListsRequest {
         // add header
         request.setHeader("User-Agent", USER_AGENT);
         request.setHeader("Content-Type", CONTENT_TYPE);
+
+        // add user-context header if set in Preferences
+        int userContext = SyncListsMain.mPrefs.getInt(SyncListsApi.USER_CONTEXT, -1);
+        if(userContext != -1) {
+            request.setHeader("User-Context", Integer.toString(userContext));
+        }
 
         if(mMethod == SyncListsRequestMethod.POST && mUrlParameters != null) {
             ((HttpPost) request).setEntity(new UrlEncodedFormEntity(mUrlParameters));
