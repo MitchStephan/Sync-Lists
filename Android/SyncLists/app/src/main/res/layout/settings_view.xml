@@ -9,17 +9,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical">
 
-        <ImageButton
-            android:id="@+id/changePasswordButton"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_alignParentRight="true"
-            android:src="@drawable/circle_icon"
-            android:scaleType="fitCenter"
-            android:background="@null"
-            />
-
         <TextView
+            android:id="@+id/changePasswordButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/change_password"
@@ -32,16 +23,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical">
 
-        <ImageButton
-            android:id="@+id/snycButton"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_alignParentRight="true"
-            android:src="@drawable/circle_icon"
-            android:scaleType="fitCenter"
-            android:background="@null"/>
-
         <TextView
+            android:id="@+id/snycButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/sync"
@@ -54,16 +37,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical">
 
-        <ImageButton
-            android:id="@+id/instructionsButton"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_alignParentRight="true"
-            android:src="@drawable/circle_icon"
-            android:scaleType="fitCenter"
-            android:background="@null"/>
-
         <TextView
+            android:id="@+id/instructionsButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/instructions"
@@ -76,16 +51,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical">
 
-        <ImageButton
-            android:id="@+id/logoutButton"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_alignParentRight="true"
-            android:src="@drawable/circle_icon"
-            android:scaleType="fitCenter"
-            android:background="@null"/>
-
         <TextView
+            android:id="@+id/logoutButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/logout"

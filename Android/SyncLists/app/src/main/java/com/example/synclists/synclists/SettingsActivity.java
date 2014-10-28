@@ -6,17 +6,20 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import org.w3c.dom.Text;
 
 /**
  * Created by ethan on 10/27/14.
  */
 public class SettingsActivity extends Activity{
     protected static SharedPreferences mPrefs;
-    ImageButton mLogoutButton;
-    ImageButton mInstructionsButton;
-    ImageButton mChangePasswordButton;
-    ImageButton mSyncButton;
+    TextView mLogoutButton;
+    TextView mInstructionsButton;
+    TextView mChangePasswordButton;
+    TextView mSyncButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +33,7 @@ public class SettingsActivity extends Activity{
 
     public void addLogoutListner() {
 
-        mLogoutButton = (ImageButton) findViewById(R.id.logoutButton);
+        mLogoutButton = (TextView) findViewById(R.id.logoutButton);
         final Intent logout = new Intent(this, SyncListsLogin.class);
 
         mLogoutButton.setOnClickListener(new View.OnClickListener() {
@@ -49,7 +52,7 @@ public class SettingsActivity extends Activity{
 
     public void addShowInstuctionsListener() {
 
-        mInstructionsButton = (ImageButton) findViewById(R.id.instructionsButton);
+        mInstructionsButton = (TextView) findViewById(R.id.instructionsButton);
         mInstructionsButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -62,7 +65,7 @@ public class SettingsActivity extends Activity{
 
     public void addSyncWithDatabaseListener() {
 
-        mSyncButton = (ImageButton) findViewById(R.id.snycButton);
+        mSyncButton = (TextView) findViewById(R.id.snycButton);
         mSyncButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -76,7 +79,7 @@ public class SettingsActivity extends Activity{
 
     public void addChangePasswordListner() {
 
-        mChangePasswordButton = (ImageButton) findViewById(R.id.changePasswordButton);
+        mChangePasswordButton = (TextView) findViewById(R.id.changePasswordButton);
         mChangePasswordButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
