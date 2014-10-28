@@ -2,10 +2,14 @@ package com.example.synclists.synclists;
 
 import android.app.Activity;
 import android.content.Context;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -32,15 +36,24 @@ public class ListArrayAdapter extends ArrayAdapter<SyncListsList> {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        View row = convertView;
-        ListRowHolder holder = null;
+    public View getView(final int position, View convertView, ViewGroup parent) {
+        SyncListsList list;
+        list = mItems.get(position);
 
         LayoutInflater inflater = ((Activity) mContext).getLayoutInflater();
-        row = inflater.inflate(mLayoutResourceId, parent, false);
 
-        holder = new ListRowHolder();
-        holder.list = mItems.get(position);
+        if (list.getIsListEdit()){
+            return getEditView(position, parent, list, inflater);
+        }
+        else {
+            return getListView(parent, list, inflater);
+        }
+    }
+
+    private View getListView(ViewGroup parent, SyncListsList list, LayoutInflater inflater) {
+        View row = inflater.inflate(R.layout.lists_list_view, parent, false);
+        ListRowHolder holder = new ListRowHolder();
+        holder.list = list;
         holder.listsListViewSettingsButton = (ImageButton)row.findViewById(R.id.listsListViewSettingsButton);
         holder.listsListViewSettingsButton.setTag(holder.list);
 
@@ -49,8 +62,42 @@ public class ListArrayAdapter extends ArrayAdapter<SyncListsList> {
         holder.listsListViewText.setTag(holder.list);
 
         row.setTag(holder);
-
         return row;
+    }
+
+    private View getEditView(final int position, ViewGroup parent, SyncListsList list, LayoutInflater inflater) {
+        View row = inflater.inflate(R.layout.lists_edit_list_view, parent, false);
+        final EditText edit = (EditText)row.findViewById(R.id.listsListEditText);
+        edit.setText(list.getName());
+        edit.requestFocus();
+
+        edit.setOnKeyListener(new View.OnKeyListener() {
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                // If the event is a key-down event on the "enter" button
+                if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
+                        (keyCode == KeyEvent.KEYCODE_ENTER)) {
+
+                    String newListName = edit.getText().toString();
+                    mItems.remove(position);
+
+                    validateOnCreate(newListName, position);
+                    return true;
+                }
+                return false;
+            }
+        });
+        return row;
+    }
+
+    private void validateOnCreate(String newListName, int position) {
+        if (validName(newListName)) {
+            mItems.add(position, new SyncListsList(-1, newListName));
+            notifyDataSetChanged();
+        }
+    }
+
+    private boolean validName(String newListName) {
+        return newListName != null && !newListName.equals("") && !newListName.matches("^\\s*$");
     }
 
     public static class ListRowHolder {

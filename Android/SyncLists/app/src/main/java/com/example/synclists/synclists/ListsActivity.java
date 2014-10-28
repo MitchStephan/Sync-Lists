@@ -62,13 +62,6 @@ public class ListsActivity extends Activity {
         });
     }
 
-
-//    private void createList(String name, List<String> tasks) {
-//        mListDataHeader.add(name);
-//        mListDataChild.put(name, tasks);
-//    }
-
-
     protected void populateLists(ArrayList<SyncListsList> lists) {
         mLists = lists;
         mAdapter = new ListArrayAdapter(this, R.layout.lists_list_view, mLists);
@@ -81,35 +74,11 @@ public class ListsActivity extends Activity {
 
     public void addList(MenuItem item) {
 //        setCanAddList(false);
-//
-//        final LinearLayout layout = (LinearLayout) findViewById(R.id.lists_layout);
-//        final EditText newList = new EditText(this);
-//        newList.setLayoutParams(new ListView.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, ListView.LayoutParams.WRAP_CONTENT));
-//
-//        // set focus on newList
-//        setEditTextFocus(newList, true);
-//
-//        layout.addView(newList);
-//        showKeyboard(newList);
-//
-//        newList.setOnKeyListener(new View.OnKeyListener() {
-//            public boolean onKey(View v, int keyCode, KeyEvent event) {
-//                // If the event is a key-down event on the "enter" button
-//                if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
-//                        (keyCode == KeyEvent.KEYCODE_ENTER)) {
-//
-//                    Log.d(TAG, "ENTER PRESSED");
-//
-//                    // create new list
-//                    if (!mCanAddList)
-//                        validateOnCreateList(newList, layout);
-//
-//                    return true;
-//                }
-//                return false;
-//            }
-//        });
-//
+        mLists.add(new SyncListsList(-1, "", true));
+        mAdapter.notifyDataSetChanged();
+        showKeyboard();
+
+//        // TODO: Move to getView()
 //        newList.setOnFocusChangeListener(new View.OnFocusChangeListener() {
 //            @Override
 //            public void onFocusChange(View v, boolean hasFocus) {
@@ -195,19 +164,8 @@ public class ListsActivity extends Activity {
         }
     }
 
-    private void setEditTextFocus(EditText editText, boolean isFocused){
-        editText.setCursorVisible(isFocused);
-        editText.setFocusable(isFocused);
-        editText.setFocusableInTouchMode(isFocused);
 
-        if (isFocused){
-            editText.requestFocus();
-            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.showSoftInput(editText, InputMethodManager.SHOW_FORCED);
-        }
-    }
-
-    private void showKeyboard(View v) {
+    private void showKeyboard() {
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 
         if(imm != null){
