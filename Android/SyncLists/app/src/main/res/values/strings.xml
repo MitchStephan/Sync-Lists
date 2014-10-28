@@ -10,4 +10,11 @@
 
     <string name="add_list">Add List</string>
     <string name="settings">Settings</string>
+    <!-- Setting Option -->
+    <string name="change_password">Change Password</string>
+    <string name="sync">Sync</string>
+    <string name="instructions">Instructions</string>
+    <string name="logout">Logout</string>
+
+
 </resources>

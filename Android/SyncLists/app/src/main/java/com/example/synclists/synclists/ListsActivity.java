@@ -1,31 +1,18 @@
 package com.example.synclists.synclists;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.BaseExpandableListAdapter;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ExpandableListView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
-import android.widget.SimpleExpandableListAdapter;
-import android.widget.TableRow;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -35,113 +22,82 @@ public class ListsActivity extends Activity {
 
     private final String TAG = "SyncLists";
 
-    private List<String> mListDataHeader;
-    private HashMap<String, List<String>> mListDataChild;
+    private List<SyncListsList> mLists;
+    private ListArrayAdapter mAdapter;
     private boolean mCanAddList;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sync_lists_lists);
 
-        mListDataHeader = new ArrayList<String>();
-        mListDataChild = new HashMap<String, List<String>>();
+
         mCanAddList = true;
 
-        populateLists();
+        final Context context = this;
+        SyncListsApi.getLists(new SyncListsRequestAsyncTaskCallback() {
+            @Override
+            public void onTaskComplete(SyncListsResponse syncListsResponse) {
+                if (syncListsResponse == null) {
+                    Toast.makeText(context, "Error retrieving lists",
+                            Toast.LENGTH_SHORT).show();
+                } else {
+                    try {
+                        mLists = SyncListsApi.parseLists(syncListsResponse.getBody());
 
-    }
+                        mAdapter = new ListArrayAdapter(context, R.layout.lists_list_view, mLists);
 
-
-    private void createList(String name, List<String> tasks) {
-        mListDataHeader.add(name);
-        mListDataChild.put(name, tasks);
-    }
-
-    private void populateLists() {
-        // get list from API class?
-
-        mListDataHeader.add("List 1");
-        mListDataHeader.add("List 2");
-
-        List<String> list1 = new ArrayList<String>();
-        list1.add("Task 1");
-        list1.add("Task 2");
-
-        List<String> list2 = new ArrayList<String>();
-        list2.add("Task 1");
-        list2.add("Task 2");
-
-        mListDataChild.put(mListDataHeader.get(0), list1);
-        mListDataChild.put(mListDataHeader.get(1), list2);
+                        ListView lv = (ListView) findViewById(R.id.listsListView);
+                        lv.setAdapter(mAdapter);
+                    } catch (Exception e) {
+                        Toast.makeText(context, "Error retrieving lists",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+        });
     }
 
     public void addList(MenuItem item) {
-        setCanAddList(false);
+//        setCanAddList(false);
+        mLists.add(new SyncListsList(-1, "", true));
+        mAdapter.notifyDataSetChanged();
+        showKeyboard();
 
-        final LinearLayout layout = (LinearLayout) findViewById(R.id.lists_layout);
-        final EditText newList = new EditText(this);
-        newList.setLayoutParams(new ListView.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, ListView.LayoutParams.WRAP_CONTENT));
-
-        // set focus on newList
-        setEditTextFocus(newList, true);
-
-        layout.addView(newList);
-        showKeyboard(newList);
-
-        newList.setOnKeyListener(new View.OnKeyListener() {
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                // If the event is a key-down event on the "enter" button
-                if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
-                        (keyCode == KeyEvent.KEYCODE_ENTER)) {
-
-                    Log.d(TAG, "ENTER PRESSED");
-
-                    // create new list
-                    if (!mCanAddList)
-                        validateOnCreateList(newList, layout);
-
-                    return true;
-                }
-                return false;
-            }
-        });
-
-        newList.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                Log.d(TAG, "Focus Changed");
-
-                if (hasFocus) {
-                    Log.d(TAG, "newList has focus");
-                    showKeyboard(v);
-                }
-                else {
-                    Log.d(TAG, "NO FOCUS");
-                    //if the new list has not already been added
-                    if (!mCanAddList)
-                        validateOnCreateList(newList, layout);
-
-                    hideKeyboard(v);
-                }
-            }
-        });
+//        // TODO: Move to getView()
+//        newList.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+//            @Override
+//            public void onFocusChange(View v, boolean hasFocus) {
+//                Log.d(TAG, "Focus Changed");
+//
+//                if (hasFocus) {
+//                    Log.d(TAG, "newList has focus");
+//                    showKeyboard(v);
+//                }
+//                else {
+//                    Log.d(TAG, "NO FOCUS");
+//                    //if the new list has not already been added
+//                    if (!mCanAddList)
+//                        validateOnCreateList(newList, layout);
+//
+//                    hideKeyboard(v);
+//                }
+//            }
+//        });
     }
 
-    // handles list creation and validation so that different listeners can use it
-    public void validateOnCreateList(EditText newList, LinearLayout layout) {
-        setCanAddList(true);
-
-        String newListName = newList.getText().toString();
-        layout.removeView(newList);
-
-        if (validateListName(newListName)) {
-            //createList(newListName, new ArrayList<String>());
-        }
+    public void listSettings(View v) {
+        SyncListsList list = (SyncListsList) v.getTag();
+        Toast.makeText(this, "You clicked " + list.getName() + " with id " + list.getId(),
+                Toast.LENGTH_SHORT).show();
     }
 
-    private boolean validateListName(String newListName) {
-        return newListName != null && !newListName.equals("") && !newListName.matches("^\\s*$");
+    public void onListClick(View v) {
+        SyncListsList list = (SyncListsList) v.getTag();
+        Intent tasksIntent = new Intent(this, ListsActivity.class);
+        tasksIntent.putExtra("listId", list.getId());
+        startActivity(tasksIntent);
     }
 
     private void setCanAddList(boolean canAddList) {
@@ -161,22 +117,26 @@ public class ListsActivity extends Activity {
 
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.sync_lists_lists, menu);
+
+
         return true;
     }
 
-    private void setEditTextFocus(EditText editText, boolean isFocused){
-        editText.setCursorVisible(isFocused);
-        editText.setFocusable(isFocused);
-        editText.setFocusableInTouchMode(isFocused);
-
-        if (isFocused){
-            editText.requestFocus();
-            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.showSoftInput(editText, InputMethodManager.SHOW_FORCED);
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle presses on the action bar items
+        switch (item.getItemId()) {
+            case R.id.settings:
+                Intent settings = new Intent(this, SettingsActivity.class);
+                startActivity(settings);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 
-    private void showKeyboard(View v) {
+
+    private void showKeyboard() {
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 
         if(imm != null){

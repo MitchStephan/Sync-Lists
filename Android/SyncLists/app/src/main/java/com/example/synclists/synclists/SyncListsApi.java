@@ -3,17 +3,19 @@ package com.example.synclists.synclists;
 import android.app.Activity;
 import android.content.SharedPreferences;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import android.preference.PreferenceManager;
-import android.content.SharedPreferences;
 
 /**
  * Created by SirChickenHair on 10/26/14.
  */
 public class SyncListsApi {
 
-    protected final static String USER_CONTEXT = "USER_CONTEXT";
+    protected final static String USER_CONTEXT = "USER-CONTEXT";
 
     protected static void login(Activity activity, String email, String password) {
         Map<String, Object> json = new HashMap<String, Object>();
@@ -35,5 +37,44 @@ public class SyncListsApi {
                 SyncListsRequest.SyncListsRequestMethod.POST, "user", json);
 
         new SyncListsCreateUserAsyncTask(activity).execute(request);
+    }
+
+    protected static void createList(Activity activity, String name) {
+        Map<String, Object> json = new HashMap<String, Object>();
+        json.put("name", name);
+
+        SyncListsRequest request = new SyncListsRequest(
+                SyncListsRequest.SyncListsRequestMethod.POST, "lists", json);
+
+        new SyncListsCreateListAsyncTask(activity).execute(request);
+    }
+
+    protected static void getLists(SyncListsRequestAsyncTaskCallback callback) {
+        SyncListsRequest request = new SyncListsRequest(
+                SyncListsRequest.SyncListsRequestMethod.GET, "user/lists");
+
+        new SyncListsGetListsAsyncTask(callback).execute(request);
+    }
+
+    protected static ArrayList<SyncListsList> parseLists(String json) throws Exception {
+        ArrayList<SyncListsList> lists = new ArrayList<SyncListsList>();
+        JSONArray jsonArray = new JSONArray(json);
+
+        for(int i = 0; i < jsonArray.length(); i++) {
+            JSONObject jsonObject = jsonArray.getJSONObject(i);
+            JSONObject fields = jsonObject.getJSONObject("fields");
+
+            //should handle Integer.parseInt in case error
+            SyncListsList list = new SyncListsList(Integer.parseInt(jsonObject.get("pk").toString()), fields.get("name").toString());
+            lists.add(list);
+        }
+
+        return lists;
+    }
+
+    protected static void logout() {
+        SharedPreferences.Editor editor = SyncListsLogin.getPreferencesEditor();
+        editor.remove(USER_CONTEXT);
+        editor.commit();
     }
 }
