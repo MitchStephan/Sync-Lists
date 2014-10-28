@@ -17,8 +17,8 @@ import java.util.ArrayList;
  */
 public class SyncListsGetListsAsyncTask extends SyncListsRequestAsyncTask {
 
-    public SyncListsGetListsAsyncTask(Activity activity) {
-        super(activity);
+    public SyncListsGetListsAsyncTask(SyncListsRequestAsyncTaskCallback callback) {
+        super(callback);
     }
 
     protected void onPostExecute(SyncListsResponse result) {
@@ -30,31 +30,10 @@ public class SyncListsGetListsAsyncTask extends SyncListsRequestAsyncTask {
         Log.d("SyncLists", "Status code " + result.getHttpResponse().getStatusLine().getStatusCode());
 
         if(true || result.getHttpResponse().getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
-            Toast.makeText(mActivity, "You did it",
-                    Toast.LENGTH_SHORT).show();
-
-            ArrayList<SyncListsList> lists = new ArrayList<SyncListsList>();
-            try {
-                JSONArray jsonArray = new JSONArray(result.getBody());
-
-                for(int i = 0; i < jsonArray.length(); i++) {
-                    JSONObject jsonObject = jsonArray.getJSONObject(i);
-                    JSONObject fields = jsonObject.getJSONObject("fields");
-
-                    //should handle Integer.parseInt in case error
-                    SyncListsList list = new SyncListsList(Integer.parseInt(jsonObject.get("pk").toString()), fields.get("name").toString());
-                    lists.add(list);
-                }
-
-                ((ListsActivity) mActivity).populateLists(lists);
-                return;
-            }
-            catch(Exception e) {
-                //if exception parsing json, then error loggin in
-            }
+            mSyncListsRequestAsyncTaskCallback.onTaskComplete(result);
         }
-
-        Toast.makeText(mActivity, "Error retrieving lists",
-                Toast.LENGTH_SHORT).show();
+        else {
+            mSyncListsRequestAsyncTaskCallback.onTaskComplete(null);
+        }
     }
 }

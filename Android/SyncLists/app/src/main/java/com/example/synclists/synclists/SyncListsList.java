@@ -21,4 +21,5 @@ public class SyncListsList {
     public String getName() {
         return mName;
     }
+
 }

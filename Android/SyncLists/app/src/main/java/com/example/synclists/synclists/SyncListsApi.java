@@ -2,6 +2,10 @@ package com.example.synclists.synclists;
 
 import android.app.Activity;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -44,10 +48,26 @@ public class SyncListsApi {
         new SyncListsCreateListAsyncTask(activity).execute(request);
     }
 
-    protected static void getLists(Activity activity) {
+    protected static void getLists(SyncListsRequestAsyncTaskCallback callback) {
         SyncListsRequest request = new SyncListsRequest(
                 SyncListsRequest.SyncListsRequestMethod.GET, "user/lists");
 
-        new SyncListsGetListsAsyncTask(activity).execute(request);
+        new SyncListsGetListsAsyncTask(callback).execute(request);
+    }
+
+    protected static ArrayList<SyncListsList> parseLists(String json) throws Exception {
+        ArrayList<SyncListsList> lists = new ArrayList<SyncListsList>();
+        JSONArray jsonArray = new JSONArray(json);
+
+        for(int i = 0; i < jsonArray.length(); i++) {
+            JSONObject jsonObject = jsonArray.getJSONObject(i);
+            JSONObject fields = jsonObject.getJSONObject("fields");
+
+            //should handle Integer.parseInt in case error
+            SyncListsList list = new SyncListsList(Integer.parseInt(jsonObject.get("pk").toString()), fields.get("name").toString());
+            lists.add(list);
+        }
+
+        return lists;
     }
 }

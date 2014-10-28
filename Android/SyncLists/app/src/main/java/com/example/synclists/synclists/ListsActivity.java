@@ -36,7 +36,30 @@ public class ListsActivity extends Activity {
 
         mCanAddList = true;
 
-        SyncListsApi.getLists(this);
+        final Context context = this;
+        SyncListsApi.getLists(new SyncListsRequestAsyncTaskCallback() {
+            @Override
+            public void onTaskComplete(SyncListsResponse syncListsResponse) {
+                if(syncListsResponse == null) {
+                    Toast.makeText(context, "Error retrieving lists",
+                            Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    try {
+                        mLists = SyncListsApi.parseLists(syncListsResponse.getBody());
+
+                        mAdapter = new ListArrayAdapter(context, R.layout.lists_list_view, mLists);
+
+                        ListView lv = (ListView) findViewById(R.id.listsListView);
+                        lv.setAdapter(mAdapter);
+                    }
+                    catch(Exception e) {
+                        Toast.makeText(context, "Error retrieving lists",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+        });
     }
 
 
