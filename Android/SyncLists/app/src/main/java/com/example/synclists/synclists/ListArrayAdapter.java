@@ -46,6 +46,7 @@ public class ListArrayAdapter extends ArrayAdapter<SyncListsList> {
 
         holder.listsListViewText = (TextView)row.findViewById(R.id.listsListViewText);
         holder.listsListViewText.setText(holder.list.getName());
+        holder.listsListViewText.setTag(holder.list);
 
         row.setTag(holder);
 

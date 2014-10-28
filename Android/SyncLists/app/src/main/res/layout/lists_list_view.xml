@@ -6,14 +6,17 @@
 
     <TextView xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/listsListViewText"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:textAppearance="?android:attr/textAppearanceListItemSmall"
         android:paddingStart="?android:attr/listPreferredItemPaddingStart"
         android:paddingEnd="?android:attr/listPreferredItemPaddingEnd"
         android:minHeight="?android:attr/listPreferredItemHeightSmall"
-        />
+        android:onClick="onListClick"
+        android:clickable="true"
+        android:textColor="@color/selector_txt"
+        android:background="@color/selector_background_txt"/>
 
     <ImageButton
         android:id="@+id/listsListViewSettingsButton"

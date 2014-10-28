@@ -4,6 +4,7 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.app.ListActivity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -128,6 +129,13 @@ public class ListsActivity extends Activity {
         SyncListsList list = (SyncListsList) v.getTag();
         Toast.makeText(this, "You clicked " + list.getName() + " with id " + list.getId(),
                 Toast.LENGTH_SHORT).show();
+    }
+
+    public void onListClick(View v) {
+        SyncListsList list = (SyncListsList) v.getTag();
+        Intent tasksIntent = new Intent(this, ListsActivity.class);
+        tasksIntent.putExtra("listId", list.getId());
+        startActivity(tasksIntent);
     }
 
     // handles list creation and validation so that different listeners can use it
