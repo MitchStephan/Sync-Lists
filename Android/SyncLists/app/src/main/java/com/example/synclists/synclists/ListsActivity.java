@@ -34,15 +34,9 @@ public class ListsActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sync_lists_lists);
 
-        mLists = new ArrayList<SyncListsList>();
         mCanAddList = true;
 
-        populateLists();
-
-        mAdapter = new ListArrayAdapter(this, R.layout.lists_list_view, mLists);
-
-        ListView lv = (ListView) findViewById(R.id.listsListView);
-        lv.setAdapter(mAdapter);
+        SyncListsApi.getLists(this);
     }
 
 
@@ -52,11 +46,14 @@ public class ListsActivity extends Activity {
 //    }
 
 
-    private void populateLists() {
-        // get list from API class?
+    protected void populateLists(ArrayList<SyncListsList> lists) {
+        mLists = lists;
+        mAdapter = new ListArrayAdapter(this, R.layout.lists_list_view, mLists);
 
-        mLists.add(new SyncListsList(1, "List 1"));
-        mLists.add(new SyncListsList(2, "List 2"));
+        mAdapter = new ListArrayAdapter(this, R.layout.lists_list_view, mLists);
+
+        ListView lv = (ListView) findViewById(R.id.listsListView);
+        lv.setAdapter(mAdapter);
     }
 
     public void addList(MenuItem item) {

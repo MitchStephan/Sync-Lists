@@ -43,4 +43,11 @@ public class SyncListsApi {
 
         new SyncListsCreateListAsyncTask(activity).execute(request);
     }
+
+    protected static void getLists(Activity activity) {
+        SyncListsRequest request = new SyncListsRequest(
+                SyncListsRequest.SyncListsRequestMethod.GET, "user/lists");
+
+        new SyncListsGetListsAsyncTask(activity).execute(request);
+    }
 }
