@@ -1,6 +1,7 @@
 package com.example.synclists.synclists;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -69,5 +70,11 @@ public class SyncListsApi {
         }
 
         return lists;
+    }
+
+    protected static void logout() {
+        SharedPreferences.Editor editor = SyncListsMain.getPreferencesEditor();
+        editor.remove(USER_CONTEXT);
+        editor.commit();
     }
 }
