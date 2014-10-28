@@ -10,12 +10,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -62,16 +59,6 @@ public class ListsActivity extends Activity {
         });
     }
 
-    protected void populateLists(ArrayList<SyncListsList> lists) {
-        mLists = lists;
-        mAdapter = new ListArrayAdapter(this, R.layout.lists_list_view, mLists);
-
-        mAdapter = new ListArrayAdapter(this, R.layout.lists_list_view, mLists);
-
-        ListView lv = (ListView) findViewById(R.id.listsListView);
-        lv.setAdapter(mAdapter);
-    }
-
     public void addList(MenuItem item) {
 //        setCanAddList(false);
         mLists.add(new SyncListsList(-1, "", true));
@@ -111,22 +98,6 @@ public class ListsActivity extends Activity {
         Intent tasksIntent = new Intent(this, ListsActivity.class);
         tasksIntent.putExtra("listId", list.getId());
         startActivity(tasksIntent);
-    }
-
-    // handles list creation and validation so that different listeners can use it
-    public void validateOnCreateList(EditText newList, LinearLayout layout) {
-        setCanAddList(true);
-
-        String newListName = newList.getText().toString();
-        layout.removeView(newList);
-
-        if (validateListName(newListName)) {
-            //createList(newListName, new ArrayList<String>());
-        }
-    }
-
-    private boolean validateListName(String newListName) {
-        return newListName != null && !newListName.equals("") && !newListName.matches("^\\s*$");
     }
 
     private void setCanAddList(boolean canAddList) {

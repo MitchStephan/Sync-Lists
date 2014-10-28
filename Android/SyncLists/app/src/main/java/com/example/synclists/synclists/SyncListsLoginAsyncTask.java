@@ -34,7 +34,7 @@ public class SyncListsLoginAsyncTask extends SyncListsRequestAsyncTask {
                 JSONObject jsonObject = new JSONObject(result.getBody());
 
                 //Write out user_context
-                SharedPreferences.Editor editor = SyncListsMain.getPreferencesEditor();
+                SharedPreferences.Editor editor = SyncListsLogin.getPreferencesEditor();
                 editor.putInt(SyncListsApi.USER_CONTEXT, jsonObject.getInt("pk"));
                 editor.commit();
 

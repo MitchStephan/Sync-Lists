@@ -10,7 +10,7 @@ import android.view.View;
 import android.widget.EditText;
 
 
-public class SyncListsMain extends Activity {
+public class SyncListsLogin extends Activity {
 
     private EditText mEmail = null;
     private EditText mPassword = null;
@@ -61,6 +61,6 @@ public class SyncListsMain extends Activity {
     }
 
     protected static SharedPreferences.Editor getPreferencesEditor() {
-        return SyncListsMain.mPrefs.edit();
+        return SyncListsLogin.mPrefs.edit();
     }
 }

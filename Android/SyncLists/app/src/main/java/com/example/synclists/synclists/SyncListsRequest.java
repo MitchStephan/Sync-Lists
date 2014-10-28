@@ -1,25 +1,16 @@
 package com.example.synclists.synclists;
 
 import org.apache.http.HttpRequest;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
 
-import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -95,7 +86,7 @@ public class SyncListsRequest {
         request.setHeader("Content-Type", CONTENT_TYPE);
 
         // add user-context header if set in Preferences
-        int userContext = SyncListsMain.mPrefs.getInt(SyncListsApi.USER_CONTEXT, -1);
+        int userContext = SyncListsLogin.mPrefs.getInt(SyncListsApi.USER_CONTEXT, -1);
         if(userContext != -1) {
             request.setHeader("User-Context", Integer.toString(userContext));
         }

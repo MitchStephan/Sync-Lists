@@ -3,7 +3,6 @@ package com.example.synclists.synclists;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.util.Log;
 import android.widget.Toast;
 
 import org.apache.http.HttpStatus;
@@ -26,7 +25,7 @@ public class SyncListsCreateUserAsyncTask extends SyncListsRequestAsyncTask  {
                 JSONObject jsonObject = new JSONObject(result.getBody());
 
                 //Write out user-context
-                SharedPreferences.Editor editor = SyncListsMain.getPreferencesEditor();
+                SharedPreferences.Editor editor = SyncListsLogin.getPreferencesEditor();
                 editor.putInt(SyncListsApi.USER_CONTEXT, jsonObject.getInt("pk"));
                 editor.commit();
 

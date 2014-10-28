@@ -1,18 +1,12 @@
 package com.example.synclists.synclists;
 
 import android.app.Activity;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.media.Image;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ListView;
 import android.widget.Toast;
-
-import java.util.ArrayList;
 
 /**
  * Created by ethan on 10/27/14.
@@ -37,7 +31,7 @@ public class SettingsActivity extends Activity{
     public void addLogoutListner() {
 
         mLogoutButton = (ImageButton) findViewById(R.id.logoutButton);
-        final Intent logout = new Intent(this, SyncListsMain.class);
+        final Intent logout = new Intent(this, SyncListsLogin.class);
 
         mLogoutButton.setOnClickListener(new View.OnClickListener() {
 
