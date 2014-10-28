@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import java.util.List;
@@ -33,24 +34,23 @@ public class TaskListAdapter extends ArrayAdapter<Task> {
         TaskHolder holder = null;
 
         LayoutInflater inflater = ((Activity) context).getLayoutInflater();
-        row = inflater.inflate(layoutResourceID,parent, false);
+        row = inflater.inflate(layoutResourceID, parent, false);
 
         holder = new TaskHolder();
         holder.task = taskList.get(position);
-        holder.settingsButton = (Button)row.findViewById(R.id.task_settings);
-        holder.settingsButton.setTag(holder.task);
+        holder.taskSettingsButton = (ImageButton)row.findViewById(R.id.task_settings);
+        holder.taskSettingsButton.setTag(holder.task);
 
+        holder.taskText = (TextView)row.findViewById(R.id.task_name);
+        holder.taskText.setText(holder.task.getName());
         row.setTag(holder);
 
-        holder.name.setText(holder.task.getName());
         return row;
     }
 
     public static class TaskHolder {
         Task task;
-        TextView name;
-        Button settingsButton;
-
+        TextView taskText;
+        ImageButton taskSettingsButton;
     }
-
 }
