@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -32,6 +33,8 @@ public class ListsActivity extends Activity {
         setContentView(R.layout.activity_sync_lists_lists);
 
         mCanAddList = true;
+        mLists = new ArrayList<SyncListsList>();
+        mAdapter = new ListArrayAdapter(this, R.layout.lists_list_view, mLists);
 
         final Context context = this;
         SyncListsApi.getLists(new SyncListsRequestAsyncTaskCallback() {
