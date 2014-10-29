@@ -1,11 +1,9 @@
 package com.example.synclists.synclists;
 
-import java.io.Serializable;
-
 /**
  * Created by ethan on 10/27/14.
  */
-public class Task implements Serializable {
+public class Task {
     private String name = "";
     private int id;
     private boolean mIsTaskEdit;
