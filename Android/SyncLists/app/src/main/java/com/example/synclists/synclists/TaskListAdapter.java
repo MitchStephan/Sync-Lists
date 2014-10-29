@@ -6,6 +6,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -75,28 +76,35 @@ public class TaskListAdapter extends ArrayAdapter<Task> {
                         (keyCode == KeyEvent.KEYCODE_ENTER)) {
 
                     String newTaskName = edit.getText().toString();
-                    taskList.remove(position);
-
                     validateOnCreate(newTaskName, position);
                     return true;
                 }
                 return false;
             }
         });
+
         return row;
     }
 
     private void validateOnCreate(String newTaskName, int position) {
         if (validName(newTaskName)) {
-            Toast.makeText(context, "Validate true",
-                    Toast.LENGTH_SHORT).show();
-            taskList.add(position, new Task(newTaskName, -1, true));
+            taskList.remove(position);
+            taskList.add(position, new Task(newTaskName, -1));
             notifyDataSetChanged();
+            hideKeyboard();
         }
     }
 
     private boolean validName(String newTaskName) {
         return newTaskName != null && !newTaskName.equals("") && !newTaskName.matches("^\\s*$");
+    }
+
+    private void hideKeyboard() {
+        InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+
+        if(imm != null){
+            imm.toggleSoftInput(0, InputMethodManager.HIDE_IMPLICIT_ONLY);
+        }
     }
 
     public static class TaskHolder {

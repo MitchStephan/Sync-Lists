@@ -11,6 +11,11 @@ public class Task implements Serializable {
     private boolean mIsTaskEdit;
     private boolean completed = false;
 
+    public Task(String name, int id)
+    {
+        this(name, id, false);
+    }
+
     public Task(String name, int id, boolean isTaskEdit) {
         this.name = name;
         this.id = id;
