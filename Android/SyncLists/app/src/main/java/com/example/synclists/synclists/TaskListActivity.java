@@ -12,8 +12,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -97,6 +95,24 @@ public class TaskListActivity extends Activity {
         }
     }
 
+    public void onClickDeleteEditTask(View v) {
+        final Task task = (Task) v.getTag();
+
+        int position = mTaskAdapter.getPosition(task);
+        mTaskList.remove(position);
+        mTaskAdapter.notifyDataSetChanged();
+        hideKeyboard();
+    }
+
+    private void hideKeyboard() {
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+
+        if(imm != null){
+            imm.toggleSoftInput(0, InputMethodManager.HIDE_IMPLICIT_ONLY);
+        }
+    }
+
+
     private void showKeyboard() {
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 
@@ -112,18 +128,18 @@ public class TaskListActivity extends Activity {
     }
 
     public void addTask(MenuItem item) {
-        if (!isLastElementEdit())
+        if (!isElementEdit(mTaskList.size()-1))
         {
-            showKeyboard();
+            if (item != null) {
+                showKeyboard();
+            }
             final Task task = new Task(-1, "", true);
             mTaskList.add(task);
             mTaskAdapter.notifyDataSetChanged();
         }
     }
 
-    private boolean isLastElementEdit() {
-        int last = mTaskList.size()-1;
-        return last > -1 && mTaskList.get(last).getIsTaskEdit();
-
+    private boolean isElementEdit(int position) {
+        return position > -1 && mTaskList.get(position).getIsTaskEdit();
     }
 }

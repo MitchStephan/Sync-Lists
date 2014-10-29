@@ -2,6 +2,7 @@ package com.example.synclists.synclists;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Typeface;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -70,6 +71,14 @@ public class TaskListAdapter extends ArrayAdapter<Task> {
 
     private View getEditView(final int position, ViewGroup parent, final Task task, LayoutInflater inflater) {
         View row = inflater.inflate(R.layout.tasks_edit_view, parent, false);
+
+        //set typeface for button
+        Typeface font = Typeface.createFromAsset( mContext.getAssets(), "fontawesome-webfont.ttf" );
+        Button button = (Button)row.findViewById( R.id.taskEditDeleteButton );
+        button.setTypeface(font);
+        button.setTag(task);
+
+
         final EditText edit = (EditText)row.findViewById(R.id.tasksEditText);
         edit.setText(task.getName());
         edit.requestFocus();
@@ -122,10 +131,13 @@ public class TaskListAdapter extends ArrayAdapter<Task> {
                     }
                 }
             }, mListId, newTaskName);
-
+            ((TaskListActivity)mContext).addTask(null);
         }
-        hideKeyboard();
+        else {
+            hideKeyboard();
+        }
         notifyDataSetChanged();
+
     }
 
     private boolean validName(String newTaskName) {
