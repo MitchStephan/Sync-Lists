@@ -8,12 +8,12 @@ public class Task {
     private int mId;
     private boolean mIsTaskEdit;
 
-    public Task(String name, int id)
+    public Task(int id, String name)
     {
-        this(name, id, false);
+        this(id, name, false);
     }
 
-    public Task(String name, int id, boolean isTaskEdit) {
+    public Task(int id, String name, boolean isTaskEdit) {
         mName = name;
         mId = id;
         mIsTaskEdit = isTaskEdit;

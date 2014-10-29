@@ -85,7 +85,7 @@ public class TaskListActivity extends Activity {
         if (!isLastElementEdit())
         {
             showKeyboard();
-            mTaskList.add(new Task("", -1, true));
+            mTaskList.add(new Task(-1, "", true));
             mTaskAdapter.notifyDataSetChanged();
         }
     }
