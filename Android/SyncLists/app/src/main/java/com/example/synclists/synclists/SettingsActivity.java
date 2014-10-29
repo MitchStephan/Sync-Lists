@@ -1,11 +1,15 @@
 package com.example.synclists.synclists;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -15,16 +19,45 @@ import org.w3c.dom.Text;
  * Created by ethan on 10/27/14.
  */
 public class SettingsActivity extends Activity{
-    protected static SharedPreferences mPrefs;
-    TextView mLogoutButton;
-    TextView mInstructionsButton;
-    TextView mChangePasswordButton;
-    TextView mSyncButton;
+
+    private ArrayAdapter mSettingsAdapter;
+    private final String CHANGE_PASSWORD = "Change Password";
+    private final String SYNC_EVERY = "Sync Every...";
+    private final String INSTRUCTIONS = "Instructions";
+    private final String LOGOUT = "Logout";
+    private final String[] M_SETTINGS = new String[] { CHANGE_PASSWORD, SYNC_EVERY, INSTRUCTIONS, LOGOUT };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.settings_view);
+        setContentView(R.layout.activity_sync_list_setting);
+
+        mSettingsAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, M_SETTINGS);
+
+        final ListView settingsListView = (ListView) findViewById(R.id.settingsListView);
+        settingsListView.setAdapter(mSettingsAdapter);
+
+        final Context context = this;
+        settingsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String settingTitle = M_SETTINGS[position];
+                if(settingTitle.equals(CHANGE_PASSWORD)) {
+                    onChangePasswordClicked(view);
+                }
+                else if(settingTitle.equals(SYNC_EVERY)) {
+                    onSyncEveryClicked(view);
+                }
+                else if(settingTitle.equals(INSTRUCTIONS)) {
+                    onInstructionsClicked(view);
+                }
+                else if(settingTitle.equals(LOGOUT)) {
+                    onLogoutClicked(view);
+                }
+                else {
+                    //silence is golden
+                }
+            }
+        });
     }
 
     public void onLogoutClicked(View v) {

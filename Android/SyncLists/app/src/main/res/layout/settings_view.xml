@@ -4,7 +4,7 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical">
@@ -20,7 +20,16 @@
             android:clickable="true"
             android:textColor="@color/selector_txt"
             android:background="@color/selector_background_txt"/>
-        </LinearLayout>
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dip"
+            android:background="#FFF"
+            android:layout_marginTop="5dp"
+            android:layout_below="@id/changePassword"/>
+
+        </RelativeLayout>
+
 
     <LinearLayout
         android:layout_width="fill_parent"
@@ -40,6 +49,12 @@
             android:background="@color/selector_background_txt"/>
     </LinearLayout>
 
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dip"
+        android:background="#FFF"
+        android:layout_marginTop="5dp"/>
+
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -58,6 +73,12 @@
             android:background="@color/selector_background_txt"/>
     </LinearLayout>
 
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dip"
+        android:background="#FFF"
+        android:layout_marginTop="5dp"/>
+
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -66,7 +87,7 @@
         <TextView
             android:id="@+id/logout"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="fill_parent"
             android:text="@string/logout"
             android:layout_gravity="bottom"
             android:textSize="30sp"
@@ -75,5 +96,11 @@
             android:textColor="@color/selector_txt"
             android:background="@color/selector_background_txt"/>
     </LinearLayout>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dip"
+        android:background="#FFF"
+        android:layout_marginTop="5dp"/>
 
 </LinearLayout>
