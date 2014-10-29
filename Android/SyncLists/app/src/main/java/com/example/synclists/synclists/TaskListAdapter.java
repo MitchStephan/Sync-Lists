@@ -2,6 +2,7 @@ package com.example.synclists.synclists;
 
 import android.app.Activity;
 import android.content.Context;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,8 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONObject;
+
 import java.util.List;
 
 /**
@@ -24,12 +27,14 @@ public class TaskListAdapter extends ArrayAdapter<Task> {
     private List<Task> taskList;
     private int layoutResourceID;
     private Context context;
+    private int mListId;
 
-    public TaskListAdapter(Context context, int layoutResourceID, List<Task> taskList) {
+    public TaskListAdapter(Context context, int layoutResourceID, List<Task> taskList, int listId) {
         super(context, layoutResourceID, taskList);
         this.layoutResourceID = layoutResourceID;
         this.context = context;
         this.taskList = taskList;
+        mListId = listId;
     }
 
     @Override
@@ -89,7 +94,35 @@ public class TaskListAdapter extends ArrayAdapter<Task> {
     private void validateOnCreate(String newTaskName, int position) {
         taskList.remove(position);
         if (validName(newTaskName)) {
-            taskList.add(position, new Task(newTaskName, -1));
+            final Task task = new Task(-1, newTaskName);
+            taskList.add(position, task);
+
+            //create task with api
+            SyncListsApi.createTask(new SyncListsRequestAsyncTaskCallback() {
+                @Override
+                public void onTaskComplete(SyncListsResponse syncListsResponse) {
+
+                    Log.d("SL", "Returned from creating task");
+                    if (syncListsResponse == null) {
+                        Log.d("SL", "Error creating task");
+                        Toast.makeText(context, "Error creating task",
+                                Toast.LENGTH_SHORT).show();
+
+                        if(taskList.size() > 0)
+                            taskList.remove(taskList.size() - 1);
+                    }
+                    else {
+                        try {
+                            JSONObject jsonObject = new JSONObject(syncListsResponse.getBody());
+                            task.setId(jsonObject.getInt("pk"));
+                            Log.d("SL", "Success creating task " + task.getId());
+                        } catch (Exception e) {
+
+                        }
+                    }
+                }
+            }, mListId, "task name");
+
         }
         hideKeyboard();
         notifyDataSetChanged();

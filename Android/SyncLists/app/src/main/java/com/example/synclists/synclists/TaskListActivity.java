@@ -12,6 +12,8 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +23,7 @@ import java.util.List;
 public class TaskListActivity extends Activity {
     private List<Task> mTaskList;
     private TaskListAdapter mTaskAdapter;
+    private int mListId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,9 +32,17 @@ public class TaskListActivity extends Activity {
 
         mTaskList = new ArrayList<Task>();
 
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            mListId = extras.getInt("listId");
+        }
+        else {
+            finish(); // we can't run Task activity without a list id!
+        }
+
         populateExampleTasks();
 
-        mTaskAdapter = new TaskListAdapter(this, R.layout.tasks_view, mTaskList);
+        mTaskAdapter = new TaskListAdapter(this, R.layout.tasks_view, mTaskList, mListId);
 
         ListView lv = (ListView) findViewById(R.id.tasks_view_wrapper);
         lv.setAdapter(mTaskAdapter);
@@ -85,7 +96,8 @@ public class TaskListActivity extends Activity {
         if (!isLastElementEdit())
         {
             showKeyboard();
-            mTaskList.add(new Task(-1, "", true));
+            final Task task = new Task(-1, "", true);
+            mTaskList.add(task);
             mTaskAdapter.notifyDataSetChanged();
         }
     }

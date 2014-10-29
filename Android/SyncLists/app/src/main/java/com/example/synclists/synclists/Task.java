@@ -23,5 +23,9 @@ public class Task {
 
     public int getId() { return mId; }
 
+    public void setId(int id) {
+        mId = id;
+    }
+
     public boolean getIsTaskEdit() { return mIsTaskEdit; }
 }

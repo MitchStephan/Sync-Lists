@@ -2,6 +2,7 @@ package com.example.synclists.synclists;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -47,6 +48,17 @@ public class SyncListsApi {
                 SyncListsRequest.SyncListsRequestMethod.POST, "lists", json);
 
         new SyncListsCreateListAsyncTask(callback).execute(request);
+    }
+
+    protected static void createTask(SyncListsRequestAsyncTaskCallback callback, int listId, String name) {
+        Map<String, Object> json = new HashMap<String, Object>();
+        json.put("name", name);
+
+        Log.d("SL", "Making createTask request");
+        SyncListsRequest request = new SyncListsRequest(
+                SyncListsRequest.SyncListsRequestMethod.POST, "lists/" + listId + "/tasks", json);
+
+        new SyncListsCreateTaskAsyncTask(callback).execute(request);
     }
 
     protected static void getLists(SyncListsRequestAsyncTaskCallback callback) {
