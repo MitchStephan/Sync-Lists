@@ -14,7 +14,8 @@
         android:hint="@string/newListName"
         android:textAppearance="?android:attr/textAppearanceListItemSmall"
         android:minHeight="?android:attr/listPreferredItemHeightSmall"
-        android:maxLength="100"/>
+        android:maxLength="100"
+        android:inputType="text"/>
 
 
     <Button
