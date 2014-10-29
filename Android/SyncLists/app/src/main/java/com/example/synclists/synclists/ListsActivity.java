@@ -3,12 +3,14 @@ package com.example.synclists.synclists;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -28,7 +30,6 @@ public class ListsActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sync_lists_lists);
-
 
         mCanAddList = true;
 
@@ -98,6 +99,39 @@ public class ListsActivity extends Activity {
         inflater.inflate(R.menu.sync_lists_lists, menu);
 
         return true;
+    }
+
+    public void onClickDeleteList(View v) {
+        final SyncListsList list = (SyncListsList) v.getTag();
+        final Context context = this;
+
+        SyncListsApi.deleteList(new SyncListsRequestAsyncTaskCallback() {
+            @Override
+            public void onTaskComplete(SyncListsResponse syncListsResponse) {
+                if(syncListsResponse == null) {
+                    Toast.makeText(context, "Error deleting list " + list.getName(),
+                            Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    Toast.makeText(context, "List " + list.getName() + " successfully deleted",
+                            Toast.LENGTH_SHORT).show();
+                    deleteListFromView(list);
+                }
+            }
+        }, list.getId());
+    }
+
+    private void deleteListFromView(SyncListsList list) {
+        int i = 0;
+        for(; i < mLists.size(); i++) {
+            if(mLists.get(i).getId() == list.getId())
+                break;
+        }
+
+        if(i < mLists.size()) {
+            mLists.remove(i);
+            mAdapter.notifyDataSetChanged();
+        }
     }
 
     @Override

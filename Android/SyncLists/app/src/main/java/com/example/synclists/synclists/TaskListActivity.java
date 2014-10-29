@@ -39,8 +39,8 @@ public class TaskListActivity extends Activity {
 
     public void populateExampleTasks() {
 
-//        mTaskList.add(new Task("Task 1", 1));
-//        mTaskList.add(new Task("Task 2", 2));
+//        mTaskList.add(new Task("Task 1", 1, true));
+//        mTaskList.add(new Task("Task 2", 2, true));
     }
 
     @Override
@@ -93,6 +93,6 @@ public class TaskListActivity extends Activity {
     private boolean isLastElementEdit() {
         int last = mTaskList.size()-1;
         return last > -1 && mTaskList.get(last).getIsTaskEdit();
-    }
 
+    }
 }

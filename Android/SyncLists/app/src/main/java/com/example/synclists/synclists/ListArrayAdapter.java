@@ -3,6 +3,7 @@ package com.example.synclists.synclists;
 import android.app.Activity;
 import android.app.ListActivity;
 import android.content.Context;
+import android.graphics.Typeface;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -11,9 +12,14 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import org.json.JSONObject;
 
 import java.util.List;
 
@@ -55,6 +61,14 @@ public class ListArrayAdapter extends ArrayAdapter<SyncListsList> {
         View row = inflater.inflate(R.layout.lists_list_view, parent, false);
         ListRowHolder holder = new ListRowHolder();
         holder.list = list;
+
+        //set typeface for button
+        Typeface font = Typeface.createFromAsset( mContext.getAssets(), "fontawesome-webfont.ttf" );
+        Button button = (Button)row.findViewById( R.id.listDeleteButton );
+        button.setTypeface(font);
+        holder.listsListDeleteButton = button;
+        button.setTag(holder.list);
+
         holder.listsListViewSettingsButton = (ImageButton)row.findViewById(R.id.listsListViewSettingsButton);
         holder.listsListViewSettingsButton.setTag(holder.list);
 
@@ -108,12 +122,35 @@ public class ListArrayAdapter extends ArrayAdapter<SyncListsList> {
         return row;
     }
 
-    private void validateOnCreate(String newListName, int position) {
+
+    private void validateOnCreate(String newListName, final int position) {
+        hideKeyboard();
         mItems.remove(position);
         if (validName(newListName)) {
-            mItems.add(position, new SyncListsList(-1, newListName));
+            final SyncListsList list = new SyncListsList(-1, newListName);
+            mItems.add(position, list);
+            notifyDataSetChanged();
+
+            SyncListsApi.createList(new SyncListsRequestAsyncTaskCallback() {
+                @Override
+                public void onTaskComplete(SyncListsResponse syncListsResponse) {
+                    if (syncListsResponse == null) {
+                        Toast.makeText(mContext, "Error creating list",
+                                Toast.LENGTH_SHORT).show();
+                        mItems.remove(position);
+                    }
+                    else {
+                        try {
+                            JSONObject jsonObject = new JSONObject(syncListsResponse.getBody());
+                            list.setId(jsonObject.getInt("pk"));
+                        }
+                        catch(Exception e) {
+
+                        }
+                    }
+                }
+            }, newListName);
         }
-        hideKeyboard();
         notifyDataSetChanged();
     }
 
@@ -150,6 +187,7 @@ public class ListArrayAdapter extends ArrayAdapter<SyncListsList> {
     public static class ListRowHolder {
         SyncListsList list;
         TextView listsListViewText;
+        Button listsListDeleteButton;
         ImageButton listsListViewSettingsButton;
     }
 }

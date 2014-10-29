@@ -39,14 +39,14 @@ public class SyncListsApi {
         new SyncListsCreateUserAsyncTask(activity).execute(request);
     }
 
-    protected static void createList(Activity activity, String name) {
+    protected static void createList(SyncListsRequestAsyncTaskCallback callback, String name) {
         Map<String, Object> json = new HashMap<String, Object>();
         json.put("name", name);
 
         SyncListsRequest request = new SyncListsRequest(
                 SyncListsRequest.SyncListsRequestMethod.POST, "lists", json);
 
-        new SyncListsCreateListAsyncTask(activity).execute(request);
+        new SyncListsCreateListAsyncTask(callback).execute(request);
     }
 
     protected static void getLists(SyncListsRequestAsyncTaskCallback callback) {
@@ -54,6 +54,13 @@ public class SyncListsApi {
                 SyncListsRequest.SyncListsRequestMethod.GET, "user/lists");
 
         new SyncListsGetListsAsyncTask(callback).execute(request);
+    }
+
+    protected static void deleteList(SyncListsRequestAsyncTaskCallback callback, int listId) {
+        SyncListsRequest request = new SyncListsRequest(
+                SyncListsRequest.SyncListsRequestMethod.DELETE, "lists/" + listId);
+
+        new SyncListsDeleteListAsyncTask(callback).execute(request);
     }
 
     protected static ArrayList<SyncListsList> parseLists(String json) throws Exception {

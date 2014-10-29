@@ -19,7 +19,7 @@ public class Task implements Serializable {
     public Task(String name, int id, boolean isTaskEdit) {
         this.name = name;
         this.id = id;
-        this.mIsTaskEdit = isTaskEdit;
+        mIsTaskEdit = isTaskEdit;
     }
 
     public String getName() { return name; }

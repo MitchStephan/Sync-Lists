@@ -9,8 +9,8 @@ import org.json.JSONObject;
 /**
  * Created by Mitch on 10/27/14.
  */
-public class SyncListsCreateListAsyncTask extends SyncListsRequestAsyncTask  {
-    public SyncListsCreateListAsyncTask(SyncListsRequestAsyncTaskCallback callback) {
+public class SyncListsDeleteListAsyncTask extends SyncListsRequestAsyncTask  {
+    public SyncListsDeleteListAsyncTask(SyncListsRequestAsyncTaskCallback callback) {
         super(callback);
     }
 

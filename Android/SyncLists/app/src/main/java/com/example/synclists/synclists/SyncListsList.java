@@ -22,6 +22,10 @@ public class SyncListsList {
         return mId;
     }
 
+    public void setId(int id) {
+        mId = id;
+    }
+
     public String getName() {
         return mName;
     }
