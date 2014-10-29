@@ -6,11 +6,24 @@
 
     <EditText xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/tasksEditText"
-        android:layout_width="match_parent"
+        android:layout_width="fill_parent"
+        android:layout_marginRight="50dp"
         android:layout_height="wrap_content"
         android:hint="New task name"
         android:textAppearance="?android:attr/textAppearanceListItemSmall"
         android:minHeight="?android:attr/listPreferredItemHeightSmall"
         android:maxLength="100"/>
+
+    <Button
+        android:id="@+id/taskEditDeleteButton"
+        android:text="@string/close_x"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_alignParentRight="true"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:textSize="35sp"
+        android:onClick="onClickDeleteEditTask"
+        android:scaleType="fitCenter"
+        android:textColor="#ff0000"/>
 
 </RelativeLayout>

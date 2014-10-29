@@ -107,25 +107,6 @@ public class ListArrayAdapter extends ArrayAdapter<SyncListsList> {
                 return false;
             }
         });
-
-//        edit.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-//            @Override
-//            public void onFocusChange(View v, boolean hasFocus) {
-////                Log.d("Sync Lists", "Focus Changed");
-//
-//                if (hasFocus) {
-//                    Log.d("Sync Lists", "newList has focus");
-////                    showKeyboard();
-//                }
-//                else {
-//                    Log.d("Sync Lists", "NO FOCUS");
-////                        hideKeyboard();
-//                        String newListName = edit.getText().toString();
-//                        validateOnCreate(newListName, position);
-//                }
-//            }
-//        });
-
         return row;
     }
 
@@ -178,16 +159,6 @@ public class ListArrayAdapter extends ArrayAdapter<SyncListsList> {
 
         if(imm != null){
             imm.toggleSoftInput(0, InputMethodManager.HIDE_IMPLICIT_ONLY);
-        }
-    }
-
-    private void setEditTextFocus(EditText editText, boolean isFocused){
-        editText.setCursorVisible(isFocused);
-        editText.setFocusable(isFocused);
-        editText.setFocusableInTouchMode(isFocused);
-
-        if (isFocused){
-            editText.requestFocus();
         }
     }
 
