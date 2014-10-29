@@ -9,7 +9,7 @@
         android:id="@+id/listsListEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="New list name"
+        android:hint="@string/newListName"
         android:textAppearance="?android:attr/textAppearanceListItemSmall"
         android:minHeight="?android:attr/listPreferredItemHeightSmall"
         />
