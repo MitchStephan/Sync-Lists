@@ -58,10 +58,17 @@ public class ListsActivity extends Activity {
     }
 
     public void addList(MenuItem item) {
-        mCanAddList = false;
-        showKeyboard();
-        mLists.add(new SyncListsList(-1, "", true));
-        mAdapter.notifyDataSetChanged();
+        if (!isLastElementEdit())
+        {
+            showKeyboard();
+            mLists.add(new SyncListsList(-1, "", true));
+            mAdapter.notifyDataSetChanged();
+        }
+    }
+
+    private boolean isLastElementEdit() {
+        int last = mLists.size()-1;
+        return last > -1 && mLists.get(last).getIsListEdit();
     }
 
     public void listSettings(View v) {

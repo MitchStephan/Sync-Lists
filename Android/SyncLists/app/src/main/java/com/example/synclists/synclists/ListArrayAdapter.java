@@ -109,12 +109,12 @@ public class ListArrayAdapter extends ArrayAdapter<SyncListsList> {
     }
 
     private void validateOnCreate(String newListName, int position) {
+        mItems.remove(position);
         if (validName(newListName)) {
-            mItems.remove(position);
             mItems.add(position, new SyncListsList(-1, newListName));
-            notifyDataSetChanged();
-            hideKeyboard();
         }
+        hideKeyboard();
+        notifyDataSetChanged();
     }
 
     private boolean validName(String newListName) {

@@ -87,12 +87,12 @@ public class TaskListAdapter extends ArrayAdapter<Task> {
     }
 
     private void validateOnCreate(String newTaskName, int position) {
+        taskList.remove(position);
         if (validName(newTaskName)) {
-            taskList.remove(position);
             taskList.add(position, new Task(newTaskName, -1));
-            notifyDataSetChanged();
-            hideKeyboard();
         }
+        hideKeyboard();
+        notifyDataSetChanged();
     }
 
     private boolean validName(String newTaskName) {

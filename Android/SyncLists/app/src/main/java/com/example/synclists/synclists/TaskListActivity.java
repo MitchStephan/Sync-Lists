@@ -82,9 +82,17 @@ public class TaskListActivity extends Activity {
     }
 
     public void addTask(MenuItem item) {
-//        setCanAddList(false);
-        mTaskList.add(new Task("", -1, true));
-        mTaskAdapter.notifyDataSetChanged();
-        showKeyboard();
+        if (!isLastElementEdit())
+        {
+            showKeyboard();
+            mTaskList.add(new Task("", -1, true));
+            mTaskAdapter.notifyDataSetChanged();
+        }
     }
+
+    private boolean isLastElementEdit() {
+        int last = mTaskList.size()-1;
+        return last > -1 && mTaskList.get(last).getIsTaskEdit();
+    }
+
 }
