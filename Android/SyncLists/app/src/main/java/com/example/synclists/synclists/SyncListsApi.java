@@ -56,6 +56,13 @@ public class SyncListsApi {
         new SyncListsGetListsAsyncTask(callback).execute(request);
     }
 
+    protected static void deleteList(SyncListsRequestAsyncTaskCallback callback, int listId) {
+        SyncListsRequest request = new SyncListsRequest(
+                SyncListsRequest.SyncListsRequestMethod.DELETE, "lists/" + listId);
+
+        new SyncListsDeleteListAsyncTask(callback).execute(request);
+    }
+
     protected static ArrayList<SyncListsList> parseLists(String json) throws Exception {
         ArrayList<SyncListsList> lists = new ArrayList<SyncListsList>();
         JSONArray jsonArray = new JSONArray(json);

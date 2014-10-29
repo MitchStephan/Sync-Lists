@@ -3,6 +3,7 @@ package com.example.synclists.synclists;
 import android.app.Activity;
 import android.app.ListActivity;
 import android.content.Context;
+import android.graphics.Typeface;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -11,6 +12,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
@@ -59,6 +61,14 @@ public class ListArrayAdapter extends ArrayAdapter<SyncListsList> {
         View row = inflater.inflate(R.layout.lists_list_view, parent, false);
         ListRowHolder holder = new ListRowHolder();
         holder.list = list;
+
+        //set typeface for button
+        Typeface font = Typeface.createFromAsset( mContext.getAssets(), "fontawesome-webfont.ttf" );
+        Button button = (Button)row.findViewById( R.id.listDeleteButton );
+        button.setTypeface(font);
+        holder.listsListDeleteButton = button;
+        button.setTag(holder.list);
+
         holder.listsListViewSettingsButton = (ImageButton)row.findViewById(R.id.listsListViewSettingsButton);
         holder.listsListViewSettingsButton.setTag(holder.list);
 
@@ -176,6 +186,7 @@ public class ListArrayAdapter extends ArrayAdapter<SyncListsList> {
     public static class ListRowHolder {
         SyncListsList list;
         TextView listsListViewText;
+        Button listsListDeleteButton;
         ImageButton listsListViewSettingsButton;
     }
 }
