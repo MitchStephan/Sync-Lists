@@ -37,7 +37,6 @@ public class SettingsActivity extends Activity{
         final ListView settingsListView = (ListView) findViewById(R.id.settingsListView);
         settingsListView.setAdapter(mSettingsAdapter);
 
-        final Context context = this;
         settingsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String settingTitle = M_SETTINGS[position];
