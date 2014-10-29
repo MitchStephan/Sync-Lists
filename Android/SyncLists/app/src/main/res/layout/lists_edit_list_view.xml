@@ -10,7 +10,7 @@
         android:layout_width="fill_parent"
         android:layout_marginEnd="50dp"
         android:layout_height="wrap_content"
-        android:hint="New list name"
+        android:hint="@string/newListName"
         android:textAppearance="?android:attr/textAppearanceListItemSmall"
         android:minHeight="?android:attr/listPreferredItemHeightSmall"
         />

@@ -14,6 +14,8 @@
     <string name="change_password">Change Password</string>
     <string name="sync_every">Sync Every...</string>
     <string name="instructions">Instructions</string>
+
+    <string name="newListName">New list name</string>
     <string name="logout">Logout</string>
     <!-- Icon Fonts -->
     <string name="cog">&#xf013;</string>
