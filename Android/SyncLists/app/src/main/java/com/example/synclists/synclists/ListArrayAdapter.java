@@ -82,6 +82,13 @@ public class ListArrayAdapter extends ArrayAdapter<SyncListsList> {
 
     private View getEditView(final int position, ViewGroup parent, SyncListsList list, LayoutInflater inflater) {
         View row = inflater.inflate(R.layout.lists_edit_list_view, parent, false);
+
+        //set typeface for button
+        Typeface font = Typeface.createFromAsset( mContext.getAssets(), "fontawesome-webfont.ttf" );
+        Button button = (Button)row.findViewById( R.id.listEditDeleteButton );
+        button.setTypeface(font);
+        button.setTag(list);
+
         final EditText edit = (EditText)row.findViewById(R.id.listsListEditText);
         edit.setText(list.getName());
         edit.requestFocus();

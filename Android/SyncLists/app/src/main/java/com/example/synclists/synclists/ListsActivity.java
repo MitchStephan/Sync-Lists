@@ -3,14 +3,12 @@ package com.example.synclists.synclists;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -62,7 +60,8 @@ public class ListsActivity extends Activity {
     }
 
     public void addList(MenuItem item) {
-        if (!isLastElementEdit())
+
+        if (!isListEdit(mLists.size() - 1))
         {
             showKeyboard();
             mLists.add(new SyncListsList(-1, "", true));
@@ -70,9 +69,8 @@ public class ListsActivity extends Activity {
         }
     }
 
-    private boolean isLastElementEdit() {
-        int last = mLists.size()-1;
-        return last > -1 && mLists.get(last).getIsListEdit();
+    private boolean isListEdit(int position) {
+        return position > -1 && mLists.get(position).getIsListEdit();
     }
 
     public void listSettings(View v) {
@@ -123,6 +121,23 @@ public class ListsActivity extends Activity {
                 }
             }
         }, list.getId());
+    }
+
+    public void onClickDeleteEditList(View v) {
+        final SyncListsList list = (SyncListsList) v.getTag();
+
+        int position = mAdapter.getPosition(list);
+        mLists.remove(position);
+        mAdapter.notifyDataSetChanged();
+        hideKeyboard();
+    }
+
+    private void hideKeyboard() {
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+
+        if(imm != null){
+            imm.toggleSoftInput(0, InputMethodManager.HIDE_IMPLICIT_ONLY);
+        }
     }
 
     private void deleteListFromView(SyncListsList list) {

@@ -8,6 +8,7 @@
     <TextView xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/listsListViewText"
         android:layout_width="fill_parent"
+        android:layout_marginEnd="100dp"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:textAppearance="?android:attr/textAppearanceListItemSmall"
