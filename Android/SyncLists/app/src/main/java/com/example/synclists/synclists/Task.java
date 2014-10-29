@@ -7,7 +7,6 @@ public class Task {
     private String name = "";
     private int id;
     private boolean mIsTaskEdit;
-    private boolean completed = false;
 
     public Task(String name, int id)
     {
