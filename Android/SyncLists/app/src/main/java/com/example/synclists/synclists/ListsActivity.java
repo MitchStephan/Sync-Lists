@@ -85,6 +85,7 @@ public class ListsActivity extends Activity {
         SyncListsList list = (SyncListsList) v.getTag();
         Intent tasksIntent = new Intent(this, TaskListActivity.class);
         tasksIntent.putExtra("listId", list.getId());
+        tasksIntent.putExtra("listName", list.getName());
         startActivity(tasksIntent);
     }
 

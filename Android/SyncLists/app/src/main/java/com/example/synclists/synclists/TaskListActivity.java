@@ -30,6 +30,7 @@ public class TaskListActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sync_lists_tasks);
 
+
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             mListId = extras.getInt("listId");
@@ -37,6 +38,9 @@ public class TaskListActivity extends Activity {
         else {
             finish(); // we can't run Task activity without a list id!
         }
+
+        // Set title to list name
+        setTitle(getIntent().getStringExtra("listName"));
 
         mTaskList = new ArrayList<Task>();
         mTaskAdapter = new TaskListAdapter(this, R.layout.tasks_view, mTaskList, mListId);
