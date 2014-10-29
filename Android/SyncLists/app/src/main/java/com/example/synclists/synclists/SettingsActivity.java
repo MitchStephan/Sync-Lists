@@ -31,7 +31,7 @@ public class SettingsActivity extends Activity{
     public void addLogoutListner() {
 
         mLogoutButton = (ImageButton) findViewById(R.id.logoutButton);
-        final Intent logout = new Intent(this, SyncListsLogin.class);
+        final Intent login = new Intent(this, SyncListsLogin.class);
 
         mLogoutButton.setOnClickListener(new View.OnClickListener() {
 
@@ -41,7 +41,10 @@ public class SettingsActivity extends Activity{
                 Toast.makeText(SettingsActivity.this,
                         "You have logged out", Toast.LENGTH_SHORT).show();
                 SyncListsApi.logout();
-                startActivity(logout);
+
+                login.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                login.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(login);
                 finish();
             }
         });
