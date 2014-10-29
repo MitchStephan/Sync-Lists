@@ -24,25 +24,25 @@ import java.util.List;
  */
 public class TaskListAdapter extends ArrayAdapter<Task> {
 
-    private List<Task> taskList;
-    private int layoutResourceID;
-    private Context context;
+    private List<Task> mTaskList;
+    private int mLayoutResourceID;
+    private Context mContext;
     private int mListId;
 
     public TaskListAdapter(Context context, int layoutResourceID, List<Task> taskList, int listId) {
         super(context, layoutResourceID, taskList);
-        this.layoutResourceID = layoutResourceID;
-        this.context = context;
-        this.taskList = taskList;
+        this.mLayoutResourceID = layoutResourceID;
+        this.mContext = context;
+        this.mTaskList = taskList;
         mListId = listId;
     }
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         Task task;
-        task = taskList.get(position);
+        task = mTaskList.get(position);
 
-        LayoutInflater inflater = ((Activity) context).getLayoutInflater();
+        LayoutInflater inflater = ((Activity) mContext).getLayoutInflater();
 
         if (task.getIsTaskEdit()){
             return getEditView(position, parent, task, inflater);
@@ -54,7 +54,7 @@ public class TaskListAdapter extends ArrayAdapter<Task> {
 
     public View getTaskView(ViewGroup parent, Task task, LayoutInflater inflater) {
 
-        View row = inflater.inflate(layoutResourceID, parent, false);
+        View row = inflater.inflate(mLayoutResourceID, parent, false);
         TaskHolder holder = new TaskHolder();
 
         holder.task = task;
@@ -92,10 +92,10 @@ public class TaskListAdapter extends ArrayAdapter<Task> {
     }
 
     private void validateOnCreate(String newTaskName, int position) {
-        taskList.remove(position);
+        mTaskList.remove(position);
         if (validName(newTaskName)) {
             final Task task = new Task(-1, newTaskName);
-            taskList.add(position, task);
+            mTaskList.add(position, task);
 
             //create task with api
             SyncListsApi.createTask(new SyncListsRequestAsyncTaskCallback() {
@@ -105,11 +105,11 @@ public class TaskListAdapter extends ArrayAdapter<Task> {
                     Log.d("SL", "Returned from creating task");
                     if (syncListsResponse == null) {
                         Log.d("SL", "Error creating task");
-                        Toast.makeText(context, "Error creating task",
+                        Toast.makeText(mContext, "Error creating task",
                                 Toast.LENGTH_SHORT).show();
 
-                        if(taskList.size() > 0)
-                            taskList.remove(taskList.size() - 1);
+                        if(mTaskList.size() > 0)
+                            mTaskList.remove(mTaskList.size() - 1);
                     }
                     else {
                         try {
@@ -133,7 +133,7 @@ public class TaskListAdapter extends ArrayAdapter<Task> {
     }
 
     private void hideKeyboard() {
-        InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+        InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
 
         if(imm != null){
             imm.toggleSoftInput(0, InputMethodManager.HIDE_IMPLICIT_ONLY);
