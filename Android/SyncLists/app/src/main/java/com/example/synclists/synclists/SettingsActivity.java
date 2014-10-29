@@ -25,70 +25,33 @@ public class SettingsActivity extends Activity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.settings_view);
-        addLogoutListner();
-        addShowInstuctionsListener();
-        addSyncWithDatabaseListener();
-        addChangePasswordListner();
     }
 
-    public void addLogoutListner() {
+    public void onLogoutClicked(View v) {
         final Intent login = new Intent(this, SyncListsLogin.class);
 
-        mLogoutButton.setOnClickListener(new View.OnClickListener() {
+        Toast.makeText(SettingsActivity.this,
+                "You have logged out", Toast.LENGTH_SHORT).show();
+        SyncListsApi.logout();
 
-            @Override
-            public void onClick(View v) {
-
-                Toast.makeText(SettingsActivity.this,
-                        "You have logged out", Toast.LENGTH_SHORT).show();
-                SyncListsApi.logout();
-
-                login.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                login.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(login);
-                finish();
-            }
-        });
+        login.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        login.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(login);
+        finish();
     }
 
-    public void addShowInstuctionsListener() {
-
-        mInstructionsButton = (TextView) findViewById(R.id.instructionsButton);
-        mInstructionsButton.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(SettingsActivity.this,
-                        "Show Instructions is clicked!", Toast.LENGTH_SHORT).show();
-            }
-        });
+    public void onInstructionsClicked(View v) {
+        Toast.makeText(SettingsActivity.this,
+                "Show Instructions is clicked!", Toast.LENGTH_SHORT).show();
     }
 
-    public void addSyncWithDatabaseListener() {
-
-        mSyncButton = (TextView) findViewById(R.id.snycButton);
-        mSyncButton.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-
-                Toast.makeText(SettingsActivity.this,
-                        "Sync is clicked!", Toast.LENGTH_SHORT).show();
-            }
-        });
+    public void onSyncEveryClicked(View v) {
+        Toast.makeText(SettingsActivity.this,
+                "Sync is clicked!", Toast.LENGTH_SHORT).show();
     }
 
-    public void addChangePasswordListner() {
-
-        mChangePasswordButton = (TextView) findViewById(R.id.changePasswordButton);
-        mChangePasswordButton.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-
-                Toast.makeText(SettingsActivity.this,
-                        "Change Password is clicked!", Toast.LENGTH_SHORT).show();
-            }
-        });
+    public void onChangePasswordClicked(View v) {
+        Toast.makeText(SettingsActivity.this,
+                "Change Password is clicked!", Toast.LENGTH_SHORT).show();
     }
 }

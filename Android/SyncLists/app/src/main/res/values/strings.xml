@@ -12,7 +12,7 @@
     <string name="settings">Settings</string>
     <!-- Setting Option -->
     <string name="change_password">Change Password</string>
-    <string name="sync">Sync</string>
+    <string name="sync_every">Sync Every...</string>
     <string name="instructions">Instructions</string>
     <string name="logout">Logout</string>
     <!-- Icon Fonts -->
