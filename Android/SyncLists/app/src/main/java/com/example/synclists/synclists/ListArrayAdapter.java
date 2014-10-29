@@ -13,7 +13,11 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import org.json.JSONObject;
 
 import java.util.List;
 
@@ -109,12 +113,34 @@ public class ListArrayAdapter extends ArrayAdapter<SyncListsList> {
         return row;
     }
 
-    private void validateOnCreate(String newListName, int position) {
+    private void validateOnCreate(String newListName, final int position) {
         if (validName(newListName)) {
             mItems.remove(position);
-            mItems.add(position, new SyncListsList(-1, newListName));
+
+            final SyncListsList list = new SyncListsList(-1, newListName);
+            mItems.add(position, list);
             notifyDataSetChanged();
             hideKeyboard();
+
+            SyncListsApi.createList(new SyncListsRequestAsyncTaskCallback() {
+                @Override
+                public void onTaskComplete(SyncListsResponse syncListsResponse) {
+                    if (syncListsResponse == null) {
+                        Toast.makeText(mContext, "Error creating list",
+                                Toast.LENGTH_SHORT).show();
+                        mItems.remove(position);
+                    }
+                    else {
+                        try {
+                            JSONObject jsonObject = new JSONObject(syncListsResponse.getBody());
+                            list.setId(jsonObject.getInt("pk"));
+                        }
+                        catch(Exception e) {
+
+                        }
+                    }
+                }
+            }, newListName);
         }
     }
 
