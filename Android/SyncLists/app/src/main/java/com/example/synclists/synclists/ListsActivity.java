@@ -1,7 +1,9 @@
 package com.example.synclists.synclists;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -103,24 +105,40 @@ public class ListsActivity extends Activity {
         return true;
     }
 
+    /*
+        alert dialog code from http://www.androidhub4you.com/2012/09/alert-dialog-box-or-confirmation-box-in.html
+     */
     public void onClickDeleteList(View v) {
         final SyncListsList list = (SyncListsList) v.getTag();
         final Context context = this;
 
-        SyncListsApi.deleteList(new SyncListsRequestAsyncTaskCallback() {
-            @Override
-            public void onTaskComplete(SyncListsResponse syncListsResponse) {
-                if(syncListsResponse == null) {
-                    Toast.makeText(context, "Error deleting list " + list.getName(),
-                            Toast.LENGTH_SHORT).show();
-                }
-                else {
-                    Toast.makeText(context, "List " + list.getName() + " successfully deleted",
-                            Toast.LENGTH_SHORT).show();
-                    deleteListFromView(list);
+        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which) {
+                    case DialogInterface.BUTTON_POSITIVE: // Yes button clicked
+                        SyncListsApi.deleteList(new SyncListsRequestAsyncTaskCallback() {
+                            @Override
+                            public void onTaskComplete(SyncListsResponse syncListsResponse) {
+                                if(syncListsResponse == null) {
+                                    Toast.makeText(context, "Error deleting list " + list.getName(),
+                                            Toast.LENGTH_SHORT).show();
+                                }
+                                else {
+                                    Toast.makeText(context, "List " + list.getName() + " successfully deleted",
+                                            Toast.LENGTH_SHORT).show();
+                                    deleteListFromView(list);
+                                }
+                            }
+                        }, list.getId());
+                        break;
                 }
             }
-        }, list.getId());
+        };
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Are you sure you want to permanently delete the list and all its tasks?")
+                .setPositiveButton("Yes", dialogClickListener)
+                .setNegativeButton("No", dialogClickListener).show();
     }
 
     public void onClickDeleteEditList(View v) {
