@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -82,7 +83,8 @@ public class ListsActivity extends Activity {
     }
 
     public void onListClick(View v) {
-        SyncListsList list = (SyncListsList) v.getTag();
+        ListArrayAdapter.ListRowHolder listRowHolder = (ListArrayAdapter.ListRowHolder) v.getTag();
+        SyncListsList list = listRowHolder.list;
         Intent tasksIntent = new Intent(this, TaskListActivity.class);
         tasksIntent.putExtra("listId", list.getId());
         tasksIntent.putExtra("listName", list.getName());

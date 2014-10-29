@@ -3,28 +3,32 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/listsLayout"
     android:orientation="horizontal" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/selector_background_txt"
+    android:clickable="true"
+    android:onClick="onListClick">
 
     <TextView xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/listsListViewText"
         android:layout_width="fill_parent"
         android:layout_marginEnd="100dp"
+        android:layout_marginRight="100dp"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:textAppearance="?android:attr/textAppearanceListItemSmall"
         android:paddingStart="?android:attr/listPreferredItemPaddingStart"
+        android:paddingLeft="?android:attr/listPreferredItemPaddingLeft"
         android:paddingEnd="?android:attr/listPreferredItemPaddingEnd"
+        android:paddingRight="?android:attr/listPreferredItemPaddingRight"
         android:minHeight="?android:attr/listPreferredItemHeightSmall"
-        android:onClick="onListClick"
-        android:clickable="true"
         android:textColor="@color/selector_txt"
-        android:gravity="center_vertical"
-        android:background="@color/selector_background_txt"/>
+        android:gravity="center_vertical"/>
 
     <ImageButton
         android:id="@+id/listsListViewSettingsButton"
         android:layout_width="50dp"
         android:layout_height="50dp"
+        android:layout_toStartOf="@+id/listDeleteButton"
         android:layout_toLeftOf="@+id/listDeleteButton"
         android:src="@drawable/settings"
         android:onClick="listSettings"
@@ -34,6 +38,7 @@
         android:id="@+id/listDeleteButton"
         android:text="@string/close_x"
         style="?android:attr/buttonStyleSmall"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_width="50dp"
         android:layout_height="50dp"

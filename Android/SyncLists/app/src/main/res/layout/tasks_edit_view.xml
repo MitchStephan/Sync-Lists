@@ -7,6 +7,7 @@
     <EditText xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/tasksEditText"
         android:layout_width="fill_parent"
+        android:layout_marginEnd="50dp"
         android:layout_marginRight="50dp"
         android:layout_height="wrap_content"
         android:hint="New task name"
