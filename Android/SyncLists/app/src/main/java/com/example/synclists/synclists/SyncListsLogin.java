@@ -8,6 +8,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 
 public class SyncListsLogin extends Activity {
@@ -38,7 +39,18 @@ public class SyncListsLogin extends Activity {
     }
 
     public void createUser(View view) {
-        SyncListsApi.createUser(this, mEmail.getText().toString(), mPassword.getText().toString());
+        if(validSignUp()) {
+            SyncListsApi.createUser(this, mEmail.getText().toString(), mPassword.getText().toString());
+        }
+        else {
+            Toast.makeText(this, "Invalid email", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private boolean validSignUp() {
+        String email = mEmail.getText().toString();
+
+        return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
 
     protected static SharedPreferences.Editor getPreferencesEditor() {
