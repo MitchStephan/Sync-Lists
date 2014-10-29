@@ -6,9 +6,9 @@
         <color android:color="#00000000"/>
     </item>
     <item android:state_pressed="true">
-        <color android:color="#ff0000"/>
+        <color android:color="#ff33b5e5"/>
     </item>
     <item android:state_pressed="false" android:state_selected="true">
-        <color android:color="#ff0000"/>
+        <color android:color="#ff33b5e5"/>
     </item>
 </selector>
