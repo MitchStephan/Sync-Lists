@@ -68,6 +68,13 @@ public class SyncListsApi {
         new SyncListsGetListsAsyncTask(callback).execute(request);
     }
 
+    protected static void getTasks(SyncListsRequestAsyncTaskCallback callback, int listId) {
+        SyncListsRequest request = new SyncListsRequest(
+                SyncListsRequest.SyncListsRequestMethod.GET, "lists/" + listId + "/tasks");
+
+        new SyncListsGetTasksAsyncTask(callback).execute(request);
+    }
+
     protected static void deleteList(SyncListsRequestAsyncTaskCallback callback, int listId) {
         SyncListsRequest request = new SyncListsRequest(
                 SyncListsRequest.SyncListsRequestMethod.DELETE, "lists/" + listId);
@@ -89,6 +96,22 @@ public class SyncListsApi {
         }
 
         return lists;
+    }
+
+    protected static ArrayList<Task> parseTasks(String json) throws Exception {
+        ArrayList<Task> tasks = new ArrayList<Task>();
+        JSONArray jsonArray = new JSONArray(json);
+
+        for(int i = 0; i < jsonArray.length(); i++) {
+            JSONObject jsonObject = jsonArray.getJSONObject(i);
+            JSONObject fields = jsonObject.getJSONObject("fields");
+
+            //should handle Integer.parseInt in case error
+            Task task = new Task(jsonObject.getInt("pk"), fields.getString("name"));
+            tasks.add(task);
+        }
+
+        return tasks;
     }
 
     protected static void logout() {

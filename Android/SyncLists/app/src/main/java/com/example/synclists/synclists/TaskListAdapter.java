@@ -121,7 +121,7 @@ public class TaskListAdapter extends ArrayAdapter<Task> {
                         }
                     }
                 }
-            }, mListId, "task name");
+            }, mListId, newTaskName);
 
         }
         hideKeyboard();

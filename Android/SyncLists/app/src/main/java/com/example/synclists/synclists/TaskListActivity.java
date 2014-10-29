@@ -30,8 +30,6 @@ public class TaskListActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sync_lists_tasks);
 
-        mTaskList = new ArrayList<Task>();
-
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             mListId = extras.getInt("listId");
@@ -40,18 +38,35 @@ public class TaskListActivity extends Activity {
             finish(); // we can't run Task activity without a list id!
         }
 
-        populateExampleTasks();
-
+        mTaskList = new ArrayList<Task>();
         mTaskAdapter = new TaskListAdapter(this, R.layout.tasks_view, mTaskList, mListId);
+
+        final Context context = this;
+        SyncListsApi.getTasks(new SyncListsRequestAsyncTaskCallback() {
+            @Override
+            public void onTaskComplete(SyncListsResponse syncListsResponse) {
+                if (syncListsResponse == null) {
+                    Toast.makeText(context, "Error retrieving tasks",
+                            Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    try {
+                        mTaskList = SyncListsApi.parseTasks(syncListsResponse.getBody());
+
+                        mTaskAdapter = new TaskListAdapter(context, R.layout.tasks_view, mTaskList, mListId);
+
+                        ListView lv = (ListView) findViewById(R.id.tasks_view_wrapper);
+                        lv.setAdapter(mTaskAdapter);
+                    } catch (Exception e) {
+                        Toast.makeText(context, "Error retrieving tasks",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+        }, mListId);
 
         ListView lv = (ListView) findViewById(R.id.tasks_view_wrapper);
         lv.setAdapter(mTaskAdapter);
-    }
-
-    public void populateExampleTasks() {
-
-//        mTaskList.add(new Task("Task 1", 1, true));
-//        mTaskList.add(new Task("Task 2", 2, true));
     }
 
     @Override
