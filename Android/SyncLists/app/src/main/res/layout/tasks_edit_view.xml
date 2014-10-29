@@ -13,7 +13,8 @@
         android:hint="New task name"
         android:textAppearance="?android:attr/textAppearanceListItemSmall"
         android:minHeight="?android:attr/listPreferredItemHeightSmall"
-        android:maxLength="100"/>
+        android:maxLength="100"
+        android:inputType="text"/>
 
     <Button
         android:id="@+id/taskEditDeleteButton"

@@ -83,6 +83,20 @@ public class TaskListAdapter extends ArrayAdapter<Task> {
         edit.setText(task.getName());
         edit.requestFocus();
 
+        edit.setImeActionLabel("Add", KeyEvent.KEYCODE_ENTER);
+        edit.setOnEditorActionListener(new TextView.OnEditorActionListener()
+        {
+            @Override
+            public boolean onEditorAction(TextView v, int keyCode, KeyEvent event) {
+                if (keyCode == KeyEvent.KEYCODE_ENTER) {
+                    String newTaskName = edit.getText().toString();
+                    validateOnCreate(newTaskName, position);
+                    return true;
+                }
+                return false;
+            }
+        });
+
         edit.setOnKeyListener(new View.OnKeyListener() {
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 // If the event is a key-down event on the "enter" button

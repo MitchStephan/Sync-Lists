@@ -107,6 +107,20 @@ public class ListArrayAdapter extends ArrayAdapter<SyncListsList> {
             }
         });
 
+        edit.setOnKeyListener(new View.OnKeyListener() {
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+
+                // If the event is a key-down event on the "enter" button
+                if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
+                        (keyCode == KeyEvent.KEYCODE_ENTER)) {
+
+                    String newListName = edit.getText().toString();
+                    validateOnCreate(newListName, position);
+                    return true;
+                }
+                return false;
+            }
+        });
         return row;
     }
 
