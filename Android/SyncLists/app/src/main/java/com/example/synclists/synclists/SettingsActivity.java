@@ -32,8 +32,6 @@ public class SettingsActivity extends Activity{
     }
 
     public void addLogoutListner() {
-
-        mLogoutButton = (ImageButton) findViewById(R.id.logoutButton);
         final Intent login = new Intent(this, SyncListsLogin.class);
 
         mLogoutButton.setOnClickListener(new View.OnClickListener() {
