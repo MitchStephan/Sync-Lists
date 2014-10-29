@@ -22,7 +22,7 @@
         android:layout_height="50dp"
         android:layout_alignParentRight="true"
         android:src="@drawable/settings"
-        android:onClick="listSettings"
+        android:onClick="taskSettings"
         android:scaleType="fitCenter"/>
 
 </RelativeLayout>

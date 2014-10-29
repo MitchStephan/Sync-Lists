@@ -7,8 +7,10 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -71,6 +73,12 @@ public class TaskListActivity extends Activity {
         if(imm != null){
             imm.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0);
         }
+    }
+
+    public void taskSettings(View v) {
+        Task task = (Task) v.getTag();
+        Toast.makeText(this, "You clicked " + task.getName() + " with id " + task.getId(),
+                Toast.LENGTH_SHORT).show();
     }
 
     public void addTask(MenuItem item) {

@@ -24,5 +24,7 @@ public class Task implements Serializable {
 
     public String getName() { return name; }
 
+    public int getId() { return id; }
+
     public boolean getIsTaskEdit() { return mIsTaskEdit; }
 }
