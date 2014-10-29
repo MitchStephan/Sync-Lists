@@ -4,8 +4,8 @@ package com.example.synclists.synclists;
  * Created by ethan on 10/27/14.
  */
 public class Task {
-    private String name = "";
-    private int id;
+    private String mName = "";
+    private int mId;
     private boolean mIsTaskEdit;
 
     public Task(String name, int id)
@@ -14,14 +14,14 @@ public class Task {
     }
 
     public Task(String name, int id, boolean isTaskEdit) {
-        this.name = name;
-        this.id = id;
+        mName = name;
+        mId = id;
         mIsTaskEdit = isTaskEdit;
     }
 
-    public String getName() { return name; }
+    public String getName() { return mName; }
 
-    public int getId() { return id; }
+    public int getId() { return mId; }
 
     public boolean getIsTaskEdit() { return mIsTaskEdit; }
 }
