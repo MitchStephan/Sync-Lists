@@ -75,7 +75,6 @@ public class ListArrayAdapter extends ArrayAdapter<SyncListsList> {
         final EditText edit = (EditText)row.findViewById(R.id.listsListEditText);
         edit.setText(list.getName());
         edit.requestFocus();
-//        setEditTextFocus(edit, true);
 
 
         edit.setOnKeyListener(new View.OnKeyListener() {

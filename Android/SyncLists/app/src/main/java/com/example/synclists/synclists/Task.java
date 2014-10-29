@@ -8,12 +8,23 @@ import java.io.Serializable;
 public class Task implements Serializable {
     private String name = "";
     private int id;
+    private boolean mIsTaskEdit;
     private boolean completed = false;
 
-    public Task(String name, int id) {
+    public Task(String name, int id)
+    {
+        this(name, id, false);
+    }
+
+    public Task(String name, int id, boolean isTaskEdit) {
         this.name = name;
         this.id = id;
+        this.mIsTaskEdit = isTaskEdit;
     }
 
     public String getName() { return name; }
+
+    public int getId() { return id; }
+
+    public boolean getIsTaskEdit() { return mIsTaskEdit; }
 }
