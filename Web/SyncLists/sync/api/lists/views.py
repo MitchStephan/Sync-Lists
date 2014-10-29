@@ -81,6 +81,8 @@ def delete_list(request, l_id):
     try:
         list = List.get_by_id(l_id)
         if validate_user_context(request, list):
+            for task in list.get_tasks():
+                task.delete()
             list.delete()
             response = delete_response('List', l_id)
             status_code = 200

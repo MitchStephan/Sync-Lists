@@ -116,7 +116,7 @@ def delete_task(request, l_id, t_id):
         if validate_user_context(request, list):
             t = Task.get_by_id(t_id)
             t.delete()
-            response = delete_response('User', t_id)
+            response = delete_response('Task', t_id)
             status_code = 200
         else:
             response = invalid_user_context(request)
