@@ -5,6 +5,7 @@
         android:id="@+id/add_list"
         android:icon="@drawable/plus_button"
         android:showAsAction="ifRoom"
+        android:onClick="addTask"
         android:title="@string/add_list"/>
 
     <item

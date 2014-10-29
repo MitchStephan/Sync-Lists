@@ -1,11 +1,13 @@
 package com.example.synclists.synclists;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -35,8 +37,8 @@ public class TaskListActivity extends Activity {
 
     public void populateExampleTasks() {
 
-        mTaskList.add(new Task("Task 1", 1));
-        mTaskList.add(new Task("Task 2", 2));
+//        mTaskList.add(new Task("Task 1", 1));
+//        mTaskList.add(new Task("Task 2", 2));
     }
 
     @Override
@@ -63,4 +65,18 @@ public class TaskListActivity extends Activity {
         }
     }
 
+    private void showKeyboard() {
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+
+        if(imm != null){
+            imm.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0);
+        }
+    }
+
+    public void addTask(MenuItem item) {
+//        setCanAddList(false);
+        mTaskList.add(new Task("", -1, true));
+        mTaskAdapter.notifyDataSetChanged();
+        showKeyboard();
+    }
 }
