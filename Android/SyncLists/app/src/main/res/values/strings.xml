@@ -15,6 +15,9 @@
     <string name="sync">Sync</string>
     <string name="instructions">Instructions</string>
     <string name="logout">Logout</string>
+    <!-- Icon Fonts -->
+    <string name="cog">&#xf013;</string>
+    <string name="plus">&#xf067;</string>
 
 
 </resources>
