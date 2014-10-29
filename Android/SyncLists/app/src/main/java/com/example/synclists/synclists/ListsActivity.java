@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -20,11 +19,9 @@ import java.util.List;
  */
 public class ListsActivity extends Activity {
 
-    private final String TAG = "SyncLists";
-
     private List<SyncListsList> mLists;
     private ListArrayAdapter mAdapter;
-    private boolean mCanAddList;
+    public boolean mCanAddList;
 
 
     @Override
@@ -42,7 +39,8 @@ public class ListsActivity extends Activity {
                 if (syncListsResponse == null) {
                     Toast.makeText(context, "Error retrieving lists",
                             Toast.LENGTH_SHORT).show();
-                } else {
+                }
+                else {
                     try {
                         mLists = SyncListsApi.parseLists(syncListsResponse.getBody());
 
@@ -60,31 +58,10 @@ public class ListsActivity extends Activity {
     }
 
     public void addList(MenuItem item) {
-//        setCanAddList(false);
+        mCanAddList = false;
+        showKeyboard();
         mLists.add(new SyncListsList(-1, "", true));
         mAdapter.notifyDataSetChanged();
-        showKeyboard();
-
-//        // TODO: Move to getView()
-//        newList.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-//            @Override
-//            public void onFocusChange(View v, boolean hasFocus) {
-//                Log.d(TAG, "Focus Changed");
-//
-//                if (hasFocus) {
-//                    Log.d(TAG, "newList has focus");
-//                    showKeyboard(v);
-//                }
-//                else {
-//                    Log.d(TAG, "NO FOCUS");
-//                    //if the new list has not already been added
-//                    if (!mCanAddList)
-//                        validateOnCreateList(newList, layout);
-//
-//                    hideKeyboard(v);
-//                }
-//            }
-//        });
     }
 
     public void listSettings(View v) {
@@ -95,14 +72,9 @@ public class ListsActivity extends Activity {
 
     public void onListClick(View v) {
         SyncListsList list = (SyncListsList) v.getTag();
-        Intent tasksIntent = new Intent(this, ListsActivity.class);
+        Intent tasksIntent = new Intent(this, TaskListActivity.class);
         tasksIntent.putExtra("listId", list.getId());
         startActivity(tasksIntent);
-    }
-
-    private void setCanAddList(boolean canAddList) {
-        mCanAddList = canAddList;
-        invalidateOptionsMenu();
     }
 
     @Override
@@ -117,7 +89,6 @@ public class ListsActivity extends Activity {
 
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.sync_lists_lists, menu);
-
 
         return true;
     }
@@ -144,12 +115,4 @@ public class ListsActivity extends Activity {
         }
     }
 
-    private void hideKeyboard(View v) {
-        Log.d(TAG, "IN HIDE KEYBOARD");
-        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-
-        if(imm != null){
-            imm.toggleSoftInput(0, InputMethodManager.HIDE_IMPLICIT_ONLY);
-        }
-    }
 }

@@ -1,11 +1,15 @@
 package com.example.synclists.synclists;
 
 import android.app.Activity;
+import android.app.ListActivity;
 import android.content.Context;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -67,6 +71,8 @@ public class ListArrayAdapter extends ArrayAdapter<SyncListsList> {
         final EditText edit = (EditText)row.findViewById(R.id.listsListEditText);
         edit.setText(list.getName());
         edit.requestFocus();
+//        setEditTextFocus(edit, true);
+
 
         edit.setOnKeyListener(new View.OnKeyListener() {
             public boolean onKey(View v, int keyCode, KeyEvent event) {
@@ -75,26 +81,71 @@ public class ListArrayAdapter extends ArrayAdapter<SyncListsList> {
                         (keyCode == KeyEvent.KEYCODE_ENTER)) {
 
                     String newListName = edit.getText().toString();
-                    mItems.remove(position);
-
                     validateOnCreate(newListName, position);
                     return true;
                 }
                 return false;
             }
         });
+
+//        edit.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+//            @Override
+//            public void onFocusChange(View v, boolean hasFocus) {
+////                Log.d("Sync Lists", "Focus Changed");
+//
+//                if (hasFocus) {
+//                    Log.d("Sync Lists", "newList has focus");
+////                    showKeyboard();
+//                }
+//                else {
+//                    Log.d("Sync Lists", "NO FOCUS");
+////                        hideKeyboard();
+//                        String newListName = edit.getText().toString();
+//                        validateOnCreate(newListName, position);
+//                }
+//            }
+//        });
+
         return row;
     }
 
     private void validateOnCreate(String newListName, int position) {
         if (validName(newListName)) {
+            mItems.remove(position);
             mItems.add(position, new SyncListsList(-1, newListName));
             notifyDataSetChanged();
+            hideKeyboard();
         }
     }
 
     private boolean validName(String newListName) {
         return newListName != null && !newListName.equals("") && !newListName.matches("^\\s*$");
+    }
+
+    private void showKeyboard() {
+        InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+
+        if(imm != null){
+            imm.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0);
+        }
+    }
+
+    private void hideKeyboard() {
+        InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+
+        if(imm != null){
+            imm.toggleSoftInput(0, InputMethodManager.HIDE_IMPLICIT_ONLY);
+        }
+    }
+
+    private void setEditTextFocus(EditText editText, boolean isFocused){
+        editText.setCursorVisible(isFocused);
+        editText.setFocusable(isFocused);
+        editText.setFocusableInTouchMode(isFocused);
+
+        if (isFocused){
+            editText.requestFocus();
+        }
     }
 
     public static class ListRowHolder {
