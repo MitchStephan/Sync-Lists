@@ -27,9 +27,6 @@ public class SyncListsLoginAsyncTask extends SyncListsRequestAsyncTask {
         Log.d("SyncLists", "Status code " + result.getHttpResponse().getStatusLine().getStatusCode());
 
         if(result.getHttpResponse().getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
-            Toast.makeText(mActivity, "You did it",
-                    Toast.LENGTH_SHORT).show();
-
             try {
                 JSONObject jsonObject = new JSONObject(result.getBody());
 
