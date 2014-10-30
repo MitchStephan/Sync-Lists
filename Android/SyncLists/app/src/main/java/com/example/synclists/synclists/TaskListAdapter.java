@@ -83,7 +83,6 @@ public class TaskListAdapter extends ArrayAdapter<Task> {
         edit.setText(task.getName());
         edit.requestFocus();
 
-        edit.setImeActionLabel("Add", KeyEvent.KEYCODE_ENTER);
         edit.setOnEditorActionListener(new TextView.OnEditorActionListener()
         {
             @Override
