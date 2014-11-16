@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,6 +27,9 @@ public class SyncListsLogin extends Activity {
         setContentView(R.layout.activity_sync_lists_main);
         mEmail = (EditText)findViewById(R.id.email);
         mPassword = (EditText)findViewById(R.id.password);
+
+        //when user hits enter on password EditText, call login for them
+        mPassword.setOnKeyListener(new PasswordOnKeyListener());
 
         //set up prefs
         mPrefs = getSharedPreferences(PREF_FILE_NAME, MODE_PRIVATE);
@@ -63,6 +67,25 @@ public class SyncListsLogin extends Activity {
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         if(imm != null){
             imm.toggleSoftInput(0, InputMethodManager.HIDE_IMPLICIT_ONLY);
+        }
+    }
+
+    private class PasswordOnKeyListener implements View.OnKeyListener {
+
+        public boolean onKey(View v, int keyCode, KeyEvent event) {
+            // If the event is a key-down event on the "enter" button
+            if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
+                    (keyCode == KeyEvent.KEYCODE_ENTER)) {
+
+                String email = mEmail.getText().toString();
+                String password = mPassword.getText().toString();
+                if (email != null && !email.isEmpty() && password != null && !password.isEmpty())
+                    login(null);
+
+                return true;
+            }
+
+            return false;
         }
     }
 }
