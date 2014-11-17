@@ -130,12 +130,12 @@ public class TaskListActivity extends Activity {
     public void addTask(MenuItem item) {
         if (!isElementEdit(mTaskList.size()-1))
         {
-            if (item != null) {
-                showKeyboard();
-            }
             final Task task = new Task(-1, "", true);
             mTaskList.add(task);
             mTaskAdapter.notifyDataSetChanged();
+            if (item != null) {
+                showKeyboard();
+            }
         }
     }
 
