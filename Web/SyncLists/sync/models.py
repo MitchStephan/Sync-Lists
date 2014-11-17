@@ -19,7 +19,7 @@ class User(models.Model):
         return User.objects.get(email=email)
 
     @staticmethod
-    def create(email, password, sharing_enabled):
+    def create(email, password, sharing_enabled=True):
         new_user = User.objects.create(email=email, password=password, sharing_enabled=sharing_enabled)
         new_user.save()
         return new_user
@@ -49,7 +49,7 @@ class User(models.Model):
 
     # noinspection PyRedundantParentheses
     def single_to_json(self):
-        return serializers.serialize("json", [self], fields=('email, date_created'))[1:-1]
+        return serializers.serialize("json", [self], fields=('email, date_created, sharing_enabled'))[1:-1]
 
     # noinspection PyRedundantParentheses
     @staticmethod
@@ -159,11 +159,13 @@ class Task(models.Model):
         new_task.save()
         return new_task
 
-    def edit(self, name, completed, visible, editor):
+    def edit(self, name, completed, last_editor, visible=True):
+        if not isinstance(last_editor, User):
+            last_editor = User.get_by_id(last_editor)
         self.name = name
         self.completed = completed
         self.visible = visible
-        self.last_editor = editor
+        self.last_editor = last_editor
         self.save()
         return self
 
@@ -173,8 +175,11 @@ class Task(models.Model):
             self.last_editor)
 
     def single_to_json(self):
-        return serializers.serialize("json", [self])[1:-1]
+        return serializers.serialize("json", [self], fields=(
+            "name, list, completed, task_owner, date_created, date_updated, last_editor"))[1:-1]
 
     @staticmethod
     def to_json(list):
-        return serializers.serialize("json", list)
+        return serializers.serialize("json", list, fields=(
+            "name, list, completed, task_owner, date_created, date_updated, last_editor")
+        )

@@ -95,7 +95,7 @@ def edit_task(request, l_id, t_id):
         if validate_user_context(request, list):
             t = Task.get_by_id(t_id)
             request_body = request_body_to_dict(request)
-            response = t.edit(**request_body).single_to_json()
+            response = t.edit(last_editor=get_user_context(request), **request_body).single_to_json()
             status_code = 200
         else:
             response = invalid_user_context(request)
