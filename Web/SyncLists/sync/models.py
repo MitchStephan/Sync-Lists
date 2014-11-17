@@ -1,3 +1,4 @@
+import datetime
 from django.core import serializers
 from django.db import models
 
@@ -133,16 +134,14 @@ class List(models.Model):
 class Task(models.Model):
     # id (pk)
     name = models.CharField(max_length=225)
-    # order of task in list
-    # order = models.ImageField()
     list = models.ForeignKey(List)
     completed = models.BooleanField()
     visible = models.BooleanField()
     # date_due = models.DateTimeField()
     task_owner = models.ForeignKey(User, related_name="task_owner")
     date_created = models.DateTimeField(auto_now_add=True)
-    date_updated = models.DateTimeField(auto_now=True)
-    last_editor = models.ForeignKey(User, related_name="last_editor")
+    date_updated = models.DateTimeField(auto_now=True, default=datetime.datetime(2014, 1, 1, 1, 11))
+    last_editor = models.ForeignKey(User, related_name="last_editor", default=None, null=True)
 
 
     @staticmethod
@@ -156,7 +155,7 @@ class Task(models.Model):
         if not isinstance(task_owner, User):
             task_owner = User.get_by_id(task_owner)
         new_task = Task.objects.create(name=name, list=list, completed=False, visible=True,
-                                       task_owner=task_owner)
+                                       task_owner=task_owner, last_editor=task_owner)
         new_task.save()
         return new_task
 
@@ -166,10 +165,10 @@ class Task(models.Model):
         self.visible = visible
         self.last_editor = editor
         self.save()
-        return selfs
+        return self
 
     def __unicode__(self):
-        return 'Task; pk:{0}, name:{1}, list:{2}, completed:{3}, visible:{4}, task_owner:{5}, date_created:{6}, last_editor:{7}'.format(
+        return 'Task; pk:{0}, name:{1}, list:{2}, completed:{3}, task_owner:{5}, date_created:{6}, editor:{7}'.format(
             self.pk, self.name, self.list, self.completed, self.visible, self.task_owner, self.date_created,
             self.last_editor)
 
