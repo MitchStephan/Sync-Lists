@@ -19,6 +19,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.undo.UndoAdapter;
+import com.nhaarman.listviewanimations.util.Insertable;
+
 import org.json.JSONObject;
 
 import java.util.List;
@@ -29,7 +32,7 @@ import java.util.List;
  * Code from https://looksok.wordpress.com/tag/listview-item-with-button/
  *
  */
-public class ListArrayAdapter extends ArrayAdapter<SyncListsList> {
+public class ListArrayAdapter extends ArrayAdapter<SyncListsList> implements UndoAdapter {
 
     private List<SyncListsList> mItems;
     private int mLayoutResourceId;
@@ -44,8 +47,7 @@ public class ListArrayAdapter extends ArrayAdapter<SyncListsList> {
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-        SyncListsList list;
-        list = mItems.get(position);
+        SyncListsList list = getItem(position);
 
         LayoutInflater inflater = ((Activity) mContext).getLayoutInflater();
 
@@ -53,30 +55,33 @@ public class ListArrayAdapter extends ArrayAdapter<SyncListsList> {
             return getEditView(position, parent, list, inflater);
         }
         else {
-            return getListView(parent, list, inflater);
+            return getListView(parent, list, inflater, convertView);
         }
     }
 
-    private View getListView(ViewGroup parent, SyncListsList list, LayoutInflater inflater) {
-        View row = inflater.inflate(R.layout.lists_list_view, parent, false);
-        ListRowHolder holder = new ListRowHolder();
+    private View getListView(ViewGroup parent, SyncListsList list, LayoutInflater inflater, View convertView) {
+        View row = convertView;
+        ListRowHolder holder;
+
+        if(row == null) {
+            row = inflater.inflate(R.layout.lists_list_view, parent, false);
+            holder = new ListRowHolder();
+            holder.list = list;
+
+            holder.listsListViewSettingsButton = (ImageButton) row.findViewById(R.id.listsListViewSettingsButton);
+
+            holder.listsListViewText = (TextView) row.findViewById(R.id.listsListViewText);
+            holder.listsListViewText.setTag(holder.list);
+
+            row.setTag(holder);
+        }
+        else {
+            holder = (ListRowHolder) row.getTag();
+        }
+
         holder.list = list;
-
-        //set typeface for button
-        Typeface font = Typeface.createFromAsset( mContext.getAssets(), "fontawesome-webfont.ttf" );
-        Button button = (Button)row.findViewById( R.id.listDeleteButton );
-        button.setTypeface(font);
-        holder.listsListDeleteButton = button;
-        button.setTag(holder.list);
-
-        holder.listsListViewSettingsButton = (ImageButton)row.findViewById(R.id.listsListViewSettingsButton);
-        holder.listsListViewSettingsButton.setTag(holder.list);
-
-        holder.listsListViewText = (TextView)row.findViewById(R.id.listsListViewText);
-        holder.listsListViewText.setText(holder.list.getName());
-        holder.listsListViewText.setTag(holder.list);
-
-        row.setTag(holder);
+        holder.listsListViewSettingsButton.setTag(list);
+        holder.listsListViewText.setText(list.getName());
         return row;
     }
 
@@ -110,14 +115,13 @@ public class ListArrayAdapter extends ArrayAdapter<SyncListsList> {
         return row;
     }
 
-
     private void validateOnCreate(String newListName, final int position) {
         hideKeyboard();
-        mItems.remove(position);
+        remove(getItem(position));
+
         if (validName(newListName)) {
             final SyncListsList list = new SyncListsList(-1, newListName);
-            mItems.add(position, list);
-            notifyDataSetChanged();
+            insert(list, position);
 
             SyncListsApi.createList(new SyncListsRequestAsyncTaskCallback() {
                 @Override
@@ -125,7 +129,7 @@ public class ListArrayAdapter extends ArrayAdapter<SyncListsList> {
                     if (syncListsResponse == null) {
                         Toast.makeText(mContext, "Error creating list",
                                 Toast.LENGTH_SHORT).show();
-                        mItems.remove(position);
+                        remove(getItem(position));
                     }
                     else {
                         try {
@@ -139,7 +143,6 @@ public class ListArrayAdapter extends ArrayAdapter<SyncListsList> {
                 }
             }, newListName);
         }
-        notifyDataSetChanged();
     }
 
     private boolean validName(String newListName) {
@@ -162,10 +165,23 @@ public class ListArrayAdapter extends ArrayAdapter<SyncListsList> {
         }
     }
 
+    @Override
+    public View getUndoView(final int position, final View convertView, final ViewGroup parent) {
+        View view = convertView;
+        if (view == null) {
+            view = LayoutInflater.from(mContext).inflate(R.layout.undo_row, parent, false);
+        }
+        return view;
+    }
+
+    @Override
+    public View getUndoClickView(final View view) {
+        return view.findViewById(R.id.undo_row_undobutton);
+    }
+
     public static class ListRowHolder {
         SyncListsList list;
         TextView listsListViewText;
-        Button listsListDeleteButton;
         ImageButton listsListViewSettingsButton;
     }
 }

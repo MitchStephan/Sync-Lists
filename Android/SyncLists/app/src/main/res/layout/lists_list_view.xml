@@ -28,23 +28,10 @@
         android:id="@+id/listsListViewSettingsButton"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_toStartOf="@+id/listDeleteButton"
-        android:layout_toLeftOf="@+id/listDeleteButton"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
         android:src="@drawable/settings"
         android:onClick="listSettings"
         android:scaleType="fitCenter"/>
-
-    <Button
-        android:id="@+id/listDeleteButton"
-        android:text="@string/close_x"
-        style="?android:attr/buttonStyleSmall"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:textSize="35dp"
-        android:onClick="onClickDeleteList"
-        android:scaleType="fitCenter"
-        android:textColor="#ff0000"/>
 
 </RelativeLayout>

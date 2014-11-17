@@ -11,9 +11,15 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import com.nhaarman.listviewanimations.itemmanipulation.DynamicListView;
+import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.OnDismissCallback;
+import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.undo.SimpleSwipeUndoAdapter;
+import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.undo.TimedUndoAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +32,8 @@ public class ListsActivity extends Activity {
     private List<SyncListsList> mLists;
     private ListArrayAdapter mAdapter;
     public boolean mCanAddList;
-
+    private DynamicListView mDynamicListView;
+    private final Activity CONTEXT = this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +44,14 @@ public class ListsActivity extends Activity {
         mLists = new ArrayList<SyncListsList>();
         mAdapter = new ListArrayAdapter(this, R.layout.lists_list_view, mLists);
 
+        mDynamicListView = (DynamicListView) findViewById(R.id.list_lists_view);
         final Context context = this;
+
+        TimedUndoAdapter timedUndoAdapter = new TimedUndoAdapter(mAdapter, this, mOnDeleteListCallback);
+        timedUndoAdapter.setAbsListView(mDynamicListView);
+        mDynamicListView.setAdapter(timedUndoAdapter);
+        mDynamicListView.enableSimpleSwipeUndo();
+
         SyncListsApi.getLists(new SyncListsRequestAsyncTaskCallback() {
             @Override
             public void onTaskComplete(SyncListsResponse syncListsResponse) {
@@ -49,11 +63,11 @@ public class ListsActivity extends Activity {
                     try {
                         mLists = SyncListsApi.parseLists(syncListsResponse.getBody());
 
-                        mAdapter = new ListArrayAdapter(context, R.layout.lists_list_view, mLists);
-
-                        ListView lv = (ListView) findViewById(R.id.listsListView);
-                        lv.setAdapter(mAdapter);
-                    } catch (Exception e) {
+                        mAdapter.clear();
+                        for(SyncListsList list : mLists)
+                            mAdapter.add(list);
+                    }
+                    catch (Exception e) {
                         Toast.makeText(context, "Error retrieving lists",
                                 Toast.LENGTH_SHORT).show();
                     }
@@ -64,16 +78,16 @@ public class ListsActivity extends Activity {
 
     public void addList(MenuItem item) {
 
-        if (!isListEdit(mLists.size() - 1))
+        if (!isListEdit(mAdapter.getCount() - 1))
         {
             showKeyboard();
-            mLists.add(new SyncListsList(-1, "", true));
-            mAdapter.notifyDataSetChanged();
+            mAdapter.add(new SyncListsList(-1, "", true));
+            mDynamicListView.smoothScrollToPosition(mAdapter.getCount());
         }
     }
 
     private boolean isListEdit(int position) {
-        return position > -1 && mLists.get(position).getIsListEdit();
+        return position > -1 && mAdapter.getItem(position).getIsListEdit();
     }
 
     public void listSettings(View v) {
@@ -107,48 +121,10 @@ public class ListsActivity extends Activity {
         return true;
     }
 
-    /*
-        alert dialog code from http://www.androidhub4you.com/2012/09/alert-dialog-box-or-confirmation-box-in.html
-     */
-    public void onClickDeleteList(View v) {
-        final SyncListsList list = (SyncListsList) v.getTag();
-        final Context context = this;
-
-        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                switch (which) {
-                    case DialogInterface.BUTTON_POSITIVE: // Yes button clicked
-                        SyncListsApi.deleteList(new SyncListsRequestAsyncTaskCallback() {
-                            @Override
-                            public void onTaskComplete(SyncListsResponse syncListsResponse) {
-                                if(syncListsResponse == null) {
-                                    Toast.makeText(context, "Error deleting list " + list.getName(),
-                                            Toast.LENGTH_SHORT).show();
-                                }
-                                else {
-                                    Toast.makeText(context, "List " + list.getName() + " successfully deleted",
-                                            Toast.LENGTH_SHORT).show();
-                                    deleteListFromView(list);
-                                }
-                            }
-                        }, list.getId());
-                        break;
-                }
-            }
-        };
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("Are you sure you want to permanently delete the list and all its tasks?")
-                .setPositiveButton("Yes", dialogClickListener)
-                .setNegativeButton("No", dialogClickListener).show();
-    }
-
     public void onClickDeleteEditList(View v) {
         final SyncListsList list = (SyncListsList) v.getTag();
 
-        int position = mAdapter.getPosition(list);
-        mLists.remove(position);
-        mAdapter.notifyDataSetChanged();
+        mAdapter.remove(list);
         hideKeyboard();
     }
 
@@ -157,19 +133,6 @@ public class ListsActivity extends Activity {
 
         if(imm != null){
             imm.toggleSoftInput(0, InputMethodManager.HIDE_IMPLICIT_ONLY);
-        }
-    }
-
-    private void deleteListFromView(SyncListsList list) {
-        int i = 0;
-        for(; i < mLists.size(); i++) {
-            if(mLists.get(i).getId() == list.getId())
-                break;
-        }
-
-        if(i < mLists.size()) {
-            mLists.remove(i);
-            mAdapter.notifyDataSetChanged();
         }
     }
 
@@ -194,5 +157,30 @@ public class ListsActivity extends Activity {
             imm.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0);
         }
     }
+
+    private OnDismissCallback mOnDeleteListCallback = new OnDismissCallback() {
+        @Override
+        public void onDismiss(final ViewGroup listView, final int[] reverseSortedPositions) {
+            for (int position : reverseSortedPositions) {
+
+                final SyncListsList list = mAdapter.getItem(position);
+                mAdapter.remove(mAdapter.getItem(position));
+
+                SyncListsApi.deleteList(new SyncListsRequestAsyncTaskCallback() {
+                    @Override
+                    public void onTaskComplete(SyncListsResponse syncListsResponse) {
+                        if (syncListsResponse == null) {
+                            Toast.makeText(CONTEXT, "Error deleting list " + list.getName(),
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                        else {
+                            Toast.makeText(CONTEXT, "List " + list.getName() + " successfully deleted",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }, list.getId());
+            }
+        }
+    };
 
 }
