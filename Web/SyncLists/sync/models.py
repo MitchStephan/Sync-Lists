@@ -139,10 +139,10 @@ class Task(models.Model):
     completed = models.BooleanField()
     visible = models.BooleanField()
     # date_due = models.DateTimeField()
-    task_owner = models.ForeignKey(User)
+    task_owner = models.ForeignKey(User, related_name="task_owner")
     date_created = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now=True)
-    last_editor = models.ForeignKey(User)
+    last_editor = models.ForeignKey(User, related_name="last_editor")
 
 
     @staticmethod
