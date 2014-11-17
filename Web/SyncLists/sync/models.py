@@ -7,6 +7,7 @@ class User(models.Model):
     email = models.CharField(max_length=255, unique=True)
     password = models.CharField(max_length=255)
     date_created = models.DateTimeField(auto_now_add=True)
+    sharing_enabled = models.BooleanField(default=True)
 
     @staticmethod
     def get_by_id(pk):
@@ -17,14 +18,15 @@ class User(models.Model):
         return User.objects.get(email=email)
 
     @staticmethod
-    def create(email, password):
-        new_user = User.objects.create(email=email, password=password)
+    def create(email, password, sharing_enabled):
+        new_user = User.objects.create(email=email, password=password, sharing_enabled=sharing_enabled)
         new_user.save()
         return new_user
 
-    def edit(self, email, password):
+    def edit(self, email, password, sharing_enabled):
         self.email = email
         self.password = password
+        self.sharing_enabled = sharing_enabled
         self.save()
         return self
 
@@ -37,7 +39,9 @@ class User(models.Model):
             return None
 
     def __unicode__(self):
-        return 'User; pk:{0}, email:{1}, date_created:{2}'.format(self.pk, self.email, self.date_created)
+        return 'User; pk:{0}, email:{1}, date_created:{2}, sharing_enabled:{3}'.format(self.pk, self.email,
+                                                                                       self.date_created,
+                                                                                       self.sharing_enabled)
 
     def get_lists(self):
         return List.objects.filter(list_owner=self) | List.objects.filter(shared_users=self)
@@ -91,6 +95,31 @@ class List(models.Model):
     def get_tasks(self):
         return Task.objects.filter(list=self)
 
+    def add_shared_user(self, user):
+        if not isinstance(user, User):
+            user = User.get_by_id(user)
+        self.shared_users.add(user)
+
+    def delete_shared_user(self, user):
+        if not isinstance(user, User):
+            user = User.get_by_id(user)
+        self.shared_users.remove(user)
+
+    def list_delete(self, user):
+        if not isinstance(user, User):
+            user = User.get_by_id(user)
+        # if shared user, just remove user from shared_users
+        if user in self.shared_users:
+            self.delete_shared_user(user)
+            return True
+        # if owner, clean up and delete list
+        elif user is self.list_owner:
+            for task in self.get_tasks():
+                task.delete()
+            self.delete()
+            return True
+        return False
+
     # noinspection PyRedundantParentheses
     def single_to_json(self):
         return serializers.serialize("json", [self], fields=("name, list_owner, shared_users, date_created"))[1:-1]
@@ -112,6 +141,9 @@ class Task(models.Model):
     # date_due = models.DateTimeField()
     task_owner = models.ForeignKey(User)
     date_created = models.DateTimeField(auto_now_add=True)
+    date_updated = models.DateTimeField(auto_now=True)
+    last_editor = models.ForeignKey(User)
+
 
     @staticmethod
     def get_by_id(pk):
@@ -128,16 +160,18 @@ class Task(models.Model):
         new_task.save()
         return new_task
 
-    def edit(self, name, completed, visible):
+    def edit(self, name, completed, visible, editor):
         self.name = name
         self.completed = completed
         self.visible = visible
+        self.last_editor = editor
         self.save()
-        return self
+        return selfs
 
     def __unicode__(self):
-        return 'Task; pk:{0}, name:{1}, list:{2}, completed:{3}, visible:{4}, task_owner:{5}, date_created:{6}'.format(
-            self.pk, self.name, self.list, self.completed, self.visible, self.task_owner, self.date_created)
+        return 'Task; pk:{0}, name:{1}, list:{2}, completed:{3}, visible:{4}, task_owner:{5}, date_created:{6}, last_editor:{7}'.format(
+            self.pk, self.name, self.list, self.completed, self.visible, self.task_owner, self.date_created,
+            self.last_editor)
 
     def single_to_json(self):
         return serializers.serialize("json", [self])[1:-1]

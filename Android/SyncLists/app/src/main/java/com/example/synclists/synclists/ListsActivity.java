@@ -66,9 +66,9 @@ public class ListsActivity extends Activity {
 
         if (!isListEdit(mLists.size() - 1))
         {
-            showKeyboard();
             mLists.add(new SyncListsList(-1, "", true));
             mAdapter.notifyDataSetChanged();
+            showKeyboard();
         }
     }
 
