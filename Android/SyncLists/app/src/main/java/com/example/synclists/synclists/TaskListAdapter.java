@@ -23,14 +23,14 @@ import java.util.List;
 /**
  * Created by ethan on 10/27/14.
  */
-public class TaskListAdapter extends ArrayAdapter<Task> {
+public class TaskListAdapter extends ArrayAdapter<SyncListTask> {
 
-    private List<Task> mTaskList;
+    private List<SyncListTask> mTaskList;
     private int mLayoutResourceID;
     private Context mContext;
     private int mListId;
 
-    public TaskListAdapter(Context context, int layoutResourceID, List<Task> taskList, int listId) {
+    public TaskListAdapter(Context context, int layoutResourceID, List<SyncListTask> taskList, int listId) {
         super(context, layoutResourceID, taskList);
         this.mLayoutResourceID = layoutResourceID;
         this.mContext = context;
@@ -40,7 +40,7 @@ public class TaskListAdapter extends ArrayAdapter<Task> {
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-        Task task;
+        SyncListTask task;
         task = mTaskList.get(position);
 
         LayoutInflater inflater = ((Activity) mContext).getLayoutInflater();
@@ -53,7 +53,7 @@ public class TaskListAdapter extends ArrayAdapter<Task> {
         }
     }
 
-    public View getTaskView(ViewGroup parent, Task task, LayoutInflater inflater) {
+    public View getTaskView(ViewGroup parent, SyncListTask task, LayoutInflater inflater) {
 
         View row = inflater.inflate(mLayoutResourceID, parent, false);
         TaskHolder holder = new TaskHolder();
@@ -69,7 +69,7 @@ public class TaskListAdapter extends ArrayAdapter<Task> {
         return row;
     }
 
-    private View getEditView(final int position, ViewGroup parent, final Task task, LayoutInflater inflater) {
+    private View getEditView(final int position, ViewGroup parent, final SyncListTask task, LayoutInflater inflater) {
         View row = inflater.inflate(R.layout.tasks_edit_view, parent, false);
 
         //set typeface for button
@@ -103,7 +103,7 @@ public class TaskListAdapter extends ArrayAdapter<Task> {
     private void validateOnCreate(String newTaskName, int position) {
         mTaskList.remove(position);
         if (validName(newTaskName)) {
-            final Task task = new Task(-1, newTaskName);
+            final SyncListTask task = new SyncListTask(-1, newTaskName);
             mTaskList.add(position, task);
 
             //create task with api
@@ -153,7 +153,7 @@ public class TaskListAdapter extends ArrayAdapter<Task> {
     }
 
     public static class TaskHolder {
-        Task task;
+        SyncListTask task;
         TextView taskText;
         ImageButton taskSettingsButton;
     }

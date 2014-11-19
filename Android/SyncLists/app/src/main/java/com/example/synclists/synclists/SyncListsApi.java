@@ -98,8 +98,8 @@ public class SyncListsApi {
         return lists;
     }
 
-    protected static ArrayList<Task> parseTasks(String json) throws Exception {
-        ArrayList<Task> tasks = new ArrayList<Task>();
+    protected static ArrayList<SyncListTask> parseTasks(String json) throws Exception {
+        ArrayList<SyncListTask> tasks = new ArrayList<SyncListTask>();
         JSONArray jsonArray = new JSONArray(json);
 
         for(int i = 0; i < jsonArray.length(); i++) {
@@ -107,7 +107,7 @@ public class SyncListsApi {
             JSONObject fields = jsonObject.getJSONObject("fields");
 
             //should handle Integer.parseInt in case error
-            Task task = new Task(jsonObject.getInt("pk"), fields.getString("name"));
+            SyncListTask task = new SyncListTask(jsonObject.getInt("pk"), fields.getString("name"));
             tasks.add(task);
         }
 

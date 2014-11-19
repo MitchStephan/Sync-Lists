@@ -3,17 +3,17 @@ package com.example.synclists.synclists;
 /**
  * Created by ethan on 10/27/14.
  */
-public class Task {
+public class SyncListTask {
     private String mName = "";
     private int mId;
     private boolean mIsTaskEdit;
 
-    public Task(int id, String name)
+    public SyncListTask(int id, String name)
     {
         this(id, name, false);
     }
 
-    public Task(int id, String name, boolean isTaskEdit) {
+    public SyncListTask(int id, String name, boolean isTaskEdit) {
         mName = name;
         mId = id;
         mIsTaskEdit = isTaskEdit;

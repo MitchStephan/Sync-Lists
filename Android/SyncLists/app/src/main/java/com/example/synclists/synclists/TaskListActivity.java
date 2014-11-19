@@ -12,6 +12,8 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.nhaarman.listviewanimations.itemmanipulation.DynamicListView;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +21,7 @@ import java.util.List;
  * Created by ethan on 10/27/14.
  */
 public class TaskListActivity extends Activity {
-    private List<Task> mTaskList;
+    private List<SyncListTask> mTaskList;
     private TaskListAdapter mTaskAdapter;
     private int mListId;
 
@@ -40,7 +42,7 @@ public class TaskListActivity extends Activity {
         // Set title to list name
         setTitle(getIntent().getStringExtra("listName"));
 
-        mTaskList = new ArrayList<Task>();
+        mTaskList = new ArrayList<SyncListTask>();
         mTaskAdapter = new TaskListAdapter(this, R.layout.tasks_view, mTaskList, mListId);
 
         final Context context = this;
@@ -96,7 +98,7 @@ public class TaskListActivity extends Activity {
     }
 
     public void onClickDeleteEditTask(View v) {
-        final Task task = (Task) v.getTag();
+        final SyncListTask task = (SyncListTask) v.getTag();
 
         int position = mTaskAdapter.getPosition(task);
         mTaskList.remove(position);
@@ -122,7 +124,7 @@ public class TaskListActivity extends Activity {
     }
 
     public void taskSettings(View v) {
-        Task task = (Task) v.getTag();
+        SyncListTask task = (SyncListTask) v.getTag();
         Toast.makeText(this, "You clicked " + task.getName() + " with id " + task.getId(),
                 Toast.LENGTH_SHORT).show();
     }
@@ -130,7 +132,7 @@ public class TaskListActivity extends Activity {
     public void addTask(MenuItem item) {
         if (!isElementEdit(mTaskList.size()-1))
         {
-            final Task task = new Task(-1, "", true);
+            final SyncListTask task = new SyncListTask(-1, "", true);
             mTaskList.add(task);
             mTaskAdapter.notifyDataSetChanged();
             if (item != null) {
