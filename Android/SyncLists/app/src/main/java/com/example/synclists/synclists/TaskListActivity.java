@@ -8,11 +8,13 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import com.nhaarman.listviewanimations.itemmanipulation.DynamicListView;
+import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.OnDismissCallback;
+import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.undo.TimedUndoAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,15 +23,17 @@ import java.util.List;
  * Created by ethan on 10/27/14.
  */
 public class TaskListActivity extends Activity {
-    private List<SyncListTask> mTaskList;
-    private TaskListAdapter mTaskAdapter;
+    private List<SyncListsTask> mTaskList;
+    private TaskListAdapter mAdapter;
     private int mListId;
+    private DynamicListView mDynamicListView;
+    private final Activity CONTEXT = this;
+    private final int SHOW_TASK_COMPLETED_TIME = 1000; // in milliseconds
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sync_lists_tasks);
-
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
@@ -39,13 +43,21 @@ public class TaskListActivity extends Activity {
             finish(); // we can't run Task activity without a list id!
         }
 
+        mTaskList = new ArrayList<SyncListsTask>();
+        mAdapter = new TaskListAdapter(this, R.layout.tasks_view, mTaskList, mListId);
+
+        mDynamicListView = (DynamicListView) findViewById(R.id.tasks_view_wrapper);
+        final Context context = this;
+
+        TimedUndoAdapter timedUndoAdapter = new TimedUndoAdapter(mAdapter, this, mOnCompleteTaskCallback);
+        timedUndoAdapter.setAbsListView(mDynamicListView);
+        timedUndoAdapter.setTimeoutMs(SHOW_TASK_COMPLETED_TIME);
+        mDynamicListView.setAdapter(timedUndoAdapter);
+        mDynamicListView.enableSimpleSwipeUndo();
+
         // Set title to list name
         setTitle(getIntent().getStringExtra("listName"));
 
-        mTaskList = new ArrayList<SyncListTask>();
-        mTaskAdapter = new TaskListAdapter(this, R.layout.tasks_view, mTaskList, mListId);
-
-        final Context context = this;
         SyncListsApi.getTasks(new SyncListsRequestAsyncTaskCallback() {
             @Override
             public void onTaskComplete(SyncListsResponse syncListsResponse) {
@@ -57,10 +69,11 @@ public class TaskListActivity extends Activity {
                     try {
                         mTaskList = SyncListsApi.parseTasks(syncListsResponse.getBody());
 
-                        mTaskAdapter = new TaskListAdapter(context, R.layout.tasks_view, mTaskList, mListId);
+                        mAdapter.clear();
 
-                        ListView lv = (ListView) findViewById(R.id.tasks_view_wrapper);
-                        lv.setAdapter(mTaskAdapter);
+                        for(SyncListsTask task : mTaskList)
+                            if(!task.getCompleted())
+                                mAdapter.add(task);
                     } catch (Exception e) {
                         Toast.makeText(context, "Error retrieving tasks",
                                 Toast.LENGTH_SHORT).show();
@@ -68,9 +81,6 @@ public class TaskListActivity extends Activity {
                 }
             }
         }, mListId);
-
-        ListView lv = (ListView) findViewById(R.id.tasks_view_wrapper);
-        lv.setAdapter(mTaskAdapter);
     }
 
     @Override
@@ -98,11 +108,9 @@ public class TaskListActivity extends Activity {
     }
 
     public void onClickDeleteEditTask(View v) {
-        final SyncListTask task = (SyncListTask) v.getTag();
+        final SyncListsTask task = (SyncListsTask) v.getTag();
 
-        int position = mTaskAdapter.getPosition(task);
-        mTaskList.remove(position);
-        mTaskAdapter.notifyDataSetChanged();
+        mAdapter.remove(task);
         hideKeyboard();
     }
 
@@ -124,17 +132,17 @@ public class TaskListActivity extends Activity {
     }
 
     public void taskSettings(View v) {
-        SyncListTask task = (SyncListTask) v.getTag();
+        SyncListsTask task = (SyncListsTask) v.getTag();
         Toast.makeText(this, "You clicked " + task.getName() + " with id " + task.getId(),
                 Toast.LENGTH_SHORT).show();
     }
 
     public void addTask(MenuItem item) {
-        if (!isElementEdit(mTaskList.size()-1))
+        if (!isElementEdit(mAdapter.getCount() - 1))
         {
-            final SyncListTask task = new SyncListTask(-1, "", true);
-            mTaskList.add(task);
-            mTaskAdapter.notifyDataSetChanged();
+            final SyncListsTask task = new SyncListsTask(-1, "", true);
+            mAdapter.add(task);
+            mDynamicListView.smoothScrollToPosition(mAdapter.getCount());
             if (item != null) {
                 showKeyboard();
             }
@@ -142,6 +150,35 @@ public class TaskListActivity extends Activity {
     }
 
     private boolean isElementEdit(int position) {
-        return position > -1 && mTaskList.get(position).getIsTaskEdit();
+        return position > -1 && mAdapter.getItem(position).getIsTaskEdit();
     }
+
+    private OnDismissCallback mOnCompleteTaskCallback = new OnDismissCallback() {
+        @Override
+        public void onDismiss(final ViewGroup listView, final int[] reverseSortedPositions) {
+            for (int position : reverseSortedPositions) {
+
+                final SyncListsTask task = mAdapter.getItem(position);
+                mAdapter.remove(task);
+                task.setCompleted(true);
+
+                SyncListsApi.updateTask(new SyncListsRequestAsyncTaskCallback() {
+                    @Override
+                    public void onTaskComplete(SyncListsResponse syncListsResponse) {
+                        if (syncListsResponse == null) {
+                            Toast.makeText(CONTEXT, "Error completing task " + task.getName(),
+                                    Toast.LENGTH_SHORT).show();
+
+                            //error updating task, so set it not completed
+                            task.setCompleted(false);
+                        }
+                        else {
+                            Toast.makeText(CONTEXT, "Task " + task.getName() + " successfully completed",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }, mListId, task);
+            }
+        }
+    };
 }

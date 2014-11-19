@@ -61,6 +61,19 @@ public class SyncListsApi {
         new SyncListsCreateTaskAsyncTask(callback).execute(request);
     }
 
+    protected static void updateTask(SyncListsRequestAsyncTaskCallback callback, int listId, SyncListsTask task) {
+        Map<String, Object> json = new HashMap<String, Object>();
+        json.put("name", task.getName());
+        json.put("completed", task.getCompleted() ? 1 : 0);
+        json.put("visible", 0);
+
+        Log.d("SL", "Making updateTask request");
+        SyncListsRequest request = new SyncListsRequest(
+                SyncListsRequest.SyncListsRequestMethod.PUT, "lists/" + listId + "/tasks/" + task.getId(), json);
+
+        new SyncListsUpdateTaskAsyncTask(callback).execute(request);
+    }
+
     protected static void getLists(SyncListsRequestAsyncTaskCallback callback) {
         SyncListsRequest request = new SyncListsRequest(
                 SyncListsRequest.SyncListsRequestMethod.GET, "user/lists");
@@ -98,8 +111,8 @@ public class SyncListsApi {
         return lists;
     }
 
-    protected static ArrayList<SyncListTask> parseTasks(String json) throws Exception {
-        ArrayList<SyncListTask> tasks = new ArrayList<SyncListTask>();
+    protected static ArrayList<SyncListsTask> parseTasks(String json) throws Exception {
+        ArrayList<SyncListsTask> tasks = new ArrayList<SyncListsTask>();
         JSONArray jsonArray = new JSONArray(json);
 
         for(int i = 0; i < jsonArray.length(); i++) {
@@ -107,7 +120,7 @@ public class SyncListsApi {
             JSONObject fields = jsonObject.getJSONObject("fields");
 
             //should handle Integer.parseInt in case error
-            SyncListTask task = new SyncListTask(jsonObject.getInt("pk"), fields.getString("name"));
+            SyncListsTask task = new SyncListsTask(jsonObject.getInt("pk"), fields.getString("name"), false, fields.getBoolean("completed"));
             tasks.add(task);
         }
 

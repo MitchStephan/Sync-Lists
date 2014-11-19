@@ -16,6 +16,8 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.undo.UndoAdapter;
+
 import org.json.JSONObject;
 
 import java.util.List;
@@ -23,14 +25,14 @@ import java.util.List;
 /**
  * Created by ethan on 10/27/14.
  */
-public class TaskListAdapter extends ArrayAdapter<SyncListTask> {
+public class TaskListAdapter extends ArrayAdapter<SyncListsTask> implements UndoAdapter {
 
-    private List<SyncListTask> mTaskList;
+    private List<SyncListsTask> mTaskList;
     private int mLayoutResourceID;
     private Context mContext;
     private int mListId;
 
-    public TaskListAdapter(Context context, int layoutResourceID, List<SyncListTask> taskList, int listId) {
+    public TaskListAdapter(Context context, int layoutResourceID, List<SyncListsTask> taskList, int listId) {
         super(context, layoutResourceID, taskList);
         this.mLayoutResourceID = layoutResourceID;
         this.mContext = context;
@@ -40,8 +42,8 @@ public class TaskListAdapter extends ArrayAdapter<SyncListTask> {
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-        SyncListTask task;
-        task = mTaskList.get(position);
+        SyncListsTask task;
+        task = getItem(position);
 
         LayoutInflater inflater = ((Activity) mContext).getLayoutInflater();
 
@@ -49,27 +51,34 @@ public class TaskListAdapter extends ArrayAdapter<SyncListTask> {
             return getEditView(position, parent, task, inflater);
         }
         else {
-            return getTaskView(parent, task, inflater);
+            return getTaskView(parent, task, convertView, inflater);
         }
     }
 
-    public View getTaskView(ViewGroup parent, SyncListTask task, LayoutInflater inflater) {
+    public View getTaskView(ViewGroup parent, SyncListsTask task, View convertView, LayoutInflater inflater) {
 
-        View row = inflater.inflate(mLayoutResourceID, parent, false);
-        TaskHolder holder = new TaskHolder();
+        View row = convertView;
+        TaskHolder holder;
+
+        if(row == null) {
+            row = inflater.inflate(R.layout.tasks_view, parent, false);
+            holder = new TaskHolder();
+
+            holder.taskSettingsButton = (ImageButton)row.findViewById(R.id.task_settings);
+            holder.taskText = (TextView)row.findViewById(R.id.task_name);
+            row.setTag(holder);
+        }
+        else {
+            holder = (TaskHolder) row.getTag();
+        }
 
         holder.task = task;
-        holder.taskSettingsButton = (ImageButton)row.findViewById(R.id.task_settings);
         holder.taskSettingsButton.setTag(holder.task);
-
-        holder.taskText = (TextView)row.findViewById(R.id.task_name);
         holder.taskText.setText(holder.task.getName());
-        row.setTag(holder);
-
         return row;
     }
 
-    private View getEditView(final int position, ViewGroup parent, final SyncListTask task, LayoutInflater inflater) {
+    private View getEditView(final int position, ViewGroup parent, final SyncListsTask task, LayoutInflater inflater) {
         View row = inflater.inflate(R.layout.tasks_edit_view, parent, false);
 
         //set typeface for button
@@ -100,11 +109,12 @@ public class TaskListAdapter extends ArrayAdapter<SyncListTask> {
         return row;
     }
 
-    private void validateOnCreate(String newTaskName, int position) {
-        mTaskList.remove(position);
+    private void validateOnCreate(String newTaskName, final int position) {
+        remove(getItem(position));
+
         if (validName(newTaskName)) {
-            final SyncListTask task = new SyncListTask(-1, newTaskName);
-            mTaskList.add(position, task);
+            final SyncListsTask task = new SyncListsTask(-1, newTaskName);
+            insert(task, position);
 
             //create task with api
             SyncListsApi.createTask(new SyncListsRequestAsyncTaskCallback() {
@@ -117,15 +127,16 @@ public class TaskListAdapter extends ArrayAdapter<SyncListTask> {
                         Toast.makeText(mContext, "Error creating task",
                                 Toast.LENGTH_SHORT).show();
 
-                        if(mTaskList.size() > 0)
-                            mTaskList.remove(mTaskList.size() - 1);
+                        if(getCount() > 0)
+                            remove(getItem(position));
                     }
                     else {
                         try {
                             JSONObject jsonObject = new JSONObject(syncListsResponse.getBody());
                             task.setId(jsonObject.getInt("pk"));
                             Log.d("SL", "Success creating task " + task.getId());
-                        } catch (Exception e) {
+                        }
+                        catch (Exception e) {
 
                         }
                     }
@@ -136,8 +147,6 @@ public class TaskListAdapter extends ArrayAdapter<SyncListTask> {
         else {
             hideKeyboard();
         }
-        notifyDataSetChanged();
-
     }
 
     private boolean validName(String newTaskName) {
@@ -152,8 +161,27 @@ public class TaskListAdapter extends ArrayAdapter<SyncListTask> {
         }
     }
 
+    @Override
+    public View getUndoView(final int position, final View convertView, final ViewGroup parent) {
+        View view = convertView;
+        if (view == null) {
+            view = LayoutInflater.from(mContext).inflate(R.layout.task_undo_row, parent, false);
+        }
+
+        return view;
+    }
+
+    @Override
+    public View getUndoClickView(final View view) {
+        Typeface font = Typeface.createFromAsset( mContext.getAssets(), "fontawesome-webfont.ttf" );
+        TextView textView = (TextView) view.findViewById(R.id.task_undo_row_texttv);
+        textView.setTypeface(font);
+
+        return view.findViewById(R.id.undo_row_undobutton);
+    }
+
     public static class TaskHolder {
-        SyncListTask task;
+        SyncListsTask task;
         TextView taskText;
         ImageButton taskSettingsButton;
     }

@@ -24,5 +24,6 @@
     <string name="cog">&#xf013;</string>
     <string name="plus">&#xf067;</string>
     <string name="close_x">&#xf00d;</string>
+    <string name="checkmark">&#xf046;</string>
 
 </resources>

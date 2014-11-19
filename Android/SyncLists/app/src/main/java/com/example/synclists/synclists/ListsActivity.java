@@ -1,25 +1,19 @@
 package com.example.synclists.synclists;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import com.nhaarman.listviewanimations.itemmanipulation.DynamicListView;
 import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.OnDismissCallback;
-import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.undo.SimpleSwipeUndoAdapter;
 import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.undo.TimedUndoAdapter;
 
 import java.util.ArrayList;
@@ -165,7 +159,7 @@ public class ListsActivity extends Activity {
             for (int position : reverseSortedPositions) {
 
                 final SyncListsList list = mAdapter.getItem(position);
-                mAdapter.remove(mAdapter.getItem(position));
+                mAdapter.remove(list);
 
                 SyncListsApi.deleteList(new SyncListsRequestAsyncTaskCallback() {
                     @Override

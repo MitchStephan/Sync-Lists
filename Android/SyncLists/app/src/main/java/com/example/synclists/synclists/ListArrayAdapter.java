@@ -66,12 +66,9 @@ public class ListArrayAdapter extends ArrayAdapter<SyncListsList> implements Und
         if(row == null) {
             row = inflater.inflate(R.layout.lists_list_view, parent, false);
             holder = new ListRowHolder();
-            holder.list = list;
 
             holder.listsListViewSettingsButton = (ImageButton) row.findViewById(R.id.listsListViewSettingsButton);
-
             holder.listsListViewText = (TextView) row.findViewById(R.id.listsListViewText);
-            holder.listsListViewText.setTag(holder.list);
 
             row.setTag(holder);
         }
@@ -82,6 +79,7 @@ public class ListArrayAdapter extends ArrayAdapter<SyncListsList> implements Und
         holder.list = list;
         holder.listsListViewSettingsButton.setTag(list);
         holder.listsListViewText.setText(list.getName());
+        holder.listsListViewText.setTag(holder.list);
         return row;
     }
 
