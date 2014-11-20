@@ -43,12 +43,12 @@ public class SyncListsLogin extends Activity {
     }
 
     public void login(View view) {
-        SyncListsApi.login(this, mEmail.getText().toString(), mPassword.getText().toString());
+        SyncListsApi.login(this, mEmail.getText().toString(), mPassword.getText().toString(), this);
     }
 
     public void createUser(View view) {
         if(validSignUp()) {
-            SyncListsApi.createUser(this, mEmail.getText().toString(), mPassword.getText().toString());
+            SyncListsApi.createUser(this, mEmail.getText().toString(), mPassword.getText().toString(), this);
         }
         else {
             Toast.makeText(this, "Invalid email", Toast.LENGTH_SHORT).show();

@@ -68,7 +68,7 @@ public class ListsActivity extends Activity {
                     }
                 }
             }
-        });
+        }, this);
     }
 
     public void addList(MenuItem item) {
@@ -173,7 +173,7 @@ public class ListsActivity extends Activity {
                                     Toast.LENGTH_SHORT).show();
                         }
                     }
-                }, list.getId());
+                }, list.getId(), CONTEXT);
             }
         }
     };

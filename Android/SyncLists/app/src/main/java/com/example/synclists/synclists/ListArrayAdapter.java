@@ -139,7 +139,7 @@ public class ListArrayAdapter extends ArrayAdapter<SyncListsList> implements Und
                         }
                     }
                 }
-            }, newListName);
+            }, newListName, mContext);
         }
     }
 

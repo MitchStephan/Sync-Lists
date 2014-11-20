@@ -80,7 +80,7 @@ public class TaskListActivity extends Activity {
                     }
                 }
             }
-        }, mListId);
+        }, mListId, CONTEXT);
     }
 
     @Override
@@ -177,7 +177,7 @@ public class TaskListActivity extends Activity {
                                     Toast.LENGTH_SHORT).show();
                         }
                     }
-                }, mListId, task);
+                }, mListId, task, CONTEXT);
             }
         }
     };

@@ -141,7 +141,7 @@ public class TaskListAdapter extends ArrayAdapter<SyncListsTask> implements Undo
                         }
                     }
                 }
-            }, mListId, newTaskName);
+            }, mListId, newTaskName, mContext);
             ((TaskListActivity)mContext).addTask(null);
         }
         else {
