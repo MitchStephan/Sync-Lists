@@ -25,5 +25,12 @@
     <string name="plus">&#xf067;</string>
     <string name="close_x">&#xf00d;</string>
     <string name="checkmark">&#xf046;</string>
+    <!-- Instruction text -->
+    <string name="add_list_instruction">&#8226;To add a list, simply click the plus button and add a name.</string>
+    <string name="remove_list_instruction">&#8226;Once you are done with a list, swipe the list left or right to remove.</string>
+    <string name="view_tasks_instruction">&#8226;Once you create a list, click on it to view that list's tasks.</string>
+    <string name="create_task_instruction">&#8226;To create a task in your list, hit the plus button and add a name.</string>
+    <string name="remove_task_instruction">&#8226;Once you have finished a task on the list, swipe the task left or right to remove it.</string>
+    <string name="OK">OK</string>
 
 </resources>

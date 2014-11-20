@@ -1,6 +1,7 @@
 package com.example.synclists.synclists;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -8,6 +9,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.DialerFilter;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -26,7 +29,6 @@ public class SettingsActivity extends Activity{
     private final String INSTRUCTIONS = "Instructions";
     private final String LOGOUT = "Logout";
     private final String[] M_SETTINGS = new String[] { CHANGE_PASSWORD, SYNC_EVERY, INSTRUCTIONS, LOGOUT };
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,8 +75,20 @@ public class SettingsActivity extends Activity{
     }
 
     public void onInstructionsClicked(View v) {
-        Toast.makeText(SettingsActivity.this,
-                "Show Instructions is clicked!", Toast.LENGTH_SHORT).show();
+        final Dialog instructionsDialog = new Dialog(this);
+        instructionsDialog.setContentView(R.layout.instructions_dialog);
+        instructionsDialog.setTitle("Instructions");
+
+        Button dialogButton = (Button) instructionsDialog.findViewById(R.id.dialogButtonOK);
+        // if button is clicked, close the custom dialog
+        dialogButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                instructionsDialog.dismiss();
+            }
+        });
+
+        instructionsDialog.show();
     }
 
     public void onSyncEveryClicked(View v) {
