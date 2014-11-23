@@ -35,6 +35,20 @@ public class SyncListsApi {
         }
     }
 
+    protected static void changePassword(Activity activity, String newPassword, String confirmNewPassword, Context context, String email) {
+        Map<String, Object> json = new HashMap<String, Object>();
+        json.put("password", newPassword);
+        json.put("email", email);
+
+        if (isNetworkAvailable(context) && newPassword.equals(confirmNewPassword)) {
+            Log.d("SyncLists", "Email: " + email);
+            SyncListsRequest request = new SyncListsRequest(
+                    SyncListsRequest.SyncListsRequestMethod.PUT, "user", json);
+
+            new SyncListsChangePasswordAsyncTask(activity).execute(request);
+        }
+    }
+
     protected static void createUser(Activity activity, String email, String password, Context context) {
         Map<String, Object> json = new HashMap<String, Object>();
         json.put("email", email);

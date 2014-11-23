@@ -6,11 +6,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DialerFilter;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -18,12 +21,15 @@ import android.widget.Toast;
 
 import org.w3c.dom.Text;
 
+import java.util.Map;
+
 /**
  * Created by ethan on 10/27/14.
  */
 public class SettingsActivity extends Activity{
 
     private ArrayAdapter mSettingsAdapter;
+    private String mEmail;
     private final String CHANGE_PASSWORD = "Change Password";
     private final String SYNC_EVERY = "Sync Every...";
     private final String INSTRUCTIONS = "Instructions";
@@ -97,7 +103,37 @@ public class SettingsActivity extends Activity{
     }
 
     public void onChangePasswordClicked(View v) {
-        Toast.makeText(SettingsActivity.this,
-                "Change Password is clicked!", Toast.LENGTH_SHORT).show();
+        final Dialog changePasswordDialog = new Dialog(this);
+        changePasswordDialog.setContentView(R.layout.change_password_dialog);
+        changePasswordDialog.setTitle("Change Password");
+
+        Button dialogButton = (Button) changePasswordDialog.findViewById(R.id.confirmChange);
+        // if button is clicked, close the custom dialog and attempt to update password
+        dialogButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // change password in database
+                EditText newPasswordDescription = (EditText)changePasswordDialog.findViewById(R.id.passwordChange);
+                String newPassword = newPasswordDescription.getText().toString();
+                EditText confirmNewPasswordDescription = (EditText)changePasswordDialog.findViewById(R.id.confirmPasswordChange);
+                String confirmNewPassword = confirmNewPasswordDescription.getText().toString();
+                changePassword(v, newPassword, confirmNewPassword);
+
+                if (newPassword.equals(confirmNewPassword)) {
+                    changePasswordDialog.dismiss();
+                }
+                else {
+                    Toast.makeText(SettingsActivity.this,
+                            "Your passwords did not match", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        changePasswordDialog.show();
+    }
+
+    public void changePassword(View view, String newPassword, String confirmPassword) {
+        SharedPreferences prefs = this.getSharedPreferences("SyncListsPrefs", Context.MODE_PRIVATE);
+        mEmail = prefs.getString("Email", null);
+        SyncListsApi.changePassword(this, newPassword, confirmPassword, this, mEmail);
     }
 }

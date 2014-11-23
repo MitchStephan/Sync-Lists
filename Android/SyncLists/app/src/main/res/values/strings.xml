@@ -32,5 +32,9 @@
     <string name="create_task_instruction">&#8226;To create a task in your list, hit the plus button and add a name.</string>
     <string name="remove_task_instruction">&#8226;Once you have finished a task on the list, swipe the task left or right to remove it.</string>
     <string name="OK">OK</string>
+    <!-- Change Password Dialog -->
+    <string name="new_password_hint">New Password</string>
+    <string name="confirm_new_password_hint">Confirm New Password</string>
+    <string name="confirm_change_password">Confirm Change</string>
 
 </resources>
