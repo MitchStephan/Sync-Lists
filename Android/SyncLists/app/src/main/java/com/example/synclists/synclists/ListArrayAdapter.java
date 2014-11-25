@@ -67,6 +67,10 @@ public class ListArrayAdapter extends ArrayAdapter<SyncListsList> implements Und
             row = inflater.inflate(R.layout.lists_list_view, parent, false);
             holder = new ListRowHolder();
 
+            Typeface font = Typeface.createFromAsset( mContext.getAssets(), "fontawesome-webfont.ttf" );
+            holder.listsListViewEditButton = (Button) row.findViewById(R.id.editList);
+            holder.listsListViewEditButton.setTypeface(font);
+
             holder.listsListViewSettingsButton = (ImageButton) row.findViewById(R.id.listsListViewSettingsButton);
             holder.listsListViewText = (TextView) row.findViewById(R.id.listsListViewText);
 
@@ -77,6 +81,7 @@ public class ListArrayAdapter extends ArrayAdapter<SyncListsList> implements Und
         }
 
         holder.list = list;
+        holder.listsListViewEditButton.setTag(list);
         holder.listsListViewSettingsButton.setTag(list);
         holder.listsListViewText.setText(list.getName());
         holder.listsListViewText.setTag(holder.list);
@@ -180,6 +185,7 @@ public class ListArrayAdapter extends ArrayAdapter<SyncListsList> implements Und
     public static class ListRowHolder {
         SyncListsList list;
         TextView listsListViewText;
+        Button listsListViewEditButton;
         ImageButton listsListViewSettingsButton;
     }
 }

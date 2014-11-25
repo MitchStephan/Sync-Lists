@@ -1,15 +1,21 @@
 package com.example.synclists.synclists;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.nhaarman.listviewanimations.itemmanipulation.DynamicListView;
@@ -98,6 +104,76 @@ public class ListsActivity extends Activity {
         tasksIntent.putExtra("listId", list.getId());
         tasksIntent.putExtra("listName", list.getName());
         startActivity(tasksIntent);
+    }
+
+    public void onClickEditList(View v) {
+
+        final SyncListsList list = (SyncListsList) v.getTag();
+        final String currentListName = list.getName();
+
+        // get prompts.xml view
+        LayoutInflater layoutInflater = LayoutInflater.from(this);
+
+        View promptView = layoutInflater.inflate(R.layout.popup_edit_list, null);
+
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+
+        // set prompts.xml to be the layout file of the alertdialog builder
+        alertDialogBuilder.setView(promptView);
+
+        final EditText input = (EditText) promptView.findViewById(R.id.userInput);
+        input.setText(currentListName);
+
+        //set cursor to after last letter
+        input.setSelection(currentListName.length());
+
+        // setup a dialog window
+        alertDialogBuilder
+                .setCancelable(false)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        final String successMessage = "List name successfully updated";
+                        final String newListName = input.getText().toString();
+
+                        //only make API call if list name changed
+                        if (currentListName.equals(newListName)) {
+                            Toast.makeText(CONTEXT, successMessage, Toast.LENGTH_SHORT).show();
+                        }
+                        else {
+                            list.setName(newListName);
+
+                            SyncListsApi.updateList(new SyncListsRequestAsyncTaskCallback() {
+                                @Override
+                                public void onTaskComplete(SyncListsResponse syncListsResponse) {
+                                    if (syncListsResponse == null) {
+                                        Toast.makeText(CONTEXT, "Error renaming list " + list.getName(),
+                                                Toast.LENGTH_SHORT).show();
+                                        list.setName(currentListName);
+                                    } else {
+                                        Toast.makeText(CONTEXT, successMessage,
+                                                Toast.LENGTH_SHORT).show();
+
+                                        int position = mAdapter.getPosition(list);
+                                        View view = mDynamicListView.getChildAt(position);
+                                        TextView editText = (TextView) view.findViewById(R.id.listsListViewText);
+                                        editText.setText(newListName);
+                                    }
+                                }
+                            }, list, CONTEXT);
+                        }
+                    }
+                })
+                .setNegativeButton("Cancel",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
+
+        // create an alert dialog
+        AlertDialog alertD = alertDialogBuilder.create();
+
+        alertD.show();
     }
 
     @Override

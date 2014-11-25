@@ -34,4 +34,14 @@
         android:onClick="listSettings"
         android:scaleType="fitCenter"/>
 
+    <Button
+        android:id="@+id/editList"
+        android:text="@string/fa_edit"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_toStartOf="@id/listsListViewSettingsButton"
+        android:layout_toLeftOf="@id/listsListViewSettingsButton"
+        android:scaleType="fitCenter"
+        android:onClick="onClickEditList"/>
+
 </RelativeLayout>

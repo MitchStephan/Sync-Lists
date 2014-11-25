@@ -74,6 +74,18 @@ public class SyncListsApi {
         }
     }
 
+    protected static void updateList(SyncListsRequestAsyncTaskCallback callback, SyncListsList list, Context context) {
+        Map<String, Object> json = new HashMap<String, Object>();
+        json.put("name", list.getName());
+
+        if (isNetworkAvailable(context)) {
+            SyncListsRequest request = new SyncListsRequest(
+                    SyncListsRequest.SyncListsRequestMethod.PUT, "lists/" + list.getId(), json);
+
+            new SyncListsUpdateListAsyncTask(callback).execute(request);
+        }
+    }
+
     protected static void createTask(SyncListsRequestAsyncTaskCallback callback, int listId, String name, Context context) {
         Map<String, Object> json = new HashMap<String, Object>();
         json.put("name", name);

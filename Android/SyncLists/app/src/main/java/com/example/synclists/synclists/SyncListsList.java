@@ -30,5 +30,9 @@ public class SyncListsList {
         return mName;
     }
 
+    public void setName(String name) {
+        mName = name;
+    }
+
     public boolean getIsListEdit() { return mIsListEdit; }
 }
