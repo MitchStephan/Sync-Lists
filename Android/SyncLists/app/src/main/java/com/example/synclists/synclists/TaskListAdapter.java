@@ -124,9 +124,9 @@ public class TaskListAdapter extends ArrayAdapter<SyncListsTask> implements Undo
                 @Override
                 public void onTaskComplete(SyncListsResponse syncListsResponse) {
 
-                    Log.d("SL", "Returned from creating task");
+                    Log.d(Constants.TAG, "Returned from creating task");
                     if (syncListsResponse == null) {
-                        Log.d("SL", "Error creating task");
+                        Log.d(Constants.TAG, "Error creating task");
                         Toast.makeText(mContext, "Error creating task",
                                 Toast.LENGTH_SHORT).show();
 
@@ -137,7 +137,7 @@ public class TaskListAdapter extends ArrayAdapter<SyncListsTask> implements Undo
                         try {
                             JSONObject jsonObject = new JSONObject(syncListsResponse.getBody());
                             task.setId(jsonObject.getInt("pk"));
-                            Log.d("SL", "Success creating task " + task.getId());
+                            Log.d(Constants.TAG, "Success creating task " + task.getId());
                         }
                         catch (Exception e) {
 

@@ -24,10 +24,10 @@ public class SyncListsGetTasksAsyncTask extends SyncListsRequestAsyncTask {
     protected void onPostExecute(SyncListsResponse result) {
         //handle valid login
 
-        Log.d("SyncLists", "Result " + result.toString());
-        Log.d("SyncLists", "Response " + result.getHttpResponse());
-        Log.d("SyncLists", "Status Line " + result.getHttpResponse().getStatusLine());
-        Log.d("SyncLists", "Status code " + result.getHttpResponse().getStatusLine().getStatusCode());
+        Log.d(Constants.TAG, "Result " + result.toString());
+        Log.d(Constants.TAG, "Response " + result.getHttpResponse());
+        Log.d(Constants.TAG, "Status Line " + result.getHttpResponse().getStatusLine());
+        Log.d(Constants.TAG, "Status code " + result.getHttpResponse().getStatusLine().getStatusCode());
 
         if(result.getHttpResponse().getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
             mSyncListsRequestAsyncTaskCallback.onTaskComplete(result);

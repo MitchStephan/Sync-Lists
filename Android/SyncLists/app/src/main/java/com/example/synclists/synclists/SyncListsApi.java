@@ -41,7 +41,7 @@ public class SyncListsApi {
         json.put("email", email);
 
         if (isNetworkAvailable(context) && newPassword.equals(confirmNewPassword)) {
-            Log.d("SyncLists", "Email: " + email);
+            Log.d(Constants.TAG, "Email: " + email);
             SyncListsRequest request = new SyncListsRequest(
                     SyncListsRequest.SyncListsRequestMethod.PUT, "user", json);
 
@@ -91,7 +91,7 @@ public class SyncListsApi {
         json.put("name", name);
 
         if (isNetworkAvailable(context)) {
-            Log.d("SL", "Making createTask request");
+            Log.d(Constants.TAG, "Making createTask request");
             SyncListsRequest request = new SyncListsRequest(
                     SyncListsRequest.SyncListsRequestMethod.POST, "lists/" + listId + "/tasks", json);
 
@@ -106,7 +106,7 @@ public class SyncListsApi {
         json.put("visible", 0);
 
         if (isNetworkAvailable(context)) {
-            Log.d("SL", "Making updateTask request");
+            Log.d(Constants.TAG, "Making updateTask request");
             SyncListsRequest request = new SyncListsRequest(
                     SyncListsRequest.SyncListsRequestMethod.PUT, "lists/" + listId + "/tasks/" + task.getId(), json);
 
