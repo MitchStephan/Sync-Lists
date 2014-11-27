@@ -20,8 +20,6 @@ import java.util.Map;
  */
 public class SyncListsApi {
 
-    protected final static String USER_CONTEXT = "USER-CONTEXT";
-
     protected static void login(Activity activity, String email, String password, Context context) {
         Map<String, Object> json = new HashMap<String, Object>();
         json.put("email", email);
@@ -175,7 +173,7 @@ public class SyncListsApi {
 
     protected static void logout() {
         SharedPreferences.Editor editor = SyncListsLogin.getPreferencesEditor();
-        editor.remove(USER_CONTEXT);
+        editor.remove(Constants.USER_CONTEXT_HEADER);
         editor.commit();
     }
 

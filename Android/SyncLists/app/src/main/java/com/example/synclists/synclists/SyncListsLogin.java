@@ -35,8 +35,8 @@ public class SyncListsLogin extends Activity {
         //set up prefs
         mPrefs = getSharedPreferences(PREF_FILE_NAME, MODE_PRIVATE);
 
-        Log.d(Constants.TAG, " USER CONTEXT " + mPrefs.getInt(SyncListsApi.USER_CONTEXT, -1));
-        if(mPrefs.getInt(SyncListsApi.USER_CONTEXT, -1) != -1) {
+        Log.d(Constants.TAG, " USER CONTEXT " + mPrefs.getInt(Constants.USER_CONTEXT_HEADER, -1));
+        if(mPrefs.getInt(Constants.USER_CONTEXT_HEADER, -1) != -1) {
             Intent lists = new Intent(this, ListsActivity.class);
             startActivity(lists);
         }

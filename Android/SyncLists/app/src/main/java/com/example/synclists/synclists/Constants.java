@@ -8,6 +8,9 @@ public final class Constants {
     /* App TAG */
     public static final String TAG = "SyncLists";
 
+    /* USER-CONTEXT header */
+    protected final static String USER_CONTEXT_HEADER = "USER-CONTEXT";
+
     /* resources */
 
     /* path to fontawesome assets */

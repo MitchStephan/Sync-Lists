@@ -26,7 +26,7 @@ public class SyncListsCreateUserAsyncTask extends SyncListsRequestAsyncTask  {
 
                 //Write out user-context
                 SharedPreferences.Editor editor = SyncListsLogin.getPreferencesEditor();
-                editor.putInt(SyncListsApi.USER_CONTEXT, jsonObject.getInt("pk"));
+                editor.putInt(Constants.USER_CONTEXT_HEADER, jsonObject.getInt("pk"));
                 editor.commit();
 
                 Intent lists = new Intent(mActivity, ListsActivity.class);

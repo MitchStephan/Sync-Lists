@@ -86,7 +86,7 @@ public class SyncListsRequest {
         request.setHeader("Content-Type", CONTENT_TYPE);
 
         // add user-context header if set in Preferences
-        int userContext = SyncListsLogin.mPrefs.getInt(SyncListsApi.USER_CONTEXT, -1);
+        int userContext = SyncListsLogin.mPrefs.getInt(Constants.USER_CONTEXT_HEADER, -1);
         if(userContext != -1) {
             request.setHeader("User-Context", Integer.toString(userContext));
         }

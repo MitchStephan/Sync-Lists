@@ -45,7 +45,7 @@ public class SyncListsLoginAsyncTask extends SyncListsRequestAsyncTask {
 
                 //Write out user_context
                 SharedPreferences.Editor editor = SyncListsLogin.getPreferencesEditor();
-                editor.putInt(SyncListsApi.USER_CONTEXT, jsonObject.getInt("pk"));
+                editor.putInt(Constants.USER_CONTEXT_HEADER, jsonObject.getInt("pk"));
                 // Save email
                 editor.putString("Email", jsonObject.getJSONObject("fields").getString("email"));
                 editor.commit();
