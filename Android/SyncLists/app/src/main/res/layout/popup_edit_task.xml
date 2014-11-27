@@ -7,14 +7,14 @@
     android:padding="10dp" >
 
     <TextView
-        android:id="@+id/editListTextView"
+        android:id="@+id/editTaskTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/popup_edit_list_label"
+        android:text="@string/popup_edit_task_label"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <EditText
-        android:id="@+id/editListUserInput"
+        android:id="@+id/editTaskUserInput"
         android:layout_width="match_parent"
         android:inputType="text"
         android:layout_height="wrap_content" >

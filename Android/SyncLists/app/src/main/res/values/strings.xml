@@ -22,6 +22,7 @@
     <string name="logout">Logout</string>
 
     <string name="popup_edit_list_label">New list name</string>
+    <string name="popup_edit_task_label">New task name</string>
 
     <!-- Icon Fonts -->
     <string name="cog">&#xf013;</string>

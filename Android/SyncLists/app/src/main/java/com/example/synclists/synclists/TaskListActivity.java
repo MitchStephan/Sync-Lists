@@ -1,15 +1,20 @@
 package com.example.synclists.synclists;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.nhaarman.listviewanimations.itemmanipulation.DynamicListView;
@@ -147,6 +152,76 @@ public class TaskListActivity extends Activity {
                 showKeyboard();
             }
         }
+    }
+
+    public void onClickEditTask(View v) {
+
+        final SyncListsTask task = (SyncListsTask) v.getTag();
+        final String currentTaskName = task.getName();
+
+        // get prompts.xml view
+        LayoutInflater layoutInflater = LayoutInflater.from(this);
+
+        View promptView = layoutInflater.inflate(R.layout.popup_edit_task, null);
+
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+
+        // set prompts.xml to be the layout file of the alertdialog builder
+        alertDialogBuilder.setView(promptView);
+
+        final EditText input = (EditText) promptView.findViewById(R.id.editTaskUserInput);
+        input.setText(currentTaskName);
+
+        //set cursor to after last letter
+        input.setSelection(currentTaskName.length());
+
+        // setup a dialog window
+        alertDialogBuilder
+                .setCancelable(false)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        final String successMessage = "Task name successfully updated";
+                        final String newTaskName = input.getText().toString();
+
+                        //only make API call if list name changed
+                        if (currentTaskName.equals(newTaskName)) {
+                            Toast.makeText(CONTEXT, successMessage, Toast.LENGTH_SHORT).show();
+                        }
+                        else {
+                            task.setName(newTaskName);
+
+                            SyncListsApi.updateTask(new SyncListsRequestAsyncTaskCallback() {
+                                @Override
+                                public void onTaskComplete(SyncListsResponse syncListsResponse) {
+                                    if (syncListsResponse == null) {
+                                        Toast.makeText(CONTEXT, "Error renaming task " + task.getName(),
+                                                Toast.LENGTH_SHORT).show();
+                                        task.setName(currentTaskName);
+                                    } else {
+                                        Toast.makeText(CONTEXT, successMessage,
+                                                Toast.LENGTH_SHORT).show();
+
+                                        int position = mAdapter.getPosition(task);
+                                        View view = mDynamicListView.getChildAt(position);
+                                        TextView editText = (TextView) view.findViewById(R.id.task_name);
+                                        editText.setText(newTaskName);
+                                    }
+                                }
+                            }, mListId, task, CONTEXT);
+                        }
+                    }
+                })
+                .setNegativeButton("Cancel",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
+
+        // create an alert dialog
+        AlertDialog alertD = alertDialogBuilder.create();
+
+        alertD.show();
     }
 
     private boolean isElementEdit(int position) {

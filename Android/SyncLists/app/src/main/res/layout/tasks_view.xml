@@ -29,4 +29,14 @@
         android:onClick="taskSettings"
         android:scaleType="fitCenter"/>
 
+    <Button
+        android:id="@+id/editTask"
+        android:text="@string/fa_edit"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_toStartOf="@id/task_settings"
+        android:layout_toLeftOf="@id/task_settings"
+        android:scaleType="fitCenter"
+        android:onClick="onClickEditTask"/>
+
 </RelativeLayout>

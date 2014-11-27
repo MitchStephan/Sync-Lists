@@ -64,6 +64,10 @@ public class TaskListAdapter extends ArrayAdapter<SyncListsTask> implements Undo
             row = inflater.inflate(R.layout.tasks_view, parent, false);
             holder = new TaskHolder();
 
+            Typeface font = Typeface.createFromAsset( mContext.getAssets(), "fontawesome-webfont.ttf" );
+            holder.taskEditButton = (Button) row.findViewById(R.id.editTask);
+            holder.taskEditButton.setTypeface(font);
+
             holder.taskSettingsButton = (ImageButton)row.findViewById(R.id.task_settings);
             holder.taskText = (TextView)row.findViewById(R.id.task_name);
             row.setTag(holder);
@@ -73,6 +77,7 @@ public class TaskListAdapter extends ArrayAdapter<SyncListsTask> implements Undo
         }
 
         holder.task = task;
+        holder.taskEditButton.setTag(holder.task);
         holder.taskSettingsButton.setTag(holder.task);
         holder.taskText.setText(holder.task.getName());
         return row;
@@ -183,6 +188,7 @@ public class TaskListAdapter extends ArrayAdapter<SyncListsTask> implements Undo
     public static class TaskHolder {
         SyncListsTask task;
         TextView taskText;
+        Button taskEditButton;
         ImageButton taskSettingsButton;
     }
 }

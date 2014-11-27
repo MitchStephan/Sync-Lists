@@ -121,7 +121,7 @@ public class ListsActivity extends Activity {
         // set prompts.xml to be the layout file of the alertdialog builder
         alertDialogBuilder.setView(promptView);
 
-        final EditText input = (EditText) promptView.findViewById(R.id.userInput);
+        final EditText input = (EditText) promptView.findViewById(R.id.editListUserInput);
         input.setText(currentListName);
 
         //set cursor to after last letter
