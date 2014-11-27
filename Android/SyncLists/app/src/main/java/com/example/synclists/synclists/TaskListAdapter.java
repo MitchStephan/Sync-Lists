@@ -64,9 +64,8 @@ public class TaskListAdapter extends ArrayAdapter<SyncListsTask> implements Undo
             row = inflater.inflate(R.layout.tasks_view, parent, false);
             holder = new TaskHolder();
 
-            Typeface font = Typeface.createFromAsset( mContext.getAssets(), "fontawesome-webfont.ttf" );
             holder.taskEditButton = (Button) row.findViewById(R.id.editTask);
-            holder.taskEditButton.setTypeface(font);
+            holder.taskEditButton.setTypeface(Typefaces.get(mContext));
 
             holder.taskSettingsButton = (ImageButton)row.findViewById(R.id.task_settings);
             holder.taskText = (TextView)row.findViewById(R.id.task_name);
@@ -87,9 +86,8 @@ public class TaskListAdapter extends ArrayAdapter<SyncListsTask> implements Undo
         View row = inflater.inflate(R.layout.tasks_edit_view, parent, false);
 
         //set typeface for button
-        Typeface font = Typeface.createFromAsset( mContext.getAssets(), "fontawesome-webfont.ttf" );
         Button button = (Button)row.findViewById( R.id.taskEditDeleteButton );
-        button.setTypeface(font);
+        button.setTypeface(Typefaces.get(mContext));
         button.setTag(task);
 
 
@@ -178,9 +176,8 @@ public class TaskListAdapter extends ArrayAdapter<SyncListsTask> implements Undo
 
     @Override
     public View getUndoClickView(final View view) {
-        Typeface font = Typeface.createFromAsset( mContext.getAssets(), "fontawesome-webfont.ttf" );
         TextView textView = (TextView) view.findViewById(R.id.task_undo_row_texttv);
-        textView.setTypeface(font);
+        textView.setTypeface(Typefaces.get(mContext));
 
         return view.findViewById(R.id.undo_row_undobutton);
     }
