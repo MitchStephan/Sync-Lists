@@ -1,8 +1,10 @@
 package com.example.synclists.synclists;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -98,8 +100,40 @@ public class SettingsActivity extends Activity{
     }
 
     public void onSyncEveryClicked(View v) {
-        Toast.makeText(SettingsActivity.this,
-                "Sync is clicked!", Toast.LENGTH_SHORT).show();
+        AlertDialog.Builder adb = new AlertDialog.Builder(this);
+        final CharSequence options[] = new CharSequence[] {"15 seconds", "30 seconds", "1 minute", "5 minutes"};
+        final int optionsInMilliseconds [] = {15000, 30000, 60000, 300000};
+
+        int currentOption = 0;
+        SharedPreferences prefs = getSharedPreferences(Constants.PREF_FILE_NAME, MODE_PRIVATE);
+        int syncEvery = prefs.getInt(Constants.PREF_SYNC_EVERY, Constants.DEFAULT_SYNC_EVERY);
+
+        for(int i = 0; i < optionsInMilliseconds.length; i++) {
+            if(optionsInMilliseconds[i] == syncEvery) {
+                currentOption = i;
+                break;
+            }
+        }
+
+        adb.setSingleChoiceItems(options, currentOption, new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int n) {
+                dialog.dismiss();
+
+                SharedPreferences.Editor editor = SyncListsLogin.getPreferencesEditor();
+                editor.putInt(Constants.PREF_SYNC_EVERY, optionsInMilliseconds[n]);
+                editor.apply();
+
+                Toast.makeText(SettingsActivity.this,
+                        "Set to sync every " + options[n], Toast.LENGTH_SHORT).show();
+            }
+
+        });
+
+        adb.setNegativeButton(getString(R.string.cancel), null);
+        adb.setTitle(getString(R.string.sync_every));
+        adb.show();
     }
 
     public void onChangePasswordClicked(View v) {

@@ -15,15 +15,17 @@ public class SyncListsSync {
     private Timer mTimer;
     private SyncListsSyncTask mSyncListsSyncTask;
     private SharedPreferences mPrefs;
+    private String mClassName;
 
     public SyncListsSync(Activity context, SyncListsSyncTask syncListsSyncTask) {
         mContext = context;
         mSyncListsSyncTask = syncListsSyncTask;
         mPrefs = mContext.getSharedPreferences(Constants.PREF_FILE_NAME, mContext.MODE_PRIVATE);
+        mClassName = mContext.getLocalClassName();
     }
 
     public void stopSync() {
-        Log.d(Constants.TAG, "Syncing stopped for " + mContext.getLocalClassName());
+        Log.d(Constants.TAG, "Syncing stopped for " + mClassName);
         mTimer.cancel();
     }
 
@@ -34,8 +36,11 @@ public class SyncListsSync {
     public void startSync(boolean delay) {
         Log.d(Constants.TAG, "Sync Started");
 
-        final String logMessage = "Syncing for " + mContext.getLocalClassName() + "...";
+        final String logMessage = "Syncing for " + mClassName + "...";
         int syncEvery =  mPrefs.getInt(Constants.PREF_SYNC_EVERY, Constants.DEFAULT_SYNC_EVERY);
+
+        Log.d(Constants.TAG, "Set to sync every " + (syncEvery / 1000) + " seconds in " + mClassName);
+
         int delayTime = delay ? syncEvery : 0;
 
         mTimer = new Timer();

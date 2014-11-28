@@ -37,6 +37,7 @@ public class ListsActivity extends Activity {
     private DynamicListView mDynamicListView;
     private final Activity CONTEXT = this;
     private SyncListsSync mSyncer;
+    private boolean mFirstOnResume = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,7 +84,13 @@ public class ListsActivity extends Activity {
 
     protected void onResume() {
         super.onResume();
-        mSyncer.startSync(false);
+
+        if(mFirstOnResume) {
+            mSyncer.startSync();
+            mFirstOnResume = false;
+        }
+        else
+            mSyncer.startSync(false);
     }
 
     protected void onPause() {
