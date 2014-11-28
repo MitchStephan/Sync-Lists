@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -34,6 +35,8 @@ public class TaskListActivity extends Activity {
     private DynamicListView mDynamicListView;
     private final Activity CONTEXT = this;
     private final int SHOW_TASK_COMPLETED_TIME = 1000; // in milliseconds
+    private SyncListsSync mSyncer;
+    private boolean mFirstOnResume = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +89,24 @@ public class TaskListActivity extends Activity {
                 }
             }
         }, mListId, CONTEXT);
+
+        mSyncer = new SyncListsSync(this, syncTasksTask);
+    }
+
+    protected void onResume() {
+        super.onResume();
+
+        if(mFirstOnResume) {
+            mSyncer.startSync();
+            mFirstOnResume = false;
+        }
+        else
+            mSyncer.startSync(false);
+    }
+
+    protected void onPause() {
+        super.onPause();
+        mSyncer.stopSync();
     }
 
     @Override
@@ -254,6 +275,13 @@ public class TaskListActivity extends Activity {
                     }
                 }, mListId, task, CONTEXT);
             }
+        }
+    };
+
+    private SyncListsSyncTask syncTasksTask = new SyncListsSyncTask() {
+        @Override
+        public void onPerformSync() {
+            Log.d(Constants.TAG, "In onPerformSync in TasksActivity");
         }
     };
 }

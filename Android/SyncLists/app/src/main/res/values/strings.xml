@@ -18,6 +18,8 @@
     <string name="sync_every">Sync Every...</string>
     <string name="instructions">Instructions</string>
 
+    <string name="cancel">Cancel</string>
+
     <string name="newListName">New list name</string>
     <string name="logout">Logout</string>
 
