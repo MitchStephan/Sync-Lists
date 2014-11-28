@@ -20,7 +20,7 @@ import java.util.Map;
 public class SyncListsRequest {
     private final String USER_AGENT = "SyncLists-AndroidClient/1.0";
     private final String CONTENT_TYPE = "application/json";
-    private final String API_BASE = "http://mitchstephan.pythonanywhere.com/api/";
+    private final String API_BASE = "http://synclists.pythonanywhere.com/api/";
 
     private String mPath;
 

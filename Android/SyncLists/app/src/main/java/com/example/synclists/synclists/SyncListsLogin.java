@@ -64,13 +64,6 @@ public class SyncListsLogin extends Activity {
         return SyncListsLogin.mPrefs.edit();
     }
 
-    public void hideKeyboard(View view) {
-        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        if(imm != null){
-            imm.toggleSoftInput(0, InputMethodManager.HIDE_IMPLICIT_ONLY);
-        }
-    }
-
     private class PasswordOnKeyListener implements View.OnKeyListener {
 
         public boolean onKey(View v, int keyCode, KeyEvent event) {

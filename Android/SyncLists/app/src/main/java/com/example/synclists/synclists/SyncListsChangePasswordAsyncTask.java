@@ -44,7 +44,11 @@ public class SyncListsChangePasswordAsyncTask extends SyncListsRequestAsyncTask 
         if(result.getHttpResponse().getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
 
             Toast.makeText(mActivity, "Your password has changed", Toast.LENGTH_SHORT).show();
-            mProgressDialog.dismiss();
         }
+        else
+        {
+            Toast.makeText(mActivity, "Something went wrong, please try again later", Toast.LENGTH_SHORT).show();
+        }
+        mProgressDialog.dismiss();
     }
 }

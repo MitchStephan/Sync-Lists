@@ -32,6 +32,7 @@ public class SettingsActivity extends Activity{
 
     private ArrayAdapter mSettingsAdapter;
     private String mEmail;
+    private Boolean mSharingEnabled;
     private final String CHANGE_PASSWORD = "Change Password";
     private final String SYNC_EVERY = "Sync Every...";
     private final String INSTRUCTIONS = "Instructions";
@@ -168,6 +169,7 @@ public class SettingsActivity extends Activity{
     public void changePassword(View view, String newPassword, String confirmPassword) {
         SharedPreferences prefs = this.getSharedPreferences("SyncListsPrefs", Context.MODE_PRIVATE);
         mEmail = prefs.getString("Email", null);
-        SyncListsApi.changePassword(this, newPassword, confirmPassword, this, mEmail);
+        mSharingEnabled = prefs.getBoolean("sharingEnabled", true);
+        SyncListsApi.changePassword(this, newPassword, confirmPassword, this, mEmail, mSharingEnabled);
     }
 }

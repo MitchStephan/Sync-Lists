@@ -43,11 +43,13 @@ public class SyncListsLoginAsyncTask extends SyncListsRequestAsyncTask {
             try {
                 JSONObject jsonObject = new JSONObject(result.getBody());
 
-                //Write out user_context
+                // Write out user_context
                 SharedPreferences.Editor editor = SyncListsLogin.getPreferencesEditor();
                 editor.putInt(Constants.USER_CONTEXT_HEADER, jsonObject.getInt("pk"));
                 // Save email
                 editor.putString("Email", jsonObject.getJSONObject("fields").getString("email"));
+                // Save preferences
+                editor.putBoolean("sharingEnabled", jsonObject.getJSONObject("fields").getBoolean("sharing_enabled"));
                 editor.apply();
 
                 Intent lists = new Intent(mActivity, ListsActivity.class);
@@ -55,7 +57,7 @@ public class SyncListsLoginAsyncTask extends SyncListsRequestAsyncTask {
                 return;
             }
             catch(Exception e) {
-                //if exception parsing json, then error loggin in
+                // if exception parsing json, then error loggin in
             }
         }
 

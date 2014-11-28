@@ -33,10 +33,18 @@ public class SyncListsApi {
         }
     }
 
-    protected static void changePassword(Activity activity, String newPassword, String confirmNewPassword, Context context, String email) {
+    protected static void changePassword(Activity activity, String newPassword, String confirmNewPassword, Context context, String email, Boolean sharingEnabled) {
         Map<String, Object> json = new HashMap<String, Object>();
         json.put("password", newPassword);
         json.put("email", email);
+        if (sharingEnabled)
+        {
+            json.put("sharing_enabled", 1);
+        }
+        else
+        {
+            json.put("sharing_enabled", 0);
+        }
 
         if (isNetworkAvailable(context) && newPassword.equals(confirmNewPassword)) {
             Log.d(Constants.TAG, "Email: " + email);
