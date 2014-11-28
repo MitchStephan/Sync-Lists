@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -35,6 +36,7 @@ public class ListsActivity extends Activity {
     public boolean mCanAddList;
     private DynamicListView mDynamicListView;
     private final Activity CONTEXT = this;
+    private SyncListsSync mSyncer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +77,18 @@ public class ListsActivity extends Activity {
                 }
             }
         }, this);
+
+        mSyncer = new SyncListsSync(this, syncListsTask);
+    }
+
+    protected void onResume() {
+        super.onResume();
+        mSyncer.startSync();
+    }
+
+    protected void onPause() {
+        super.onPause();
+        mSyncer.stopSync();
     }
 
     public void addList(MenuItem item) {
@@ -254,4 +268,10 @@ public class ListsActivity extends Activity {
         }
     };
 
+    private SyncListsSyncTask syncListsTask = new SyncListsSyncTask() {
+        @Override
+        public void onPerformSync() {
+            Log.d(Constants.TAG, "In onPerformSync in ListsActivity");
+        }
+    };
 }

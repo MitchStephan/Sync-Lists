@@ -20,7 +20,6 @@ public class SyncListsLogin extends Activity {
     private EditText mEmail = null;
     private EditText mPassword = null;
     protected static SharedPreferences mPrefs;
-    private final String PREF_FILE_NAME = "SyncListsPrefs";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,9 +32,9 @@ public class SyncListsLogin extends Activity {
         mPassword.setOnKeyListener(new PasswordOnKeyListener());
 
         //set up prefs
-        mPrefs = getSharedPreferences(PREF_FILE_NAME, MODE_PRIVATE);
+        mPrefs = getSharedPreferences(Constants.PREF_FILE_NAME, MODE_PRIVATE);
 
-        Log.d(Constants.TAG, " USER CONTEXT " + mPrefs.getInt(Constants.USER_CONTEXT_HEADER, -1));
+        Log.d(Constants.TAG, " USER CONTEXT " + mPrefs.getInt(Constants.PREF_USER_CONTEXT, -1));
         if(mPrefs.getInt(Constants.USER_CONTEXT_HEADER, -1) != -1) {
             Intent lists = new Intent(this, ListsActivity.class);
             startActivity(lists);

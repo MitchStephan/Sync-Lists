@@ -173,7 +173,7 @@ public class SyncListsApi {
 
     protected static void logout() {
         SharedPreferences.Editor editor = SyncListsLogin.getPreferencesEditor();
-        editor.remove(Constants.USER_CONTEXT_HEADER);
+        editor.remove(Constants.PREF_USER_CONTEXT);
         editor.commit();
     }
 
