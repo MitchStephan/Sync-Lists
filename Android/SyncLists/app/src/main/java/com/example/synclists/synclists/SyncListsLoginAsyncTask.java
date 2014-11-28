@@ -48,7 +48,7 @@ public class SyncListsLoginAsyncTask extends SyncListsRequestAsyncTask {
                 editor.putInt(Constants.USER_CONTEXT_HEADER, jsonObject.getInt("pk"));
                 // Save email
                 editor.putString("Email", jsonObject.getJSONObject("fields").getString("email"));
-                editor.commit();
+                editor.apply();
 
                 Intent lists = new Intent(mActivity, ListsActivity.class);
                 mActivity.startActivity(lists);

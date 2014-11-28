@@ -174,7 +174,7 @@ public class SyncListsApi {
     protected static void logout() {
         SharedPreferences.Editor editor = SyncListsLogin.getPreferencesEditor();
         editor.remove(Constants.PREF_USER_CONTEXT);
-        editor.commit();
+        editor.apply();
     }
 
     private static boolean isNetworkAvailable(Context context) {
