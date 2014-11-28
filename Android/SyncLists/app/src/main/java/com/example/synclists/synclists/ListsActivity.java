@@ -83,7 +83,7 @@ public class ListsActivity extends Activity {
 
     protected void onResume() {
         super.onResume();
-        mSyncer.startSync();
+        mSyncer.startSync(false);
     }
 
     protected void onPause() {
