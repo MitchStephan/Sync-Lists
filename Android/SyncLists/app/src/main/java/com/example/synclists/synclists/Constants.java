@@ -21,10 +21,12 @@ public final class Constants {
 
     // in milliseconds
     protected static final int DEFAULT_SYNC_EVERY = 30000;
+    protected static final boolean DEFAULT_SHARING = true;
 
     /* Prefs */
     protected static final String PREF_SYNC_EVERY = "SYNC_EVERY";
     protected final static String PREF_USER_CONTEXT = "USER-CONTEXT";
+    protected final static String PREF_SHARING = "SHARING_ENABLED";
 
     private Constants() throws Exception {
         throw new Exception("Cannot instantiate Constants class");

@@ -37,7 +37,8 @@ public class SettingsActivity extends Activity{
     private final String SYNC_EVERY = "Sync Every...";
     private final String INSTRUCTIONS = "Instructions";
     private final String LOGOUT = "Logout";
-    private final String[] M_SETTINGS = new String[] { CHANGE_PASSWORD, SYNC_EVERY, INSTRUCTIONS, LOGOUT };
+    private final String SHARING = "Toggle Sharing";
+    private final String[] M_SETTINGS = new String[] { INSTRUCTIONS, SHARING, SYNC_EVERY, CHANGE_PASSWORD, LOGOUT };
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,11 +64,50 @@ public class SettingsActivity extends Activity{
                 else if(settingTitle.equals(LOGOUT)) {
                     onLogoutClicked(view);
                 }
+                else if(settingTitle.equals(SHARING)) {
+                    onSharingClicked(view);
+                }
                 else {
                     //silence is golden
                 }
             }
         });
+    }
+
+    private void onSharingClicked(View view) {
+        AlertDialog.Builder adb = new AlertDialog.Builder(this);
+        final CharSequence options[] = new CharSequence[] {"Sharing On", "Sharing Off"};
+        final boolean boolOptions [] = {true, false};
+
+        int currentOption = 0;
+        SharedPreferences prefs = getSharedPreferences(Constants.PREF_FILE_NAME, MODE_PRIVATE);
+        boolean sharing = prefs.getBoolean(Constants.PREF_SHARING, Constants.DEFAULT_SHARING);
+
+
+        if(!sharing) {
+            currentOption = 1;
+        }
+
+
+        adb.setSingleChoiceItems(options, currentOption, new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int n) {
+                dialog.dismiss();
+
+                SharedPreferences.Editor editor = SyncListsLogin.getPreferencesEditor();
+                editor.putBoolean(Constants.PREF_SHARING, boolOptions[n]);
+                editor.apply();
+
+                Toast.makeText(SettingsActivity.this,
+                         options[n], Toast.LENGTH_SHORT).show();
+            }
+
+        });
+
+        adb.setNegativeButton(getString(R.string.cancel), null);
+        adb.setTitle("Toggle Sharing");
+        adb.show();
     }
 
     public void onLogoutClicked(View v) {
@@ -169,7 +209,7 @@ public class SettingsActivity extends Activity{
     public void changePassword(View view, String newPassword, String confirmPassword) {
         SharedPreferences prefs = this.getSharedPreferences("SyncListsPrefs", Context.MODE_PRIVATE);
         mEmail = prefs.getString("Email", null);
-        mSharingEnabled = prefs.getBoolean("sharingEnabled", true);
+        mSharingEnabled = prefs.getBoolean(Constants.PREF_SHARING, Constants.DEFAULT_SHARING);
         SyncListsApi.changePassword(this, newPassword, confirmPassword, this, mEmail, mSharingEnabled);
     }
 }
