@@ -27,10 +27,12 @@ public class SyncListsCreateUserAsyncTask extends SyncListsRequestAsyncTask  {
                 // Write out user-context
                 SharedPreferences.Editor editor = SyncListsLogin.getPreferencesEditor();
                 editor.putInt(Constants.USER_CONTEXT_HEADER, jsonObject.getInt("pk"));
+                editor.apply();
                 // Save email
-                editor.putString("Email", jsonObject.getJSONObject("fields").getString("email"));
+                editor.putString(Constants.PREF_EMAIL, jsonObject.getJSONObject("fields").getString("email"));
+                editor.apply();
                 // Save preferences
-                editor.putBoolean("sharingEnabled", jsonObject.getJSONObject("fields").getBoolean("sharing_enabled"));
+                editor.putBoolean(Constants.PREF_SHARING, jsonObject.getJSONObject("fields").getBoolean("sharing_enabled"));
                 editor.apply();
 
                 Intent lists = new Intent(mActivity, ListsActivity.class);

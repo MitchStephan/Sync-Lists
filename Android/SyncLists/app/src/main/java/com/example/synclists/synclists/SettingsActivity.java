@@ -81,10 +81,8 @@ public class SettingsActivity extends Activity{
 
         int currentOption = 0;
         SharedPreferences prefs = getSharedPreferences(Constants.PREF_FILE_NAME, MODE_PRIVATE);
-        final String email = prefs.getString("email", "");
+        final String email = prefs.getString(Constants.PREF_EMAIL, Constants.DEFAULT_EMAIL);
         final boolean sharing = prefs.getBoolean(Constants.PREF_SHARING, Constants.DEFAULT_SHARING);
-
-
 
         if(!sharing) {
             currentOption = 1;
@@ -223,7 +221,7 @@ public class SettingsActivity extends Activity{
 
     public void changePassword(View view, String newPassword, String confirmPassword) {
         SharedPreferences prefs = this.getSharedPreferences("SyncListsPrefs", Context.MODE_PRIVATE);
-        mEmail = prefs.getString("Email", null);
+        mEmail = prefs.getString(Constants.PREF_EMAIL, Constants.DEFAULT_EMAIL);
         mSharingEnabled = prefs.getBoolean(Constants.PREF_SHARING, Constants.DEFAULT_SHARING);
         SyncListsApi.changePassword(this, newPassword, confirmPassword, this, mEmail, mSharingEnabled);
     }
