@@ -186,6 +186,22 @@ public class SyncListsApi {
         return lists;
     }
 
+    protected static Map<Integer, SyncListsList> parseListsAsMap(String json) throws Exception {
+        HashMap<Integer, SyncListsList> lists = new HashMap<Integer, SyncListsList>();
+        JSONArray jsonArray = new JSONArray(json);
+
+        for(int i = 0; i < jsonArray.length(); i++) {
+            JSONObject jsonObject = jsonArray.getJSONObject(i);
+            JSONObject fields = jsonObject.getJSONObject("fields");
+
+            //should handle Integer.parseInt in case error
+            SyncListsList list = new SyncListsList(Integer.parseInt(jsonObject.get("pk").toString()), fields.get("name").toString());
+            lists.put(list.getId(), list);
+        }
+
+        return lists;
+    }
+
     protected static ArrayList<SyncListsTask> parseTasks(String json) throws Exception {
         ArrayList<SyncListsTask> tasks = new ArrayList<SyncListsTask>();
         JSONArray jsonArray = new JSONArray(json);

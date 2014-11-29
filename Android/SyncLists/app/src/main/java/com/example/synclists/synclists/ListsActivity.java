@@ -24,7 +24,9 @@ import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.OnDismissCa
 import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.undo.TimedUndoAdapter;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by ethan on 10/25/14.
@@ -279,6 +281,66 @@ public class ListsActivity extends Activity {
         @Override
         public void onPerformSync() {
             Log.d(Constants.TAG, "In onPerformSync in ListsActivity");
+
+            SyncListsApi.getLists(new SyncListsRequestAsyncTaskCallback() {
+                @Override
+                public void onTaskComplete(SyncListsResponse syncListsResponse) {
+                    if (syncListsResponse != null) {
+                        try {
+                            Map<Integer, SyncListsList> lists = SyncListsApi.parseListsAsMap(syncListsResponse.getBody());
+                            Log.d(Constants.TAG, "lists parsed as map");
+
+                            int i = 0;
+                            while(i < mAdapter.getCount()) {
+                                SyncListsList list = mAdapter.getItem(i);
+                                i++;
+
+                                if(list.getId() < 0) {
+                                    continue;
+                                }
+
+                                if(lists.containsKey(list.getId())) {
+                                    SyncListsList updatedList = lists.get(list.getId());
+
+                                    if(!list.getName().equals(updatedList.getName())) {
+
+                                        Toast.makeText(CONTEXT, "List " + list.getName() + " renamed to " + updatedList.getName(),
+                                                Toast.LENGTH_SHORT).show();
+
+                                        mAdapter.insert(updatedList, i);
+                                        mAdapter.remove(list);
+                                    }
+
+                                    lists.remove(list.getId());
+                                }
+                                else {
+                                    Log.d(Constants.TAG, "Deleting list " + list.getName() + " with id " + list.getId());
+                                    mAdapter.remove(list);
+
+                                    Toast.makeText(CONTEXT, "List " + list.getName() + " deleted",
+                                            Toast.LENGTH_SHORT).show();
+
+                                    i--;
+                                }
+                            }
+
+                            //any remaining lists are new and need to be added
+                            for(int newListId : lists.keySet()) {
+                                SyncListsList list = lists.get(newListId);
+                                Log.d(Constants.TAG, "Adding new list " + list.getName() + " with id " + list.getId());
+
+                                Toast.makeText(CONTEXT, "New list " + list.getName() + " added",
+                                        Toast.LENGTH_SHORT).show();
+
+                                mAdapter.add(lists.get(newListId));
+                            }
+                        }
+                        catch (Exception e) {
+                            Log.d(Constants.TAG, "exception parsing lists: " + e.getMessage());
+                        }
+                    }
+                }
+            }, CONTEXT);
         }
     };
 }
