@@ -12,8 +12,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:textAppearance="?android:attr/textAppearanceListItemSmall"
-        android:paddingStart="?android:attr/listPreferredItemPaddingStart"
-        android:paddingLeft="?android:attr/listPreferredItemPaddingLeft"
         android:paddingEnd="?android:attr/listPreferredItemPaddingEnd"
         android:paddingRight="?android:attr/listPreferredItemPaddingRight"
         android:minHeight="?android:attr/listPreferredItemHeightSmall"
