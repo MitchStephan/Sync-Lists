@@ -60,20 +60,15 @@ public class TaskListAdapter extends ArrayAdapter<SyncListsTask> implements Undo
         View row = convertView;
         TaskHolder holder;
 
-        if(row == null) {
-            row = inflater.inflate(R.layout.tasks_view, parent, false);
-            holder = new TaskHolder();
+        row = inflater.inflate(R.layout.tasks_view, parent, false);
+        holder = new TaskHolder();
 
-            holder.taskEditButton = (Button) row.findViewById(R.id.editTask);
-            holder.taskEditButton.setTypeface(Typefaces.get(mContext));
+        holder.taskEditButton = (Button) row.findViewById(R.id.editTask);
+        holder.taskEditButton.setTypeface(Typefaces.get(mContext));
 
-            holder.taskSettingsButton = (ImageButton)row.findViewById(R.id.task_settings);
-            holder.taskText = (TextView)row.findViewById(R.id.task_name);
-            row.setTag(holder);
-        }
-        else {
-            holder = (TaskHolder) row.getTag();
-        }
+        holder.taskSettingsButton = (ImageButton)row.findViewById(R.id.task_settings);
+        holder.taskText = (TextView)row.findViewById(R.id.task_name);
+        row.setTag(holder);
 
         holder.task = task;
         holder.taskEditButton.setTag(holder.task);
