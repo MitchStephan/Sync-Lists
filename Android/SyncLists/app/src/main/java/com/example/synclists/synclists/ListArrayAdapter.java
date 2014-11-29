@@ -63,21 +63,16 @@ public class ListArrayAdapter extends ArrayAdapter<SyncListsList> implements Und
         View row = convertView;
         ListRowHolder holder;
 
-        if(row == null) {
-            row = inflater.inflate(R.layout.lists_list_view, parent, false);
-            holder = new ListRowHolder();
+        row = inflater.inflate(R.layout.lists_list_view, parent, false);
+        holder = new ListRowHolder();
 
-            holder.listsListViewEditButton = (Button) row.findViewById(R.id.editList);
-            holder.listsListViewEditButton.setTypeface(Typefaces.get(mContext));
+        holder.listsListViewEditButton = (Button) row.findViewById(R.id.editList);
+        holder.listsListViewEditButton.setTypeface(Typefaces.get(mContext));
 
-            holder.listsListViewSettingsButton = (ImageButton) row.findViewById(R.id.listsListViewSettingsButton);
-            holder.listsListViewText = (TextView) row.findViewById(R.id.listsListViewText);
+        holder.listsListViewSettingsButton = (ImageButton) row.findViewById(R.id.listsListViewSettingsButton);
+        holder.listsListViewText = (TextView) row.findViewById(R.id.listsListViewText);
 
-            row.setTag(holder);
-        }
-        else {
-            holder = (ListRowHolder) row.getTag();
-        }
+        row.setTag(holder);
 
         holder.list = list;
         holder.listsListViewEditButton.setTag(list);
@@ -103,6 +98,8 @@ public class ListArrayAdapter extends ArrayAdapter<SyncListsList> implements Und
         {
             @Override
             public boolean onEditorAction(TextView v, int keyCode, KeyEvent event) {
+                Log.d(Constants.TAG, "KEY PREESED");
+
                 if (keyCode == KeyEvent.KEYCODE_ENTER || keyCode == KeyEvent.KEYCODE_ENDCALL ||
                         keyCode == KeyEvent.ACTION_DOWN) {
                     String newListName = edit.getText().toString();
