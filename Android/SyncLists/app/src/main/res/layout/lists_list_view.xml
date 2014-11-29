@@ -36,12 +36,14 @@
 
     <Button
         android:id="@+id/editList"
-        android:text="@string/fa_share_alt"
+        android:text="@string/fa_edit"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_toStartOf="@id/listsListViewSharedUsersButton"
         android:layout_toLeftOf="@id/listsListViewSharedUsersButton"
         android:scaleType="fitCenter"
         android:onClick="onClickEditList"/>
+
+
 
 </RelativeLayout>

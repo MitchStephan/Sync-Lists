@@ -1,34 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/userViewLayout"
+    android:id="@+id/user_view"
     android:orientation="horizontal" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/usersListViewText"
+    <EditText xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/userListEditView"
         android:layout_width="fill_parent"
         android:layout_marginEnd="50dp"
         android:layout_marginRight="50dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
+        android:hint="@string/newListName"
         android:textAppearance="?android:attr/textAppearanceListItemSmall"
-        android:paddingStart="?android:attr/listPreferredItemPaddingStart"
-        android:paddingLeft="?android:attr/listPreferredItemPaddingLeft"
-        android:paddingEnd="?android:attr/listPreferredItemPaddingEnd"
-        android:paddingRight="?android:attr/listPreferredItemPaddingRight"
         android:minHeight="?android:attr/listPreferredItemHeightSmall"
-        android:textColor="@color/selector_txt"
-        android:hint="Name"
-        android:gravity="center_vertical"/>
+        android:maxLength="100"
+        android:inputType="text"/>
 
 
     <Button
-        android:id="@+id/userDeleteButton"
+        android:id="@+id/userEditDeleteButton"
         android:text="@string/close_x"
+        style="?android:attr/buttonStyleSmall"
         android:layout_alignParentRight="true"
         android:layout_width="50dp"
         android:layout_height="50dp"
+        android:textSize="35sp"
         android:onClick="onClickDeleteEditList"
         android:scaleType="fitCenter"
         android:textColor="#ff0000"/>

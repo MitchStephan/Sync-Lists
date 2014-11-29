@@ -25,7 +25,6 @@ import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.OnDismissCa
 import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.undo.TimedUndoAdapter;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -131,11 +130,17 @@ public class ListsActivity extends Activity {
     }
 
     public void onClickedEditSharedUsers(View v) {
+        ArrayList<SyncListsUser> mUsers = new ArrayList<SyncListsUser>();
+        UsersArrayAdapter mAdapter = new UsersArrayAdapter(this, R.layout.user_view, mUsers);
+
+
         final Dialog sharedUsersDialog = new Dialog(this);
-        sharedUsersDialog.setContentView(R.layout.user_view);
+        sharedUsersDialog.setContentView(R.layout.user_list_view);
         sharedUsersDialog.setTitle("Shared Users");
+        mAdapter.add(new SyncListsUser(-1, "Yoyo", false));
 
         Button dialogButton = (Button) sharedUsersDialog.findViewById(R.id.userDeleteButton);
+        dialogButton.setTypeface(Typefaces.get(CONTEXT));
         // if button is clicked, close the custom dialog
         dialogButton.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -71,7 +71,9 @@ public class ListArrayAdapter extends ArrayAdapter<SyncListsList> implements Und
         holder.listsListViewEditButton = (Button) row.findViewById(R.id.editList);
         holder.listsListViewEditButton.setTypeface(Typefaces.get(mContext));
 
+
         holder.listsListViewSettingsButton = (Button) row.findViewById(R.id.listsListViewSharedUsersButton);
+        holder.listsListViewSettingsButton.setTypeface(Typefaces.get(mContext));
         holder.listsListViewText = (TextView) row.findViewById(R.id.listsListViewText);
 
         row.setTag(holder);
