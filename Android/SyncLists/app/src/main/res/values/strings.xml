@@ -37,6 +37,7 @@
     <string name="close_x">&#xf00d;</string>
     <string name="checkmark">&#xf046;</string>
     <string name="fa_edit">&#xf044;</string>
+    <string name="fa_share_alt">&#xf1e0;</string>
     <!-- Instruction text -->
     <string name="add_list_instruction">&#8226;To add a list, simply click the plus button and add a name.</string>
     <string name="remove_list_instruction">&#8226;Once you are done with a list, swipe the list left or right to remove.</string>

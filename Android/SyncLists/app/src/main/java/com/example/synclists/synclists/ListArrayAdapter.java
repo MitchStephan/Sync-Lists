@@ -71,7 +71,7 @@ public class ListArrayAdapter extends ArrayAdapter<SyncListsList> implements Und
         holder.listsListViewEditButton = (Button) row.findViewById(R.id.editList);
         holder.listsListViewEditButton.setTypeface(Typefaces.get(mContext));
 
-        holder.listsListViewSettingsButton = (ImageButton) row.findViewById(R.id.listsListViewSettingsButton);
+        holder.listsListViewSettingsButton = (Button) row.findViewById(R.id.listsListViewSharedUsersButton);
         holder.listsListViewText = (TextView) row.findViewById(R.id.listsListViewText);
 
         row.setTag(holder);
@@ -199,6 +199,6 @@ public class ListArrayAdapter extends ArrayAdapter<SyncListsList> implements Und
         SyncListsList list;
         TextView listsListViewText;
         Button listsListViewEditButton;
-        ImageButton listsListViewSettingsButton;
+        Button listsListViewSettingsButton;
     }
 }

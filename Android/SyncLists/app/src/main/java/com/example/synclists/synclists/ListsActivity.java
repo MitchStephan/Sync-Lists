@@ -2,6 +2,7 @@ package com.example.synclists.synclists;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -127,6 +128,23 @@ public class ListsActivity extends Activity {
         tasksIntent.putExtra("listId", list.getId());
         tasksIntent.putExtra("listName", list.getName());
         startActivity(tasksIntent);
+    }
+
+    public void onClickedEditSharedUsers(View v) {
+        final Dialog sharedUsersDialog = new Dialog(this);
+        sharedUsersDialog.setContentView(R.layout.user_view);
+        sharedUsersDialog.setTitle("Shared Users");
+
+        Button dialogButton = (Button) sharedUsersDialog.findViewById(R.id.userDeleteButton);
+        // if button is clicked, close the custom dialog
+        dialogButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sharedUsersDialog.dismiss();
+            }
+        });
+
+        sharedUsersDialog.show();
     }
 
     public void onClickEditList(View v) {
