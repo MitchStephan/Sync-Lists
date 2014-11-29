@@ -117,8 +117,6 @@ public class ListArrayAdapter extends ArrayAdapter<SyncListsList> implements Und
         {
             @Override
             public boolean onEditorAction(TextView v, int keyCode, KeyEvent event) {
-                Log.d(Constants.TAG, "KEY PREESED");
-
                 if (keyCode == KeyEvent.KEYCODE_ENTER || keyCode == KeyEvent.KEYCODE_ENDCALL ||
                         keyCode == KeyEvent.ACTION_DOWN) {
                     String newListName = edit.getText().toString();

@@ -26,6 +26,7 @@ import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.undo.TimedU
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by ethan on 10/27/14.
@@ -321,6 +322,85 @@ public class TaskListActivity extends Activity {
         @Override
         public void onPerformSync() {
             Log.d(Constants.TAG, "In onPerformSync in TasksActivity");
+
+            SyncListsApi.getTasks(new SyncListsRequestAsyncTaskCallback() {
+                @Override
+                public void onTaskComplete(SyncListsResponse syncListsResponse) {
+                    if (syncListsResponse != null) {
+                        try {
+                            Map<Integer, SyncListsTask> tasks = SyncListsApi.parseTasksAsMap(syncListsResponse.getBody());
+                            Log.d(Constants.TAG, "tasks parsed as map");
+
+                            int i = 0;
+                            while(i < mAdapter.getCount()) {
+                                SyncListsTask task = mAdapter.getItem(i);
+                                i++;
+
+                                if(task.getId() < 0) {
+                                    continue;
+                                }
+
+                                if(tasks.containsKey(task.getId())) {
+                                    SyncListsTask updatedTask = tasks.get(task.getId());
+                                    boolean updated = false;
+
+                                    if(!task.getName().equals(updatedTask.getName())) {
+
+                                        Toast.makeText(CONTEXT, "Task " + task.getName() + " renamed to " + updatedTask.getName(),
+                                                Toast.LENGTH_SHORT).show();
+
+                                        updated = true;
+                                    }
+                                    else if(task.getCompleted() != updatedTask.getCompleted()) {
+
+                                        String completedMessage = "Task " + task.getName() + " ";
+
+                                        if(updatedTask.getCompleted())
+                                            completedMessage += "completed";
+                                        else
+                                            completedMessage += "marked not completed";
+
+                                        Toast.makeText(CONTEXT, completedMessage,
+                                                Toast.LENGTH_SHORT).show();
+
+                                        updated = true;
+                                    }
+
+                                    if(updated) {
+                                        mAdapter.insert(updatedTask, i);
+                                        mAdapter.remove(task);
+                                    }
+
+                                    tasks.remove(task.getId());
+                                }
+                                else {
+                                    Log.d(Constants.TAG, "Deleting task " + task.getName() + " with id " + task.getId());
+                                    mAdapter.remove(task);
+
+                                    Toast.makeText(CONTEXT, "Task " + task.getName() + " deleted",
+                                            Toast.LENGTH_SHORT).show();
+
+                                    i--;
+                                }
+                            }
+
+                            //any remaining lists are new and need to be added
+                            for(int newTaskId : tasks.keySet()) {
+                                SyncListsTask task = tasks.get(newTaskId);
+                                Log.d(Constants.TAG, "Adding new task " + task.getName() + " with id " + task.getId());
+
+                                Toast.makeText(CONTEXT, "New task " + task.getName() + " added",
+                                        Toast.LENGTH_SHORT).show();
+
+                                mAdapter.add(tasks.get(newTaskId));
+                            }
+                        }
+                        catch (Exception e) {
+                            Log.d(Constants.TAG, "exception parsing tasks: " + e.getMessage());
+                        }
+                    }
+                }
+            }, mListId, CONTEXT);
         }
     };
 }

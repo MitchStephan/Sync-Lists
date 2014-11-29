@@ -218,6 +218,22 @@ public class SyncListsApi {
         return tasks;
     }
 
+    protected static Map<Integer, SyncListsTask> parseTasksAsMap(String json) throws Exception {
+        Map<Integer, SyncListsTask> tasks = new HashMap<Integer, SyncListsTask>();
+        JSONArray jsonArray = new JSONArray(json);
+
+        for(int i = 0; i < jsonArray.length(); i++) {
+            JSONObject jsonObject = jsonArray.getJSONObject(i);
+            JSONObject fields = jsonObject.getJSONObject("fields");
+
+            //should handle Integer.parseInt in case error
+            SyncListsTask task = new SyncListsTask(jsonObject.getInt("pk"), fields.getString("name"), false, fields.getBoolean("completed"));
+            tasks.put(task.getId(), task);
+        }
+
+        return tasks;
+    }
+
     protected static void logout() {
         SharedPreferences.Editor editor = SyncListsLogin.getPreferencesEditor();
         editor.remove(Constants.PREF_USER_CONTEXT);
