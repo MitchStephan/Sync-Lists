@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.ListActivity;
 import android.content.Context;
 import android.graphics.Typeface;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -82,7 +84,7 @@ public class ListArrayAdapter extends ArrayAdapter<SyncListsList> implements Und
         return row;
     }
 
-    private View getEditView(final int position, ViewGroup parent, SyncListsList list, LayoutInflater inflater) {
+    private View getEditView(final int position, ViewGroup parent, final SyncListsList list, LayoutInflater inflater) {
         View row = inflater.inflate(R.layout.lists_edit_list_view, parent, false);
 
         //set typeface for button
@@ -92,7 +94,24 @@ public class ListArrayAdapter extends ArrayAdapter<SyncListsList> implements Und
 
         final EditText edit = (EditText)row.findViewById(R.id.listsListEditText);
         edit.setText(list.getName());
+        edit.setTag(list);
         edit.requestFocus();
+
+        edit.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                list.setName(edit.getText().toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
 
         edit.setOnEditorActionListener(new TextView.OnEditorActionListener()
         {
@@ -116,10 +135,11 @@ public class ListArrayAdapter extends ArrayAdapter<SyncListsList> implements Und
     private void validateOnCreate(String newListName, final int position) {
         hideKeyboard();
         remove(getItem(position));
+        final int positionToAddTo = getCount();
 
         if (validName(newListName)) {
             final SyncListsList list = new SyncListsList(-1, newListName);
-            insert(list, position);
+            insert(list, positionToAddTo);
 
             SyncListsApi.createList(new SyncListsRequestAsyncTaskCallback() {
                 @Override
@@ -127,7 +147,7 @@ public class ListArrayAdapter extends ArrayAdapter<SyncListsList> implements Und
                     if (syncListsResponse == null) {
                         Toast.makeText(mContext, "Error creating list",
                                 Toast.LENGTH_SHORT).show();
-                        remove(getItem(position));
+                        remove(getItem(positionToAddTo));
                     }
                     else {
                         try {
