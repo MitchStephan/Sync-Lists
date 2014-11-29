@@ -55,6 +55,29 @@ public class SyncListsApi {
         }
     }
 
+    protected static void updateSharing(SyncListsRequestAsyncTaskCallback callback, String email, boolean sharingEnabled, Context context) {
+        Map<String, Object> json = new HashMap<String, Object>();
+        json.put("email", email);
+        if (sharingEnabled)
+        {
+            json.put("sharing_enabled", 1);
+        }
+        else
+        {
+            json.put("sharing_enabled", 0);
+        }
+
+        if (isNetworkAvailable(context)) {
+            Log.d(Constants.TAG, "Email: " + email);
+            SyncListsRequest request = new SyncListsRequest(
+                    SyncListsRequest.SyncListsRequestMethod.PUT, "user", json);
+
+            new SyncListsUpdateSharingAsyncTask(callback).execute(request);
+        }
+
+
+    }
+
     protected static void createUser(Activity activity, String email, String password, Context context) {
         Map<String, Object> json = new HashMap<String, Object>();
         json.put("email", email);

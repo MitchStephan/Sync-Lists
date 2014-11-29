@@ -24,10 +24,11 @@ class User(models.Model):
         new_user.save()
         return new_user
 
-    def edit(self, email, password, sharing_enabled):
+    def edit(self, email, sharing_enabled, password=None):
         self.email = email
-        self.password = password
         self.sharing_enabled = sharing_enabled
+        if not password is None:
+            self.password = password
         self.save()
         return self
 

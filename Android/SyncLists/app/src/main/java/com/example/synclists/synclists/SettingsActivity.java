@@ -81,7 +81,9 @@ public class SettingsActivity extends Activity{
 
         int currentOption = 0;
         SharedPreferences prefs = getSharedPreferences(Constants.PREF_FILE_NAME, MODE_PRIVATE);
-        boolean sharing = prefs.getBoolean(Constants.PREF_SHARING, Constants.DEFAULT_SHARING);
+        final String email = prefs.getString("email", "");
+        final boolean sharing = prefs.getBoolean(Constants.PREF_SHARING, Constants.DEFAULT_SHARING);
+
 
 
         if(!sharing) {
@@ -95,14 +97,27 @@ public class SettingsActivity extends Activity{
             public void onClick(DialogInterface dialog, int n) {
                 dialog.dismiss();
 
-                SharedPreferences.Editor editor = SyncListsLogin.getPreferencesEditor();
-                editor.putBoolean(Constants.PREF_SHARING, boolOptions[n]);
-                editor.apply();
+                final Boolean sharing = boolOptions[n];
+                final CharSequence successText = options[n];
 
-                Toast.makeText(SettingsActivity.this,
-                         options[n], Toast.LENGTH_SHORT).show();
+                SyncListsApi.updateSharing(new SyncListsRequestAsyncTaskCallback() {
+                    @Override
+                    public void onTaskComplete(SyncListsResponse syncListsResponse) {
+                        if (syncListsResponse == null) {
+                            Toast.makeText(SettingsActivity.this, "Error changing sharing",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                        else {
+                            SharedPreferences.Editor editor = SyncListsLogin.getPreferencesEditor();
+                            editor.putBoolean(Constants.PREF_SHARING, sharing);
+                            editor.apply();
+
+                            Toast.makeText(SettingsActivity.this,
+                                    successText, Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }, email, sharing, SettingsActivity.this);
             }
-
         });
 
         adb.setNegativeButton(getString(R.string.cancel), null);
