@@ -18,11 +18,12 @@ import android.widget.DialerFilter;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.w3c.dom.Text;
-
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Map;
 
 /**
@@ -30,7 +31,7 @@ import java.util.Map;
  */
 public class SettingsActivity extends Activity{
 
-    private ArrayAdapter mSettingsAdapter;
+    private SettingsArrayAdapter mSettingsAdapter;
     private String mEmail;
     private Boolean mSharingEnabled;
     private final String CHANGE_PASSWORD = "Change Password";
@@ -39,12 +40,18 @@ public class SettingsActivity extends Activity{
     private final String LOGOUT = "Logout";
     private final String SHARING = "Toggle Sharing";
     private final String[] M_SETTINGS = new String[] { INSTRUCTIONS, SHARING, SYNC_EVERY, CHANGE_PASSWORD, LOGOUT };
+    private SharedPreferences mPrefs;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sync_list_setting);
 
-        mSettingsAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, M_SETTINGS);
+        mPrefs = getSharedPreferences(Constants.PREF_FILE_NAME, MODE_PRIVATE);
+
+        boolean sharingOn = mPrefs.getBoolean(Constants.PREF_SHARING, Constants.DEFAULT_SHARING);
+        mSettingsAdapter = new SettingsArrayAdapter(this, R.id.settingsListView, Arrays.asList(M_SETTINGS), SHARING, sharingOn);//new ArrayAdapter(this, android.R.layout.simple_list_item_1, M_SETTINGS);
 
         final ListView settingsListView = (ListView) findViewById(R.id.settingsListView);
         settingsListView.setAdapter(mSettingsAdapter);
@@ -64,9 +71,6 @@ public class SettingsActivity extends Activity{
                 else if(settingTitle.equals(LOGOUT)) {
                     onLogoutClicked(view);
                 }
-                else if(settingTitle.equals(SHARING)) {
-                    onSharingClicked(view);
-                }
                 else {
                     //silence is golden
                 }
@@ -74,53 +78,37 @@ public class SettingsActivity extends Activity{
         });
     }
 
-    private void onSharingClicked(View view) {
-        AlertDialog.Builder adb = new AlertDialog.Builder(this);
-        final CharSequence options[] = new CharSequence[] {"Sharing On", "Sharing Off"};
-        final boolean boolOptions [] = {true, false};
+    public void onSharingClicked(final View view) {
+        final String email = mPrefs.getString(Constants.PREF_EMAIL, Constants.DEFAULT_EMAIL);
 
-        int currentOption = 0;
-        SharedPreferences prefs = getSharedPreferences(Constants.PREF_FILE_NAME, MODE_PRIVATE);
-        final String email = prefs.getString(Constants.PREF_EMAIL, Constants.DEFAULT_EMAIL);
-        final boolean sharing = prefs.getBoolean(Constants.PREF_SHARING, Constants.DEFAULT_SHARING);
+        final boolean on = ((Switch) view).isChecked();
+        final String successText;
 
-        if(!sharing) {
-            currentOption = 1;
-        }
+        if(on)
+            successText = "Sharing On";
+        else
+            successText = "Sharing Off";
 
+        SyncListsApi.updateSharing(new SyncListsRequestAsyncTaskCallback() {
+                @Override
+                public void onTaskComplete(SyncListsResponse syncListsResponse) {
+                    if (syncListsResponse == null) {
+                        Toast.makeText(SettingsActivity.this, "Error changing Sharing",
+                                Toast.LENGTH_SHORT).show();
 
-        adb.setSingleChoiceItems(options, currentOption, new DialogInterface.OnClickListener() {
-
-            @Override
-            public void onClick(DialogInterface dialog, int n) {
-                dialog.dismiss();
-
-                final Boolean sharing = boolOptions[n];
-                final CharSequence successText = options[n];
-
-                SyncListsApi.updateSharing(new SyncListsRequestAsyncTaskCallback() {
-                    @Override
-                    public void onTaskComplete(SyncListsResponse syncListsResponse) {
-                        if (syncListsResponse == null) {
-                            Toast.makeText(SettingsActivity.this, "Error changing sharing",
-                                    Toast.LENGTH_SHORT).show();
-                        }
-                        else {
-                            SharedPreferences.Editor editor = SyncListsLogin.getPreferencesEditor();
-                            editor.putBoolean(Constants.PREF_SHARING, sharing);
-                            editor.apply();
-
-                            Toast.makeText(SettingsActivity.this,
-                                    successText, Toast.LENGTH_SHORT).show();
-                        }
+                        //toggle it back since we could not update
+                        ((Switch) view).toggle();
                     }
-                }, email, sharing, SettingsActivity.this);
-            }
-        });
+                    else {
+                        SharedPreferences.Editor editor = SyncListsLogin.getPreferencesEditor();
+                        editor.putBoolean(Constants.PREF_SHARING, on);
+                        editor.apply();
 
-        adb.setNegativeButton(getString(R.string.cancel), null);
-        adb.setTitle("Toggle Sharing");
-        adb.show();
+                        Toast.makeText(SettingsActivity.this,
+                                successText, Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }, email, on, SettingsActivity.this);
     }
 
     public void onLogoutClicked(View v) {
@@ -159,8 +147,7 @@ public class SettingsActivity extends Activity{
         final int optionsInMilliseconds [] = {15000, 30000, 60000, 300000};
 
         int currentOption = 0;
-        SharedPreferences prefs = getSharedPreferences(Constants.PREF_FILE_NAME, MODE_PRIVATE);
-        int syncEvery = prefs.getInt(Constants.PREF_SYNC_EVERY, Constants.DEFAULT_SYNC_EVERY);
+        int syncEvery = mPrefs.getInt(Constants.PREF_SYNC_EVERY, Constants.DEFAULT_SYNC_EVERY);
 
         for(int i = 0; i < optionsInMilliseconds.length; i++) {
             if(optionsInMilliseconds[i] == syncEvery) {
@@ -220,9 +207,8 @@ public class SettingsActivity extends Activity{
     }
 
     public void changePassword(View view, String newPassword, String confirmPassword) {
-        SharedPreferences prefs = this.getSharedPreferences("SyncListsPrefs", Context.MODE_PRIVATE);
-        mEmail = prefs.getString(Constants.PREF_EMAIL, Constants.DEFAULT_EMAIL);
-        mSharingEnabled = prefs.getBoolean(Constants.PREF_SHARING, Constants.DEFAULT_SHARING);
+        mEmail = mPrefs.getString(Constants.PREF_EMAIL, Constants.DEFAULT_EMAIL);
+        mSharingEnabled = mPrefs.getBoolean(Constants.PREF_SHARING, Constants.DEFAULT_SHARING);
         SyncListsApi.changePassword(this, newPassword, confirmPassword, this, mEmail, mSharingEnabled);
     }
 }

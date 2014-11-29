@@ -17,6 +17,9 @@
     <string name="change_password">Change Password</string>
     <string name="sync_every">Sync Every...</string>
     <string name="instructions">Instructions</string>
+    <string name="sharing_toggle_on">On</string>
+    <string name="sharing_toggle_off">Off</string>
+    <string name="sharing">Sharing</string>
 
     <string name="cancel">Cancel</string>
 

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/sharing_settings_layout"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/sharing_settings_text"
+        android:layout_width="fill_parent"
+        android:layout_marginEnd="100dp"
+        android:layout_marginRight="100dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:text="@string/sharing"
+        android:textAppearance="?android:attr/textAppearanceListItemSmall"
+        android:paddingStart="?android:attr/listPreferredItemPaddingStart"
+        android:paddingLeft="?android:attr/listPreferredItemPaddingLeft"
+        android:paddingEnd="?android:attr/listPreferredItemPaddingEnd"
+        android:paddingRight="?android:attr/listPreferredItemPaddingRight"
+        android:minHeight="?android:attr/listPreferredItemHeightSmall"
+        android:gravity="center_vertical"/>
+
+    <Switch
+        android:id="@+id/sharing_toggle_button"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:textOn="@string/sharing_toggle_on"
+        android:textOff="@string/sharing_toggle_off"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:onClick="onSharingClicked"
+        android:gravity="center_vertical"
+        android:paddingStart="?android:attr/listPreferredItemPaddingStart"
+        android:paddingLeft="?android:attr/listPreferredItemPaddingLeft"
+        android:paddingEnd="?android:attr/listPreferredItemPaddingEnd"
+        android:paddingRight="?android:attr/listPreferredItemPaddingRight"
+        android:minHeight="?android:attr/listPreferredItemHeightSmall"/>
+
+</RelativeLayout>
