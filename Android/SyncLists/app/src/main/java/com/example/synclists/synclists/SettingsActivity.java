@@ -90,25 +90,25 @@ public class SettingsActivity extends Activity{
             successText = "Sharing Off";
 
         SyncListsApi.updateSharing(new SyncListsRequestAsyncTaskCallback() {
-                @Override
-                public void onTaskComplete(SyncListsResponse syncListsResponse) {
-                    if (syncListsResponse == null) {
-                        Toast.makeText(SettingsActivity.this, "Error changing Sharing",
-                                Toast.LENGTH_SHORT).show();
+            @Override
+            public void onTaskComplete(SyncListsResponse syncListsResponse) {
+                if (syncListsResponse == null) {
+                    Toast.makeText(SettingsActivity.this, "Error changing Sharing",
+                            Toast.LENGTH_SHORT).show();
 
-                        //toggle it back since we could not update
-                        ((Switch) view).toggle();
-                    }
-                    else {
-                        SharedPreferences.Editor editor = SyncListsLogin.getPreferencesEditor();
-                        editor.putBoolean(Constants.PREF_SHARING, on);
-                        editor.apply();
-
-                        Toast.makeText(SettingsActivity.this,
-                                successText, Toast.LENGTH_SHORT).show();
-                    }
+                    //toggle it back since we could not update
+                    ((Switch) view).toggle();
                 }
-            }, email, on, SettingsActivity.this);
+                else {
+                    SharedPreferences.Editor editor = SyncListsLogin.getPreferencesEditor();
+                    editor.putBoolean(Constants.PREF_SHARING, on);
+                    editor.apply();
+
+                    Toast.makeText(SettingsActivity.this,
+                            successText, Toast.LENGTH_SHORT).show();
+                }
+            }
+        }, email, on, SettingsActivity.this);
     }
 
     public void onLogoutClicked(View v) {
