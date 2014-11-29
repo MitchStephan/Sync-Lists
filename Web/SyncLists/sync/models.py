@@ -118,7 +118,7 @@ class List(models.Model):
             self.delete_shared_user(user)
             return True
         # if owner, clean up and delete list
-        elif user is self.list_owner:
+        elif user == self.list_owner:
             for task in self.get_tasks():
                 task.delete()
             self.delete()

@@ -91,9 +91,12 @@ def delete_list(request, l_id):
     try:
         list = List.get_by_id(l_id)
         if validate_user_context(request, list):
-            list.list_delete(get_user_context(request))
-            response = delete_response('List', l_id)
-            status_code = 200
+            result = list.list_delete(get_user_context(request))
+            if result:
+                response = delete_response('List', l_id)
+                status_code = 200
+            else:
+                response = "Something went wrong during deletion"
         else:
             response = invalid_user_context(request)
     except ObjectDoesNotExist:
