@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:id="@+id/task">
 
-    <TextView
+    <CheckBox
         android:id="@+id/task_name"
         android:layout_width="fill_parent"
         android:layout_marginRight="50dp"
@@ -18,7 +18,7 @@
         android:paddingRight="?android:attr/listPreferredItemPaddingRight"
         android:minHeight="?android:attr/listPreferredItemHeightSmall"
         android:gravity="center_vertical"
-        />
+        android:onClick="onCheckTask"/>
 
     <ImageButton
         android:id="@+id/task_settings"

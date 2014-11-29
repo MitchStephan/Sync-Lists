@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -80,8 +82,8 @@ public class TaskListActivity extends Activity {
                         mAdapter.clear();
 
                         for(SyncListsTask task : mTaskList)
-                            if(!task.getCompleted())
-                                mAdapter.add(task);
+                            mAdapter.add(task);
+
                     } catch (Exception e) {
                         Toast.makeText(context, "Error retrieving tasks",
                                 Toast.LENGTH_SHORT).show();
@@ -173,6 +175,43 @@ public class TaskListActivity extends Activity {
                 showKeyboard();
             }
         }
+    }
+
+    public void onCheckTask(View v) {
+        final CheckBox checkBox = (CheckBox) v;
+        final SyncListsTask task = (SyncListsTask) checkBox.getTag();
+        final boolean isChecked = checkBox.isChecked();
+        int strikethroughFlags;
+
+        if(isChecked)
+            strikethroughFlags = checkBox.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG;
+        else
+            strikethroughFlags = checkBox.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG);
+
+        task.setCompleted(isChecked);
+
+        SyncListsApi.updateTask(new SyncListsRequestAsyncTaskCallback() {
+            @Override
+            public void onTaskComplete(SyncListsResponse syncListsResponse) {
+                if (syncListsResponse == null) {
+                    Toast.makeText(CONTEXT, "Error updating task " + task.getName(),
+                            Toast.LENGTH_SHORT).show();
+
+                    //error updating task, so set it not completed
+                    task.setCompleted(!isChecked);
+
+                    int strikeThroughFlags;
+                    if(isChecked)
+                        strikeThroughFlags = checkBox.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG);
+                    else
+                        strikeThroughFlags = checkBox.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG;
+
+                    checkBox.setPaintFlags(strikeThroughFlags);
+                }
+            }
+        }, mListId, task, CONTEXT);
+
+        checkBox.setPaintFlags(strikethroughFlags);
     }
 
     public void onClickEditTask(View v) {

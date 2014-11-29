@@ -2,6 +2,7 @@ package com.example.synclists.synclists;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -11,6 +12,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -56,8 +58,7 @@ public class TaskListAdapter extends ArrayAdapter<SyncListsTask> implements Undo
     }
 
     public View getTaskView(ViewGroup parent, SyncListsTask task, View convertView, LayoutInflater inflater) {
-
-        View row = convertView;
+        View row;
         TaskHolder holder;
 
         row = inflater.inflate(R.layout.tasks_view, parent, false);
@@ -67,13 +68,24 @@ public class TaskListAdapter extends ArrayAdapter<SyncListsTask> implements Undo
         holder.taskEditButton.setTypeface(Typefaces.get(mContext));
 
         holder.taskSettingsButton = (ImageButton)row.findViewById(R.id.task_settings);
-        holder.taskText = (TextView)row.findViewById(R.id.task_name);
+        holder.taskCheckBox = (CheckBox)row.findViewById(R.id.task_name);
+
+        int strikethroughFlags;
+        if(task.getCompleted())
+            strikethroughFlags = holder.taskCheckBox.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG;
+        else
+            strikethroughFlags = holder.taskCheckBox.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG);
+
+        holder.taskCheckBox.setPaintFlags(strikethroughFlags);
+        holder.taskCheckBox.setChecked(task.getCompleted());
+
         row.setTag(holder);
 
         holder.task = task;
         holder.taskEditButton.setTag(holder.task);
         holder.taskSettingsButton.setTag(holder.task);
-        holder.taskText.setText(holder.task.getName());
+        holder.taskCheckBox.setTag(task);
+        holder.taskCheckBox.setText(holder.task.getName());
         return row;
     }
 
@@ -179,7 +191,7 @@ public class TaskListAdapter extends ArrayAdapter<SyncListsTask> implements Undo
 
     public static class TaskHolder {
         SyncListsTask task;
-        TextView taskText;
+        CheckBox taskCheckBox;
         Button taskEditButton;
         ImageButton taskSettingsButton;
     }
