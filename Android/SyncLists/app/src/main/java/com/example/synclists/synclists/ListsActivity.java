@@ -139,7 +139,7 @@ public class ListsActivity extends Activity {
         sharedUsersDialog.setTitle("Shared Users");
         mAdapter.add(new SyncListsUser(-1, "Yoyo", false));
 
-        Button dialogButton = (Button) sharedUsersDialog.findViewById(R.id.userDeleteButton);
+        Button dialogButton = (Button) sharedUsersDialog.findViewById(R.id.userEditDeleteButton);
         dialogButton.setTypeface(Typefaces.get(CONTEXT));
         // if button is clicked, close the custom dialog
         dialogButton.setOnClickListener(new View.OnClickListener() {
