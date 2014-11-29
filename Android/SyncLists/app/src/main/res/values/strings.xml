@@ -11,6 +11,8 @@
     <string name="list_deleted">List deleted</string>
     <string name="tap_to_undo">Tap to undo</string>
 
+    <string name="task_deleted">Task deleted</string>
+
     <string name="add_list">Add List</string>
     <string name="settings">Settings</string>
     <!-- Setting Option -->

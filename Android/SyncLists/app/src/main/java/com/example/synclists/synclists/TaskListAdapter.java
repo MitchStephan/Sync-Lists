@@ -203,7 +203,7 @@ public class TaskListAdapter extends ArrayAdapter<SyncListsTask> implements Undo
         TextView textView = (TextView) view.findViewById(R.id.task_undo_row_texttv);
         textView.setTypeface(Typefaces.get(mContext));
 
-        return view.findViewById(R.id.undo_row_undobutton);
+        return view.findViewById(R.id.task_undo_row_undobutton);
     }
 
     public static class TaskHolder {

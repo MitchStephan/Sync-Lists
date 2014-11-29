@@ -170,6 +170,15 @@ public class SyncListsApi {
         }
     }
 
+    protected static void deleteTask(SyncListsRequestAsyncTaskCallback callback, int listId, SyncListsTask task, Context context) {
+        if (isNetworkAvailable(context)) {
+            SyncListsRequest request = new SyncListsRequest(
+                    SyncListsRequest.SyncListsRequestMethod.DELETE, "lists/" + listId + "/tasks/" + task.getId());
+
+            new SyncListsDeleteTaskAsyncTask(callback).execute(request);
+        }
+    }
+
     protected static ArrayList<SyncListsList> parseLists(String json) throws Exception {
         ArrayList<SyncListsList> lists = new ArrayList<SyncListsList>();
         JSONArray jsonArray = new JSONArray(json);

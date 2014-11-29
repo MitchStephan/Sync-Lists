@@ -37,7 +37,6 @@ public class TaskListActivity extends Activity {
     private int mListId;
     private DynamicListView mDynamicListView;
     private final Activity CONTEXT = this;
-    private final int SHOW_TASK_COMPLETED_TIME = 1000; // in milliseconds
     private SyncListsSync mSyncer;
     private boolean mFirstOnResume = true;
 
@@ -62,7 +61,6 @@ public class TaskListActivity extends Activity {
 
         TimedUndoAdapter timedUndoAdapter = new TimedUndoAdapter(mAdapter, this, mOnCompleteTaskCallback);
         timedUndoAdapter.setAbsListView(mDynamicListView);
-        timedUndoAdapter.setTimeoutMs(SHOW_TASK_COMPLETED_TIME);
         mDynamicListView.setAdapter(timedUndoAdapter);
         mDynamicListView.enableSimpleSwipeUndo();
 
@@ -296,20 +294,16 @@ public class TaskListActivity extends Activity {
 
                 final SyncListsTask task = mAdapter.getItem(position);
                 mAdapter.remove(task);
-                task.setCompleted(true);
 
-                SyncListsApi.updateTask(new SyncListsRequestAsyncTaskCallback() {
+                SyncListsApi.deleteTask(new SyncListsRequestAsyncTaskCallback() {
                     @Override
                     public void onTaskComplete(SyncListsResponse syncListsResponse) {
                         if (syncListsResponse == null) {
-                            Toast.makeText(CONTEXT, "Error completing task " + task.getName(),
+                            Toast.makeText(CONTEXT, "Error deleting task " + task.getName(),
                                     Toast.LENGTH_SHORT).show();
-
-                            //error updating task, so set it not completed
-                            task.setCompleted(false);
                         }
                         else {
-                            Toast.makeText(CONTEXT, "Task " + task.getName() + " successfully completed",
+                            Toast.makeText(CONTEXT, "Task " + task.getName() + " successfully deleted",
                                     Toast.LENGTH_SHORT).show();
                         }
                     }
