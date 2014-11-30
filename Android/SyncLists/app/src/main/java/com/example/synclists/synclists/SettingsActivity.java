@@ -192,14 +192,18 @@ public class SettingsActivity extends Activity{
                 String newPassword = newPasswordDescription.getText().toString();
                 EditText confirmNewPasswordDescription = (EditText)changePasswordDialog.findViewById(R.id.confirmPasswordChange);
                 String confirmNewPassword = confirmNewPasswordDescription.getText().toString();
-                changePassword(v, newPassword, confirmNewPassword);
 
-                if (newPassword.equals(confirmNewPassword)) {
-                    changePasswordDialog.dismiss();
+                if (!newPassword.equals(confirmNewPassword)) {
+                    Toast.makeText(SettingsActivity.this,
+                            "Your passwords do not match", Toast.LENGTH_SHORT).show();
+                }
+                else if(newPassword.isEmpty()) {
+                    Toast.makeText(SettingsActivity.this,
+                            "Password must not be empty", Toast.LENGTH_SHORT).show();
                 }
                 else {
-                    Toast.makeText(SettingsActivity.this,
-                            "Your passwords did not match", Toast.LENGTH_SHORT).show();
+                    changePassword(v, newPassword, confirmNewPassword);
+                    changePasswordDialog.dismiss();
                 }
             }
         });
