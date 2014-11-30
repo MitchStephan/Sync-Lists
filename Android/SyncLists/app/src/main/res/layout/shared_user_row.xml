@@ -6,7 +6,7 @@
     android:layout_height="match_parent">
 
     <TextView xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/usersListViewText"
+        android:id="@+id/sharedUsersListViewText"
         android:layout_width="fill_parent"
         android:layout_marginEnd="50dp"
         android:layout_marginRight="50dp"
@@ -19,17 +19,15 @@
         android:paddingRight="?android:attr/listPreferredItemPaddingRight"
         android:minHeight="?android:attr/listPreferredItemHeightSmall"
         android:textColor="@color/selector_txt"
-        android:hint="Name"
         android:gravity="center_vertical"/>
 
-
     <Button
-        android:id="@+id/userDeleteButton"
+        android:id="@+id/userUnshareButton"
         android:text="@string/close_x"
         android:layout_alignParentRight="true"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:onClick="onClickDeleteEditList"
+        android:onClick="onClickUnshareUser"
         android:scaleType="fitCenter"
         android:textColor="#ff0000"/>
 

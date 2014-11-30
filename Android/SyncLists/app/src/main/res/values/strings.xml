@@ -31,6 +31,9 @@
     <string name="popup_edit_list_label">New list name</string>
     <string name="popup_edit_task_label">New task name</string>
 
+    <string name="shared_users_title">Shared Users</string>
+    <string name="share_with_user">Enter email to share with</string>
+
     <!-- Icon Fonts -->
     <string name="cog">&#xf013;</string>
     <string name="plus">&#xf067;</string>

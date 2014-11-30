@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/users_view"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="300dp">
+
+    <ListView
+        android:id="@+id/sharedUsersList"
+        android:layout_width="match_parent"
+        android:layout_height="0px"
+        android:layout_weight="500"/>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="0px"
+        android:background="#ff33b5e5"
+        android:layout_weight="5"/>
+
+    <EditText xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/sharedUsersEditText"
+        android:layout_width="fill_parent"
+        android:layout_height="0px"
+        android:hint="@string/share_with_user"
+        android:textAppearance="?android:attr/textAppearanceListItemSmall"
+        android:paddingStart="?android:attr/listPreferredItemPaddingStart"
+        android:paddingLeft="?android:attr/listPreferredItemPaddingLeft"
+        android:paddingEnd="?android:attr/listPreferredItemPaddingEnd"
+        android:paddingRight="?android:attr/listPreferredItemPaddingRight"
+        android:minHeight="?android:attr/listPreferredItemHeightSmall"
+        android:maxLength="100"
+        android:inputType="text"
+        android:layout_weight="90"/>
+
+</LinearLayout>

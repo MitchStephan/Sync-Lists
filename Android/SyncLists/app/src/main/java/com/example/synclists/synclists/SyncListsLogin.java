@@ -57,7 +57,7 @@ public class SyncListsLogin extends Activity {
     private boolean validSignUp() {
         String email = mEmail.getText().toString();
 
-        return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
+        return Validate.email(email);
     }
 
     protected static SharedPreferences.Editor getPreferencesEditor() {

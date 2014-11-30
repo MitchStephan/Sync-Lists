@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -17,6 +18,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,6 +42,7 @@ public class ListsActivity extends Activity {
     private final Activity CONTEXT = this;
     private SyncListsSync mSyncer;
     private boolean mFirstOnResume = true;
+    private SharedUsersArrayAdapter mSharedUsersAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -130,26 +133,60 @@ public class ListsActivity extends Activity {
     }
 
     public void onClickedEditSharedUsers(View v) {
-        ArrayList<SyncListsUser> mUsers = new ArrayList<SyncListsUser>();
-        UsersArrayAdapter mAdapter = new UsersArrayAdapter(this, R.layout.user_view, mUsers);
+        final SyncListsList list = (SyncListsList) v.getTag();
+        ArrayList<SyncListsUser> users = new ArrayList<SyncListsUser>();
+        mSharedUsersAdapter = new SharedUsersArrayAdapter(this, R.layout.shared_user_row, users);
 
+        Dialog sharedUsersDialog = new Dialog(this);
+        sharedUsersDialog.setContentView(R.layout.shared_users_dialog);
+        sharedUsersDialog.setTitle(getString(R.string.shared_users_title) + " for " + list.getName());
 
-        final Dialog sharedUsersDialog = new Dialog(this);
-        sharedUsersDialog.setContentView(R.layout.user_list_view);
-        sharedUsersDialog.setTitle("Shared Users");
-        mAdapter.add(new SyncListsUser(-1, "Yoyo", false));
+        for(int i = 0; i < 10; i++)
+            mSharedUsersAdapter.add(new SyncListsUser(-1, "user" + i + "@gmail.com", false));
 
-        Button dialogButton = (Button) sharedUsersDialog.findViewById(R.id.userEditDeleteButton);
-        dialogButton.setTypeface(Typefaces.get(CONTEXT));
-        // if button is clicked, close the custom dialog
-        dialogButton.setOnClickListener(new View.OnClickListener() {
+        final ListView listView = (ListView) sharedUsersDialog.findViewById(R.id.sharedUsersList);
+        listView.setAdapter(mSharedUsersAdapter);
+
+        final EditText shareEditText = (EditText) sharedUsersDialog.findViewById(R.id.sharedUsersEditText);
+        shareEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
-            public void onClick(View v) {
-                sharedUsersDialog.dismiss();
+            public boolean onEditorAction(TextView v, int keyCode, KeyEvent event) {
+                if (keyCode == KeyEvent.KEYCODE_ENTER || keyCode == KeyEvent.KEYCODE_ENDCALL ||
+                        keyCode == KeyEvent.ACTION_DOWN) {
+                    String emailToShareWith = shareEditText.getText().toString();
+
+                    if(Validate.email(emailToShareWith)) {
+                        //NEED TO ACTUALLY SHARE WITH API
+                        mSharedUsersAdapter.add(new SyncListsUser(-1, emailToShareWith));
+                        listView.smoothScrollToPosition(mSharedUsersAdapter.getCount());
+                        shareEditText.setText("");
+
+                        Toast.makeText(CONTEXT, "List " + list.getName() + " shared with " + emailToShareWith,
+                                Toast.LENGTH_SHORT).show();
+                    }
+                    else {
+                        Toast.makeText(CONTEXT, "Invalid email",
+                                Toast.LENGTH_SHORT).show();
+                    }
+
+                    return true;
+                }
+
+                return false;
             }
         });
 
         sharedUsersDialog.show();
+    }
+
+    public void onClickUnshareUser(View v) {
+        SyncListsUser user = (SyncListsUser) v.getTag();
+
+        //NEED TO REMOVE FROM API HERE ALSO
+        mSharedUsersAdapter.remove(user);
+
+        Toast.makeText(CONTEXT, "Unshared list with user " + user.getEmail(),
+                Toast.LENGTH_SHORT).show();
     }
 
     public void onClickEditList(View v) {
