@@ -33,11 +33,15 @@ public class SyncListsLogin extends Activity {
 
         //set up prefs
         mPrefs = getSharedPreferences(Constants.PREF_FILE_NAME, MODE_PRIVATE);
+        String prefEmail = mPrefs.getString(Constants.PREF_EMAIL, "");
 
         Log.d(Constants.TAG, " USER CONTEXT " + mPrefs.getInt(Constants.PREF_USER_CONTEXT, -1));
         if(mPrefs.getInt(Constants.USER_CONTEXT_HEADER, -1) != -1) {
             Intent lists = new Intent(this, ListsActivity.class);
             startActivity(lists);
+        }
+        else if(!prefEmail.isEmpty()) {
+            mEmail.setText(prefEmail);
         }
     }
 
