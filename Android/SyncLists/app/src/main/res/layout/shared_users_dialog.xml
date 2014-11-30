@@ -29,7 +29,7 @@
         android:paddingRight="?android:attr/listPreferredItemPaddingRight"
         android:minHeight="?android:attr/listPreferredItemHeightSmall"
         android:maxLength="100"
-        android:inputType="text"
+        android:inputType="textEmailAddress"
         android:layout_weight="90"/>
 
 </LinearLayout>
