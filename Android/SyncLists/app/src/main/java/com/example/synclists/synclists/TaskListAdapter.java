@@ -3,7 +3,6 @@ package com.example.synclists.synclists;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Paint;
-import android.graphics.Typeface;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -69,7 +68,7 @@ public class TaskListAdapter extends ArrayAdapter<SyncListsTask> implements Undo
         holder.taskEditButton = (Button) row.findViewById(R.id.editTask);
         holder.taskEditButton.setTypeface(Typefaces.get(mContext));
 
-        holder.taskSettingsButton = (ImageButton)row.findViewById(R.id.task_settings);
+        holder.taskSettingsButton = (ImageButton)row.findViewById(R.id.task_update_info);
         holder.taskCheckBox = (CheckBox)row.findViewById(R.id.task_name);
 
         int strikethroughFlags;

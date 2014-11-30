@@ -220,7 +220,13 @@ public class SyncListsApi {
             JSONObject fields = jsonObject.getJSONObject("fields");
 
             //should handle Integer.parseInt in case error
-            SyncListsTask task = new SyncListsTask(jsonObject.getInt("pk"), fields.getString("name"), false, fields.getBoolean("completed"));
+            SyncListsTask task = new SyncListsTask(
+                    jsonObject.getInt("pk"),
+                    fields.getString("name"),
+                    false,
+                    fields.getBoolean("completed"),
+                    fields.getString("date_updated"),
+                    fields.getString("last_editor"));
             tasks.add(task);
         }
 
@@ -236,7 +242,13 @@ public class SyncListsApi {
             JSONObject fields = jsonObject.getJSONObject("fields");
 
             //should handle Integer.parseInt in case error
-            SyncListsTask task = new SyncListsTask(jsonObject.getInt("pk"), fields.getString("name"), false, fields.getBoolean("completed"));
+            SyncListsTask task = new SyncListsTask(
+                    jsonObject.getInt("pk"),
+                    fields.getString("name"),
+                    false,
+                    fields.getBoolean("completed"),
+                    fields.getString("date_updated"),
+                    fields.getString("last_editor"));
             tasks.put(task.getId(), task);
         }
 

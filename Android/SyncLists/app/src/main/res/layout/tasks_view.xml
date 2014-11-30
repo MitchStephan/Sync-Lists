@@ -19,12 +19,12 @@
         android:onClick="onCheckTask"/>
 
     <ImageButton
-        android:id="@+id/task_settings"
+        android:id="@+id/task_update_info"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_alignParentRight="true"
-        android:src="@drawable/settings"
-        android:onClick="taskSettings"
+        android:src="@drawable/info"
+        android:onClick="taskLastUpdated"
         android:scaleType="fitCenter"/>
 
     <Button
@@ -32,8 +32,8 @@
         android:text="@string/fa_edit"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_toStartOf="@id/task_settings"
-        android:layout_toLeftOf="@id/task_settings"
+        android:layout_toStartOf="@id/task_update_info"
+        android:layout_toLeftOf="@id/task_update_info"
         android:scaleType="fitCenter"
         android:onClick="onClickEditTask"/>
 

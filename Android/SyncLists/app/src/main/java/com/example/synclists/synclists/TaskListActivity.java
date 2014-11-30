@@ -158,9 +158,10 @@ public class TaskListActivity extends Activity {
         }
     }
 
-    public void taskSettings(View v) {
+    public void taskLastUpdated(View v) {
         SyncListsTask task = (SyncListsTask) v.getTag();
-        Toast.makeText(this, "You clicked " + task.getName() + " with id " + task.getId(),
+
+        Toast.makeText(this, "Last update: " + task.getDateUpdated() + " by " +  task.getLastEditor(),
                 Toast.LENGTH_SHORT).show();
     }
 
