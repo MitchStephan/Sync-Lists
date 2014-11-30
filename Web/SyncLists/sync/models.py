@@ -1,6 +1,7 @@
 import datetime
 from django.core import serializers
 from django.db import models
+from sync.api.utils import json_to_dict, dict_to_json
 
 
 class User(models.Model):
@@ -71,6 +72,12 @@ class List(models.Model):
     def get_by_id(pk):
         return List.objects.get(pk=pk)
 
+
+    @staticmethod
+    def get_by_email(email):
+        return List.objects.get(email=email)
+
+
     @staticmethod
     def create(name, list_owner):
         if not isinstance(list_owner, User):
@@ -90,6 +97,7 @@ class List(models.Model):
 
     def get_all_users(self):
         return [self.list_owner] + list(self.shared_users.all())
+
 
     def is_list_user(self, u_id):
         return User.get_by_id(u_id) in self.get_all_users()
@@ -127,12 +135,22 @@ class List(models.Model):
 
     # noinspection PyRedundantParentheses
     def single_to_json(self):
-        return serializers.serialize("json", [self], fields=("name, list_owner, shared_users, date_created"))[1:-1]
+        json = serializers.serialize("json", [self], fields=("name, list_owner, shared_users, date_created"))[1:-1]
+        json_dict = json_to_dict(json)
+        json_dict['fields']['list_owner'] = self.list_owner.email
+        json_dict['fields']['shared_users'] = [user.email for user in self.shared_users.all()]
+        return dict_to_json(json_dict)
 
     # noinspection PyRedundantParentheses
     @staticmethod
     def to_json(list):
-        return serializers.serialize("json", list, fields=("name, list_owner, shared_users, date_created"))
+        json = serializers.serialize("json", list, fields=("name, list_owner, shared_users, date_created"))
+        json_dict = json_to_dict(json)
+        for l in json_dict:
+            li = List.get_by_id(l['pk'])
+            l['fields']['list_owner'] = li.list_owner.email
+            l['fields']['shared_users'] = [user.email for user in li.shared_users.all()]
+        return dict_to_json(json_dict)
 
 
 class Task(models.Model):
@@ -179,11 +197,19 @@ class Task(models.Model):
             self.last_editor)
 
     def single_to_json(self):
-        return serializers.serialize("json", [self], fields=(
+        json = serializers.serialize("json", [self], fields=(
             "name, list, completed, task_owner, date_created, date_updated, last_editor"))[1:-1]
+        last_editor = self.last_editor.email
+        json_dict = json_to_dict(json)
+        json_dict['fields']['last_editor'] = last_editor
+        return dict_to_json(json_dict)
 
     @staticmethod
     def to_json(list):
-        return serializers.serialize("json", list, fields=(
-            "name, list, completed, task_owner, date_created, date_updated, last_editor")
-        )
+        json = serializers.serialize("json", list, fields=(
+            "name, list, completed, task_owner, date_created, date_updated, last_editor"))
+        json_dict = json_to_dict(json)
+        for t in json_dict:
+            last_editor_id = t['fields']['last_editor']
+            t['fields']['last_editor'] = User.get_by_id(last_editor_id).email
+        return dict_to_json(json_dict)

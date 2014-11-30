@@ -1,4 +1,5 @@
 from ast import literal_eval
+from json import dumps, loads
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse
@@ -6,7 +7,15 @@ import sys
 
 
 def request_body_to_dict(request):
-    return literal_eval(request.read().decode('utf-8'))
+    return json_to_dict(request.read().decode('utf-8'))
+
+
+def json_to_dict(json):
+    return loads(json)
+
+
+def dict_to_json(dictionary):
+    return dumps(dictionary)
 
 
 def get_user_context(request):
