@@ -98,7 +98,6 @@ class List(models.Model):
     def get_all_users(self):
         return [self.list_owner] + list(self.shared_users.all())
 
-
     def is_list_user(self, u_id):
         return User.get_by_id(u_id) in self.get_all_users()
 
@@ -107,7 +106,7 @@ class List(models.Model):
 
     def add_shared_user(self, user):
         if not isinstance(user, User):
-            user = User.get_by_id(user)
+            user = User.get_by_email(user)
         if user.sharing_enabled and not user == self.list_owner:
             self.shared_users.add(user)
             return True
@@ -115,7 +114,7 @@ class List(models.Model):
 
     def delete_shared_user(self, user):
         if not isinstance(user, User):
-            user = User.get_by_id(user)
+            user = User.get_by_email(user)
         self.shared_users.remove(user)
 
     def list_delete(self, user):

@@ -19,7 +19,7 @@ def dict_to_json(dictionary):
 
 
 def get_user_context(request):
-    return request.META.get('HTTP_USER_CONTEXT')
+    return int(request.META.get('HTTP_USER_CONTEXT'))
 
 
 def validate_user_context(request, list):

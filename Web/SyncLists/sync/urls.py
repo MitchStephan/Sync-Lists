@@ -14,7 +14,7 @@ urlpatterns = patterns(
     url(r'^lists/(\d+)/tasks/?', 'sync.api.tasks.views.task', name='task'),
 
     # lists
-    url(r'^lists/(\d+)/users/(\d+)/?', 'sync.api.lists.views.list_users_id', name='list users id'),
+    url(r'^lists/(\d+)/share/?', 'sync.api.lists.views.list_share', name='list share'),
     url(r'^lists/(\d+)/users/?', 'sync.api.lists.views.get_list_users', name='list users'),
     url(r'^lists/(\d+)/?', 'sync.api.lists.views.list_id', name='list id'),
     url(r'^lists/?', 'sync.api.lists.views.create_list', name='create list'),
