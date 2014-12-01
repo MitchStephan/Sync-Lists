@@ -117,12 +117,6 @@ public class ListsActivity extends Activity {
         return position > -1 && mAdapter.getItem(position).getIsListEdit();
     }
 
-    public void listSettings(View v) {
-        SyncListsList list = (SyncListsList) v.getTag();
-        Toast.makeText(this, "You clicked " + list.getName() + " with id " + list.getId(),
-                Toast.LENGTH_SHORT).show();
-    }
-
     public void onListClick(View v) {
         ListArrayAdapter.ListRowHolder listRowHolder = (ListArrayAdapter.ListRowHolder) v.getTag();
         SyncListsList list = listRowHolder.list;
