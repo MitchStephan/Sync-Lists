@@ -41,12 +41,13 @@ public class SyncListsApi {
         if(isNetworkAvailable(context)) {
             SyncListsRequest request = new SyncListsRequest(
                     SyncListsRequest.SyncListsRequestMethod.POST, "api/lists/" + listID + "/share");
+            Log.d(Constants.TAG, "api/lists/" + listID + "/share/");
 
-            // new SyncListShareUserAsyncTask(activity).executre(request);
+            new SyncListsAddSharedUserAsyncTask(activity).execute(request);
         }
     }
 
-    protected  static void deleteSharedUserToList(Activity activity, int listID, String email, Context context) {
+    protected  static void deleteSharedUserFromList(Activity activity, int listID, String email, Context context) {
         Map<String, Object> json = new HashMap<String, Object>();
         json.put("action", "delete");
         json.put("email", email);
@@ -55,7 +56,7 @@ public class SyncListsApi {
             SyncListsRequest request = new SyncListsRequest(
                     SyncListsRequest.SyncListsRequestMethod.POST, "api/lists/" + listID + "/share");
 
-            // new SyncListShareUserAsyncTask(activity).executre(request);
+        //    new SyncDeleteUser(activity).executre(request);
         }
     }
 

@@ -141,8 +141,10 @@ public class ListsActivity extends Activity {
         sharedUsersDialog.setContentView(R.layout.shared_users_dialog);
         sharedUsersDialog.setTitle(getString(R.string.shared_users_title) + " for " + list.getName());
 
-        for(int i = 0; i < 10; i++)
-            mSharedUsersAdapter.add(new SyncListsUser(-1, "user" + i + "@gmail.com", false));
+        for(int i = 0; i < list.getSharedUsersList().size(); i++) {
+            mSharedUsersAdapter.add(new SyncListsUser(-1, list.getSharedUsersList().get(i)));
+        }
+
 
         final ListView listView = (ListView) sharedUsersDialog.findViewById(R.id.sharedUsersList);
         listView.setAdapter(mSharedUsersAdapter);
@@ -160,9 +162,7 @@ public class ListsActivity extends Activity {
                         mSharedUsersAdapter.add(new SyncListsUser(-1, emailToShareWith));
                         listView.smoothScrollToPosition(mSharedUsersAdapter.getCount());
                         shareEditText.setText("");
-
-                        Toast.makeText(CONTEXT, "List " + list.getName() + " shared with " + emailToShareWith,
-                                Toast.LENGTH_SHORT).show();
+                        SyncListsApi.addSharedUserToList(CONTEXT, list.getId(), emailToShareWith, CONTEXT);
                     }
                     else {
                         Toast.makeText(CONTEXT, "Invalid email",
@@ -184,7 +184,6 @@ public class ListsActivity extends Activity {
 
         //NEED TO REMOVE FROM API HERE ALSO
         mSharedUsersAdapter.remove(user);
-
         Toast.makeText(CONTEXT, "Unshared list with user " + user.getEmail(),
                 Toast.LENGTH_SHORT).show();
     }
