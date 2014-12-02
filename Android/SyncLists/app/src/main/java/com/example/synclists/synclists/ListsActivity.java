@@ -48,11 +48,13 @@ public class ListsActivity extends Activity {
     private SharedUsersArrayAdapter mSharedUsersAdapter;
     private SharedPreferences mPrefs;
     private String mEmail;
+    private boolean mRefreshing;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sync_lists_lists);
+        mRefreshing = false;
 
         mPrefs = getSharedPreferences(Constants.PREF_FILE_NAME, MODE_PRIVATE);
         mEmail = mPrefs.getString(Constants.PREF_EMAIL, Constants.DEFAULT_EMAIL);
@@ -369,6 +371,9 @@ public class ListsActivity extends Activity {
                 Intent settings = new Intent(this, SettingsActivity.class);
                 startActivity(settings);
                 return true;
+            case R.id.refresh:
+                refresh();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -381,6 +386,93 @@ public class ListsActivity extends Activity {
         if(imm != null){
             imm.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0);
         }
+    }
+
+    private void refresh() {
+        if(mRefreshing) {
+            return;
+        }
+
+        mRefreshing = true;
+        SyncListsApi.getLists(new SyncListsRequestAsyncTaskCallback() {
+            @Override
+            public void onTaskComplete(SyncListsResponse syncListsResponse) {
+                if (syncListsResponse != null) {
+                    try {
+                        Map<Integer, SyncListsList> lists = SyncListsApi.parseListsAsMap(syncListsResponse.getBody());
+                        Log.d(Constants.TAG, "lists parsed as map");
+                        String email = mPrefs.getString(Constants.PREF_EMAIL, Constants.DEFAULT_EMAIL);
+
+                        int i = 0;
+                        while(i < mAdapter.getCount()) {
+                            SyncListsList list = mAdapter.getItem(i);
+                            i++;
+
+                            if(list.getId() < 0) {
+                                continue;
+                            }
+
+                            if(lists.containsKey(list.getId())) {
+                                SyncListsList updatedList = lists.get(list.getId());
+
+                                if(!list.getName().equals(updatedList.getName())) {
+
+                                    Toast.makeText(CONTEXT, "List " + list.getName() + " renamed to " + updatedList.getName(),
+                                            Toast.LENGTH_SHORT).show();
+
+                                    mAdapter.insert(updatedList, i);
+                                    mAdapter.remove(list);
+                                }
+
+                                lists.remove(list.getId());
+                            }
+                            else {
+                                Log.d(Constants.TAG, "Deleting list " + list.getName() + " with id " + list.getId());
+                                mAdapter.remove(list);
+                                String listDeletedMessage;
+
+                                if(!list.getListOwner().equals(email)) {
+                                    listDeletedMessage = "List " + list.getName() + " unshared by " + list.getListOwner();
+                                }
+                                else {
+                                    listDeletedMessage = "List " + list.getName() + " deleted";
+                                }
+
+                                Toast.makeText(CONTEXT, listDeletedMessage,
+                                        Toast.LENGTH_SHORT).show();
+
+                                i--;
+                            }
+                        }
+
+                        //any remaining lists are new and need to be added
+                        for(int newListId : lists.keySet()) {
+                            SyncListsList list = lists.get(newListId);
+                            Log.d(Constants.TAG, "Adding new list " + list.getName() + " with id " + list.getId());
+
+                            String newListMessage;
+
+                            if(!list.getListOwner().equals(email)) {
+                                newListMessage = "List " + list.getName() + " shared by " + list.getListOwner();
+                            }
+                            else {
+                                newListMessage = "New list " + list.getName() + " added";
+                            }
+
+                            Toast.makeText(CONTEXT, newListMessage,
+                                    Toast.LENGTH_SHORT).show();
+
+                            mAdapter.add(lists.get(newListId));
+                        }
+                    }
+                    catch (Exception e) {
+                        Log.d(Constants.TAG, "exception parsing lists: " + e.getMessage());
+                    }
+                }
+
+                mRefreshing = false;
+            }
+        }, CONTEXT);
     }
 
     private OnDismissCallback mOnDeleteListCallback = new OnDismissCallback() {
@@ -412,84 +504,7 @@ public class ListsActivity extends Activity {
         @Override
         public void onPerformSync() {
             Log.d(Constants.TAG, "In onPerformSync in ListsActivity");
-
-            SyncListsApi.getLists(new SyncListsRequestAsyncTaskCallback() {
-                @Override
-                public void onTaskComplete(SyncListsResponse syncListsResponse) {
-                    if (syncListsResponse != null) {
-                        try {
-                            Map<Integer, SyncListsList> lists = SyncListsApi.parseListsAsMap(syncListsResponse.getBody());
-                            Log.d(Constants.TAG, "lists parsed as map");
-                            String email = mPrefs.getString(Constants.PREF_EMAIL, Constants.DEFAULT_EMAIL);
-
-                            int i = 0;
-                            while(i < mAdapter.getCount()) {
-                                SyncListsList list = mAdapter.getItem(i);
-                                i++;
-
-                                if(list.getId() < 0) {
-                                    continue;
-                                }
-
-                                if(lists.containsKey(list.getId())) {
-                                    SyncListsList updatedList = lists.get(list.getId());
-
-                                    if(!list.getName().equals(updatedList.getName())) {
-
-                                        Toast.makeText(CONTEXT, "List " + list.getName() + " renamed to " + updatedList.getName(),
-                                                Toast.LENGTH_SHORT).show();
-
-                                        mAdapter.insert(updatedList, i);
-                                        mAdapter.remove(list);
-                                    }
-
-                                    lists.remove(list.getId());
-                                }
-                                else {
-                                    Log.d(Constants.TAG, "Deleting list " + list.getName() + " with id " + list.getId());
-                                    mAdapter.remove(list);
-                                    String listDeletedMessage;
-
-                                    if(!list.getListOwner().equals(email)) {
-                                        listDeletedMessage = "List " + list.getName() + " unshared by " + list.getListOwner();
-                                    }
-                                    else {
-                                        listDeletedMessage = "List " + list.getName() + " deleted";
-                                    }
-
-                                    Toast.makeText(CONTEXT, listDeletedMessage,
-                                            Toast.LENGTH_SHORT).show();
-
-                                    i--;
-                                }
-                            }
-
-                            //any remaining lists are new and need to be added
-                            for(int newListId : lists.keySet()) {
-                                SyncListsList list = lists.get(newListId);
-                                Log.d(Constants.TAG, "Adding new list " + list.getName() + " with id " + list.getId());
-
-                                String newListMessage;
-
-                                if(!list.getListOwner().equals(email)) {
-                                    newListMessage = "List " + list.getName() + " shared by " + list.getListOwner();
-                                }
-                                else {
-                                    newListMessage = "New list " + list.getName() + " added";
-                                }
-
-                                Toast.makeText(CONTEXT, newListMessage,
-                                        Toast.LENGTH_SHORT).show();
-
-                                mAdapter.add(lists.get(newListId));
-                            }
-                        }
-                        catch (Exception e) {
-                            Log.d(Constants.TAG, "exception parsing lists: " + e.getMessage());
-                        }
-                    }
-                }
-            }, CONTEXT);
+            refresh();
         }
     };
 }

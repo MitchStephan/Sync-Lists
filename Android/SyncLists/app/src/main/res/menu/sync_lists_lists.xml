@@ -13,4 +13,10 @@
         android:icon="@drawable/settings"
         android:showAsAction="ifRoom"
         android:title="@string/settings"/>
+
+    <item
+        android:id="@+id/refresh"
+        android:icon="@drawable/refresh"
+        android:showAsAction="ifRoom"
+        android:title="@string/refresh"/>
 </menu>
