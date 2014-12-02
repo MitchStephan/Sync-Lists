@@ -38,9 +38,11 @@ public class SyncListsApi {
         json.put("action", "add");
         json.put("email", email);
 
+        Log.d(Constants.TAG, "email: " + email);
+
         if(isNetworkAvailable(context)) {
             SyncListsRequest request = new SyncListsRequest(
-                    SyncListsRequest.SyncListsRequestMethod.POST, "api/lists/" + listID + "/share");
+                    SyncListsRequest.SyncListsRequestMethod.POST, "lists/" + listID + "/share/", json);
             Log.d(Constants.TAG, "api/lists/" + listID + "/share/");
 
             new SyncListsAddSharedUserAsyncTask(activity).execute(request);
@@ -54,7 +56,7 @@ public class SyncListsApi {
 
         if(isNetworkAvailable(context)) {
             SyncListsRequest request = new SyncListsRequest(
-                    SyncListsRequest.SyncListsRequestMethod.POST, "api/lists/" + listID + "/share");
+                    SyncListsRequest.SyncListsRequestMethod.POST, "lists/" + listID + "/share/", json);
 
         //    new SyncDeleteUser(activity).executre(request);
         }
