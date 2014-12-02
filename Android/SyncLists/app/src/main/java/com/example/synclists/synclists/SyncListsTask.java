@@ -20,7 +20,7 @@ public class SyncListsTask {
     }
 
     public SyncListsTask(int id, String name, boolean isTaskEdit) {
-        this(id, name, isTaskEdit, false, "just now", "you");
+        this(id, name, isTaskEdit, false, Constants.DEFAULT_TASK_UPDATED_TIME, "you");
     }
 
     public SyncListsTask(int id, String name, boolean isTaskEdit, boolean completed, String dateUpdated, String lastEditor) {

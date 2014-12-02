@@ -174,24 +174,38 @@ public class TaskListActivity extends Activity {
 
     public void taskLastUpdated(View v) {
         SyncListsTask task = (SyncListsTask) v.getTag();
-
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
         df.setTimeZone(TimeZone.getTimeZone("UTC"));
         df.setTimeZone(TimeZone.getTimeZone("CST"));
-        Date date;
-        try {
-            String dateString = task.getDateUpdated().replaceAll("\\..*Z", "");
+        String dateString = task.getDateUpdated().replaceAll("\\..*Z", "");
 
-            date = df.parse(dateString);
-            String newDateString = df.format(date);
-            System.out.println(newDateString);
+        String lastUpdated = "";
 
-            Toast.makeText(this, "Last update: " + date.toString() + " by " +  task.getLastEditor(),
-                    Toast.LENGTH_SHORT).show();
+        if(task.getDateUpdated().equals(Constants.DEFAULT_TASK_UPDATED_TIME)) {
+            lastUpdated = task.getDateUpdated();
         }
-        catch (ParseException e) {
-            e.printStackTrace();
+        else {
+            Date date;
+            try {
+
+                date = df.parse(dateString);
+                String newDateString = df.format(date);
+                System.out.println(newDateString);
+
+                lastUpdated = date.toString();
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
         }
+
+        if(!lastUpdated.isEmpty())
+            Toast.makeText(this, "Last update: " + lastUpdated + " by " + task.getLastEditor(),
+                Toast.LENGTH_SHORT).show();
+    }
+
+    public void showLastUpdated(SyncListsTask task) {
+
+
     }
 
     public void addTask(MenuItem item) {
@@ -359,6 +373,9 @@ public class TaskListActivity extends Activity {
                                     Toast.makeText(CONTEXT, completedMessage,
                                             Toast.LENGTH_SHORT).show();
 
+                                    updated = true;
+                                }
+                                else if(task.getDateUpdated() == null || !task.getDateUpdated().equals(updatedTask.getDateUpdated())) {
                                     updated = true;
                                 }
 

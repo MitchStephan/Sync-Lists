@@ -26,6 +26,7 @@ public final class Constants {
     protected static final int DEFAULT_SYNC_EVERY = 30000;
     protected static final boolean DEFAULT_SHARING = true;
     protected static final String DEFAULT_EMAIL = "DEFAULT@EMAIL.COM";
+    protected static final String DEFAULT_TASK_UPDATED_TIME = "just now";
 
     /* Prefs */
     protected static final String PREF_SYNC_EVERY = "SYNC_EVERY";
