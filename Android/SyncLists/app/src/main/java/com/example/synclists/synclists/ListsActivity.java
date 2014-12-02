@@ -170,6 +170,7 @@ public class ListsActivity extends Activity {
                             public void onTaskComplete(SyncListsResponse syncListsResponse) {
                                 if(syncListsResponse == null) {
                                     Toast.makeText(CONTEXT, "Something went wrong, please try again later", Toast.LENGTH_SHORT).show();
+                                    mSharedUsersAdapter.remove(user);
                                 }
                                 else {
                                     Toast.makeText(CONTEXT, "New shared user has been added", Toast.LENGTH_SHORT).show();
