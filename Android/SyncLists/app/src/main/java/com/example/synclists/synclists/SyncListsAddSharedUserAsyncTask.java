@@ -39,11 +39,9 @@ public class SyncListsAddSharedUserAsyncTask extends SyncListsRequestAsyncTask {
 
         if(result.getHttpResponse().getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
             mSyncListsRequestAsyncTaskCallback.onTaskComplete(result);
-            Toast.makeText(mActivity, "New shared user has been added", Toast.LENGTH_SHORT).show();
         }
         else {
             mSyncListsRequestAsyncTaskCallback.onTaskComplete(null);
-            Toast.makeText(mActivity, "Something went wrong, please try again later", Toast.LENGTH_SHORT).show();
         }
         mProgressDialog.dismiss();
     }

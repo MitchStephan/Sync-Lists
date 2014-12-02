@@ -173,6 +173,7 @@ public class ListsActivity extends Activity {
                                 }
                                 else {
                                     Toast.makeText(CONTEXT, "New shared user has been added", Toast.LENGTH_SHORT).show();
+                                    list.getSharedUsersList().add(user.getEmail());
                                 }
                             }
                         }, list.getId(), emailToShareWith, CONTEXT);
