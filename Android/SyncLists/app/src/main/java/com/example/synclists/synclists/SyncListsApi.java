@@ -49,16 +49,17 @@ public class SyncListsApi {
         }
     }
 
-    protected  static void deleteSharedUserFromList(Activity activity, int listID, String email, Context context) {
+    protected  static void deleteSharedUserFromList(SyncListsRequestAsyncTaskCallback callback, int listID, String email, Context context) {
         Map<String, Object> json = new HashMap<String, Object>();
-        json.put("action", "delete");
+        json.put("action", Constants.SHARE_DELETE);
         json.put("email", email);
 
         if(isNetworkAvailable(context)) {
             SyncListsRequest request = new SyncListsRequest(
-                    SyncListsRequest.SyncListsRequestMethod.POST, "lists/" + listID + "/share/", json);
+                    SyncListsRequest.SyncListsRequestMethod.POST, "lists/" + listID + "/share", json);
 
-        //    new SyncDeleteUser(activity).executre(request);
+
+            new SyncListsDeleteSharedUserAsyncTask(callback).execute(request);
         }
     }
 

@@ -135,7 +135,7 @@ public class ListsActivity extends Activity {
     public void onClickedEditSharedUsers(View v) {
         final SyncListsList list = (SyncListsList) v.getTag();
         ArrayList<SyncListsUser> users = new ArrayList<SyncListsUser>();
-        mSharedUsersAdapter = new SharedUsersArrayAdapter(this, R.layout.shared_user_row, users);
+        mSharedUsersAdapter = new SharedUsersArrayAdapter(this, R.layout.shared_user_row, users, list);
 
         Dialog sharedUsersDialog = new Dialog(this);
         sharedUsersDialog.setContentView(R.layout.shared_users_dialog);
@@ -180,10 +180,27 @@ public class ListsActivity extends Activity {
     }
 
     public void onClickUnshareUser(View v) {
-        SyncListsUser user = (SyncListsUser) v.getTag();
+        SharedUsersArrayAdapter.SharedUserRowHolder sharedUserRowHolder = (SharedUsersArrayAdapter.SharedUserRowHolder) v.getTag();
+        final SyncListsUser user = sharedUserRowHolder.user;
+        final SyncListsList list = sharedUserRowHolder.list;
 
-        //NEED TO REMOVE FROM API HERE ALSO
         mSharedUsersAdapter.remove(user);
+
+        SyncListsApi.deleteSharedUserFromList(
+                new SyncListsRequestAsyncTaskCallback() {
+                    @Override
+                    public void onTaskComplete(SyncListsResponse syncListsResponse) {
+                        if (syncListsResponse == null) {
+                            Toast.makeText(CONTEXT, "Error unsharing list with " + user.getEmail(),
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                        else {
+                            Toast.makeText(CONTEXT, "List " + list.getName() + " successfully unshared with " + user.getEmail(),
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }, list.getId(), user.getEmail(), CONTEXT);
+
         Toast.makeText(CONTEXT, "Unshared list with user " + user.getEmail(),
                 Toast.LENGTH_SHORT).show();
     }

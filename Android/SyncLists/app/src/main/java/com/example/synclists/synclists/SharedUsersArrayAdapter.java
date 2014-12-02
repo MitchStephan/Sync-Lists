@@ -23,12 +23,14 @@ public class SharedUsersArrayAdapter extends ArrayAdapter<SyncListsUser>  {
     private List<SyncListsUser> mItems;
     private int mLayoutResourceId;
     private Context mContext;
+    private SyncListsList mList;
 
-    public SharedUsersArrayAdapter(Context context, int layoutResourceId, List<SyncListsUser> items) {
+    public SharedUsersArrayAdapter(Context context, int layoutResourceId, List<SyncListsUser> items, SyncListsList list) {
         super(context, layoutResourceId, items);
         mLayoutResourceId = layoutResourceId;
         mContext = context;
         mItems = items;
+        mList = list;
     }
 
     @Override
@@ -38,6 +40,7 @@ public class SharedUsersArrayAdapter extends ArrayAdapter<SyncListsUser>  {
 
         View row = inflater.inflate(R.layout.shared_user_row, parent, false);
         SharedUserRowHolder holder = new SharedUserRowHolder();
+        holder.list = mList;
 
         holder.userUnshareButton = (Button) row.findViewById(R.id.userUnshareButton);
         holder.userUnshareButton.setTypeface(Typefaces.get(mContext));
@@ -47,7 +50,7 @@ public class SharedUsersArrayAdapter extends ArrayAdapter<SyncListsUser>  {
         row.setTag(holder);
 
         holder.user = user;
-        holder.userUnshareButton.setTag(user);
+        holder.userUnshareButton.setTag(holder);
         holder.sharedUserViewText.setText(user.getEmail());
         holder.sharedUserViewText.setTag(holder.user);
         return row;
@@ -57,5 +60,6 @@ public class SharedUsersArrayAdapter extends ArrayAdapter<SyncListsUser>  {
         SyncListsUser user;
         TextView sharedUserViewText;
         Button userUnshareButton;
+        SyncListsList list;
     }
 }

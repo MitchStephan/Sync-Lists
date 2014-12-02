@@ -17,6 +17,9 @@ public final class Constants {
     /* path to fontawesome assets */
     protected static final String FONTAWESOME_ASSETS = "fontawesome-webfont.ttf";
 
+    /* share api call constants */
+    protected static final String SHARE_DELETE = "delete";
+
     /* defaults */
 
     // in milliseconds
