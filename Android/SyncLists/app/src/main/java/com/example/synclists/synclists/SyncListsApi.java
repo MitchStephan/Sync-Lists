@@ -33,7 +33,7 @@ public class SyncListsApi {
         }
     }
 
-    protected static void addSharedUserToList(Activity activity, int listID, String email, Context context) {
+    protected static void addSharedUserToList(SyncListsRequestAsyncTaskCallback callback, int listID, String email, Context context) {
         Map<String, Object> json = new HashMap<String, Object>();
         json.put("action", "add");
         json.put("email", email);
@@ -45,7 +45,7 @@ public class SyncListsApi {
                     SyncListsRequest.SyncListsRequestMethod.POST, "lists/" + listID + "/share/", json);
             Log.d(Constants.TAG, "api/lists/" + listID + "/share/");
 
-            new SyncListsAddSharedUserAsyncTask(activity).execute(request);
+            new SyncListsAddSharedUserAsyncTask(callback, context).execute(request);
         }
     }
 

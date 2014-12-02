@@ -27,6 +27,8 @@ import com.nhaarman.listviewanimations.itemmanipulation.DynamicListView;
 import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.OnDismissCallback;
 import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.undo.TimedUndoAdapter;
 
+import org.apache.http.HttpStatus;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -158,11 +160,22 @@ public class ListsActivity extends Activity {
                     String emailToShareWith = shareEditText.getText().toString();
 
                     if(Validate.email(emailToShareWith)) {
-                        //NEED TO ACTUALLY SHARE WITH API
-                        mSharedUsersAdapter.add(new SyncListsUser(-1, emailToShareWith));
+                        final SyncListsUser user = new SyncListsUser(-1, emailToShareWith);
+                        mSharedUsersAdapter.add(user);
                         listView.smoothScrollToPosition(mSharedUsersAdapter.getCount());
                         shareEditText.setText("");
-                        SyncListsApi.addSharedUserToList(CONTEXT, list.getId(), emailToShareWith, CONTEXT);
+
+                        SyncListsApi.addSharedUserToList(new SyncListsRequestAsyncTaskCallback() {
+                            @Override
+                            public void onTaskComplete(SyncListsResponse syncListsResponse) {
+                                if(syncListsResponse == null) {
+                                    Toast.makeText(CONTEXT, "Something went wrong, please try again later", Toast.LENGTH_SHORT).show();
+                                }
+                                else {
+                                    Toast.makeText(CONTEXT, "New shared user has been added", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        }, list.getId(), emailToShareWith, CONTEXT);
                     }
                     else {
                         Toast.makeText(CONTEXT, "Invalid email",
@@ -200,9 +213,6 @@ public class ListsActivity extends Activity {
                         }
                     }
                 }, list.getId(), user.getEmail(), CONTEXT);
-
-        Toast.makeText(CONTEXT, "Unshared list with user " + user.getEmail(),
-                Toast.LENGTH_SHORT).show();
     }
 
     public void onClickEditList(View v) {

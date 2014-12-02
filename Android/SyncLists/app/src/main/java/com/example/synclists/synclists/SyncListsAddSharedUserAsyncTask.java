@@ -2,6 +2,7 @@ package com.example.synclists.synclists;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
@@ -14,9 +15,9 @@ import org.apache.http.HttpStatus;
 public class SyncListsAddSharedUserAsyncTask extends SyncListsRequestAsyncTask {
     private ProgressDialog mProgressDialog;
 
-    public SyncListsAddSharedUserAsyncTask(Activity activity) {
-        super(activity);
-        mProgressDialog = new ProgressDialog(activity);
+    public SyncListsAddSharedUserAsyncTask(SyncListsRequestAsyncTaskCallback callback, Context context) {
+        super(callback);
+        mProgressDialog = new ProgressDialog(context);
     }
 
     @Override
@@ -37,11 +38,11 @@ public class SyncListsAddSharedUserAsyncTask extends SyncListsRequestAsyncTask {
         Log.d(Constants.TAG, "Status code " + result.getHttpResponse().getStatusLine().getStatusCode());
 
         if(result.getHttpResponse().getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
-
+            mSyncListsRequestAsyncTaskCallback.onTaskComplete(result);
             Toast.makeText(mActivity, "New shared user has been added", Toast.LENGTH_SHORT).show();
         }
-        else
-        {
+        else {
+            mSyncListsRequestAsyncTaskCallback.onTaskComplete(null);
             Toast.makeText(mActivity, "Something went wrong, please try again later", Toast.LENGTH_SHORT).show();
         }
         mProgressDialog.dismiss();
