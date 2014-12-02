@@ -25,9 +25,14 @@ import com.nhaarman.listviewanimations.itemmanipulation.DynamicListView;
 import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.OnDismissCallback;
 import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.undo.TimedUndoAdapter;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 
 /**
  * Created by ethan on 10/27/14.
@@ -170,8 +175,23 @@ public class TaskListActivity extends Activity {
     public void taskLastUpdated(View v) {
         SyncListsTask task = (SyncListsTask) v.getTag();
 
-        Toast.makeText(this, "Last update: " + task.getDateUpdated() + " by " +  task.getLastEditor(),
-                Toast.LENGTH_SHORT).show();
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+        df.setTimeZone(TimeZone.getTimeZone("UTC"));
+        df.setTimeZone(TimeZone.getTimeZone("CST"));
+        Date date;
+        try {
+            String dateString = task.getDateUpdated().replaceAll("\\..*Z", "");
+
+            date = df.parse(dateString);
+            String newDateString = df.format(date);
+            System.out.println(newDateString);
+
+            Toast.makeText(this, "Last update: " + date.toString() + " by " +  task.getLastEditor(),
+                    Toast.LENGTH_SHORT).show();
+        }
+        catch (ParseException e) {
+            e.printStackTrace();
+        }
     }
 
     public void addTask(MenuItem item) {
