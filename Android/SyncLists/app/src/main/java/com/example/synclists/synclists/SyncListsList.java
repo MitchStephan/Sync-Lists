@@ -43,4 +43,8 @@ public class SyncListsList {
     }
 
     public boolean getIsListEdit() { return mIsListEdit; }
+
+    public String getListOwner() {
+        return mListOwner;
+    }
 }

@@ -400,12 +400,22 @@ public class ListsActivity extends Activity {
                                 }
                             }
 
+                            String email = mPrefs.getString(Constants.PREF_EMAIL, Constants.DEFAULT_EMAIL);
                             //any remaining lists are new and need to be added
                             for(int newListId : lists.keySet()) {
                                 SyncListsList list = lists.get(newListId);
                                 Log.d(Constants.TAG, "Adding new list " + list.getName() + " with id " + list.getId());
 
-                                Toast.makeText(CONTEXT, "New list " + list.getName() + " added",
+                                String newListMessage;
+
+                                if(!list.getListOwner().equals(email)) {
+                                    newListMessage = "List " + list.getName() + " shared by " + list.getListOwner();
+                                }
+                                else {
+                                    newListMessage = "New list " + list.getName() + " added";
+                                }
+
+                                Toast.makeText(CONTEXT, newListMessage,
                                         Toast.LENGTH_SHORT).show();
 
                                 mAdapter.add(lists.get(newListId));
