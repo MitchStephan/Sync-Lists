@@ -34,13 +34,13 @@ public class SettingsActivity extends Activity{
     private SettingsArrayAdapter mSettingsAdapter;
     private String mEmail;
     private Boolean mSharingEnabled;
+    private SharedPreferences mPrefs;
     private final String CHANGE_PASSWORD = "Change Password";
     private final String SYNC_EVERY = "Sync Every...";
     private final String INSTRUCTIONS = "Instructions";
     private final String LOGOUT = "Logout";
     private final String SHARING = "Toggle Sharing";
     private final String[] M_SETTINGS = new String[] { INSTRUCTIONS, SHARING, SYNC_EVERY, CHANGE_PASSWORD, LOGOUT };
-    private SharedPreferences mPrefs;
 
 
     @Override

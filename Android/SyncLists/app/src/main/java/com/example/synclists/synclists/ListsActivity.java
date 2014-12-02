@@ -6,6 +6,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -43,15 +44,20 @@ public class ListsActivity extends Activity {
     private SyncListsSync mSyncer;
     private boolean mFirstOnResume = true;
     private SharedUsersArrayAdapter mSharedUsersAdapter;
+    private SharedPreferences mPrefs;
+    private String mEmail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sync_lists_lists);
 
+        mPrefs = getSharedPreferences(Constants.PREF_FILE_NAME, MODE_PRIVATE);
+        mEmail = mPrefs.getString(Constants.PREF_EMAIL, Constants.DEFAULT_EMAIL);
         mCanAddList = true;
         mLists = new ArrayList<SyncListsList>();
         mAdapter = new ListArrayAdapter(this, R.layout.lists_list_view, mLists);
+
 
         mDynamicListView = (DynamicListView) findViewById(R.id.list_lists_view);
         final Context context = this;
@@ -108,7 +114,7 @@ public class ListsActivity extends Activity {
         if (!isListEdit(mAdapter.getCount() - 1))
         {
             showKeyboard();
-            mAdapter.add(new SyncListsList(-1, "", true));
+            mAdapter.add(new SyncListsList(-1, "", true, mEmail, new ArrayList<String>()));
             mDynamicListView.smoothScrollToPosition(mAdapter.getCount());
         }
     }

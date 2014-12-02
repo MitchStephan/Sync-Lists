@@ -33,6 +33,32 @@ public class SyncListsApi {
         }
     }
 
+    protected static void addSharedUserToList(Activity activity, int listID, String email, Context context) {
+        Map<String, Object> json = new HashMap<String, Object>();
+        json.put("action", "add");
+        json.put("email", email);
+
+        if(isNetworkAvailable(context)) {
+            SyncListsRequest request = new SyncListsRequest(
+                    SyncListsRequest.SyncListsRequestMethod.POST, "api/lists/" + listID + "/share");
+
+            // new SyncListShareUserAsyncTask(activity).executre(request);
+        }
+    }
+
+    protected  static void deleteSharedUserToList(Activity activity, int listID, String email, Context context) {
+        Map<String, Object> json = new HashMap<String, Object>();
+        json.put("action", "delete");
+        json.put("email", email);
+
+        if(isNetworkAvailable(context)) {
+            SyncListsRequest request = new SyncListsRequest(
+                    SyncListsRequest.SyncListsRequestMethod.POST, "api/lists/" + listID + "/share");
+
+            // new SyncListShareUserAsyncTask(activity).executre(request);
+        }
+    }
+
     protected static void changePassword(Activity activity, String newPassword, String confirmNewPassword, Context context, String email, Boolean sharingEnabled) {
         Map<String, Object> json = new HashMap<String, Object>();
         json.put("password", newPassword);
@@ -178,7 +204,7 @@ public class SyncListsApi {
             new SyncListsDeleteTaskAsyncTask(callback).execute(request);
         }
     }
-
+    // add shared user email parsing
     protected static ArrayList<SyncListsList> parseLists(String json) throws Exception {
         ArrayList<SyncListsList> lists = new ArrayList<SyncListsList>();
         JSONArray jsonArray = new JSONArray(json);
@@ -186,15 +212,20 @@ public class SyncListsApi {
         for(int i = 0; i < jsonArray.length(); i++) {
             JSONObject jsonObject = jsonArray.getJSONObject(i);
             JSONObject fields = jsonObject.getJSONObject("fields");
+            JSONArray sharedUsers = fields.getJSONArray("shared_users");
+            ArrayList<String> sharedUsersList = new ArrayList<String>();
+            for (int j = 0; j < sharedUsers.length(); j++) {
+                sharedUsersList.add(sharedUsers.get(j).toString());
+            }
 
             //should handle Integer.parseInt in case error
-            SyncListsList list = new SyncListsList(Integer.parseInt(jsonObject.get("pk").toString()), fields.get("name").toString());
+            SyncListsList list = new SyncListsList(Integer.parseInt(jsonObject.get("pk").toString()), fields.get("name").toString(), fields.get("list_owner").toString(), sharedUsersList);
             lists.add(list);
         }
 
         return lists;
     }
-
+    // add shared user email parsing
     protected static Map<Integer, SyncListsList> parseListsAsMap(String json) throws Exception {
         HashMap<Integer, SyncListsList> lists = new HashMap<Integer, SyncListsList>();
         JSONArray jsonArray = new JSONArray(json);
@@ -202,9 +233,13 @@ public class SyncListsApi {
         for(int i = 0; i < jsonArray.length(); i++) {
             JSONObject jsonObject = jsonArray.getJSONObject(i);
             JSONObject fields = jsonObject.getJSONObject("fields");
-
+            JSONArray sharedUsers = fields.getJSONArray("shared_users");
+            ArrayList<String> sharedUsersList = new ArrayList<String>();
+            for (int j = 0; j < sharedUsers.length(); j++) {
+                sharedUsersList.add(sharedUsers.get(j).toString());
+            }
             //should handle Integer.parseInt in case error
-            SyncListsList list = new SyncListsList(Integer.parseInt(jsonObject.get("pk").toString()), fields.get("name").toString());
+            SyncListsList list = new SyncListsList(Integer.parseInt(jsonObject.get("pk").toString()), fields.get("name").toString(), fields.get("list_owner").toString(), sharedUsersList);
             lists.put(list.getId(), list);
         }
 

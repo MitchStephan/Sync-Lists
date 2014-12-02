@@ -3,6 +3,7 @@ package com.example.synclists.synclists;
 import android.app.Activity;
 import android.app.ListActivity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -26,6 +27,7 @@ import com.nhaarman.listviewanimations.util.Insertable;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -133,12 +135,14 @@ public class ListArrayAdapter extends ArrayAdapter<SyncListsList> implements Und
     }
 
     private void validateOnCreate(String newListName, final int position) {
+        SharedPreferences mPrefs = mContext.getSharedPreferences(Constants.PREF_FILE_NAME, Context.MODE_PRIVATE);
+        String mEmail = mPrefs.getString(Constants.PREF_EMAIL, Constants.DEFAULT_EMAIL);
         hideKeyboard();
         remove(getItem(position));
         final int positionToAddTo = getCount();
 
         if (validName(newListName)) {
-            final SyncListsList list = new SyncListsList(-1, newListName);
+            final SyncListsList list = new SyncListsList(-1, newListName, mEmail, new ArrayList<String>());
             insert(list, positionToAddTo);
 
             SyncListsApi.createList(new SyncListsRequestAsyncTaskCallback() {
