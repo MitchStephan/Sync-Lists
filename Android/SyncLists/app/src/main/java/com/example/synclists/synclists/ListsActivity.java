@@ -365,6 +365,7 @@ public class ListsActivity extends Activity {
                         try {
                             Map<Integer, SyncListsList> lists = SyncListsApi.parseListsAsMap(syncListsResponse.getBody());
                             Log.d(Constants.TAG, "lists parsed as map");
+                            String email = mPrefs.getString(Constants.PREF_EMAIL, Constants.DEFAULT_EMAIL);
 
                             int i = 0;
                             while(i < mAdapter.getCount()) {
@@ -392,15 +393,22 @@ public class ListsActivity extends Activity {
                                 else {
                                     Log.d(Constants.TAG, "Deleting list " + list.getName() + " with id " + list.getId());
                                     mAdapter.remove(list);
+                                    String listDeletedMessage;
 
-                                    Toast.makeText(CONTEXT, "List " + list.getName() + " deleted",
+                                    if(!list.getListOwner().equals(email)) {
+                                        listDeletedMessage = "List " + list.getName() + " unshared by " + list.getListOwner();
+                                    }
+                                    else {
+                                        listDeletedMessage = "List " + list.getName() + " deleted";
+                                    }
+
+                                    Toast.makeText(CONTEXT, listDeletedMessage,
                                             Toast.LENGTH_SHORT).show();
 
                                     i--;
                                 }
                             }
 
-                            String email = mPrefs.getString(Constants.PREF_EMAIL, Constants.DEFAULT_EMAIL);
                             //any remaining lists are new and need to be added
                             for(int newListId : lists.keySet()) {
                                 SyncListsList list = lists.get(newListId);
