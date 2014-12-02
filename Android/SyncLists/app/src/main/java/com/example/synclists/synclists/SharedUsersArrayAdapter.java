@@ -38,21 +38,27 @@ public class SharedUsersArrayAdapter extends ArrayAdapter<SyncListsUser>  {
         SyncListsUser user = getItem(position);
         LayoutInflater inflater = ((Activity) mContext).getLayoutInflater();
 
-        View row = inflater.inflate(R.layout.shared_user_row, parent, false);
-        SharedUserRowHolder holder = new SharedUserRowHolder();
-        holder.list = mList;
+        View row = inflater.inflate(mLayoutResourceId, parent, false);
 
-        holder.userUnshareButton = (Button) row.findViewById(R.id.userUnshareButton);
-        holder.userUnshareButton.setTypeface(Typefaces.get(mContext));
+        TextView sharedUserViewText = (TextView) row.findViewById(R.id.sharedUsersListViewText);
+        sharedUserViewText.setText(user.getEmail());
 
-        holder.sharedUserViewText = (TextView) row.findViewById(R.id.sharedUsersListViewText);
+        if(mLayoutResourceId == R.layout.shared_user_row) {
+            SharedUserRowHolder holder = new SharedUserRowHolder();
+            holder.list = mList;
 
-        row.setTag(holder);
+            holder.userUnshareButton = (Button) row.findViewById(R.id.userUnshareButton);
+            holder.userUnshareButton.setTypeface(Typefaces.get(mContext));
 
-        holder.user = user;
-        holder.userUnshareButton.setTag(holder);
-        holder.sharedUserViewText.setText(user.getEmail());
-        holder.sharedUserViewText.setTag(holder.user);
+            holder.sharedUserViewText = sharedUserViewText;
+
+            row.setTag(holder);
+
+            holder.user = user;
+            holder.userUnshareButton.setTag(holder);
+            holder.sharedUserViewText.setTag(holder.user);
+        }
+
         return row;
     }
 

@@ -137,10 +137,28 @@ public class ListsActivity extends Activity {
     public void onClickedEditSharedUsers(View v) {
         final SyncListsList list = (SyncListsList) v.getTag();
         ArrayList<SyncListsUser> users = new ArrayList<SyncListsUser>();
-        mSharedUsersAdapter = new SharedUsersArrayAdapter(this, R.layout.shared_user_row, users, list);
+
+        int rowLayoutId;
+        int dialogLayoutId;
+        int sharedUsersListId;
+
+        String email = mPrefs.getString(Constants.PREF_EMAIL, Constants.DEFAULT_EMAIL);
+        boolean isListOwner = list.getListOwner().equals(email);
+        if(isListOwner) {
+            rowLayoutId = R.layout.shared_user_row;
+            dialogLayoutId = R.layout.shared_users_dialog;
+            sharedUsersListId = R.id.sharedUsersList;
+        }
+        else {
+            rowLayoutId = R.layout.shared_user_row_non_owner;
+            dialogLayoutId = R.layout.shared_users_dialog_not_owner;
+            sharedUsersListId = R.id.sharedUsersListNonOwner;
+        }
+
+        mSharedUsersAdapter = new SharedUsersArrayAdapter(this, rowLayoutId, users, list);
 
         Dialog sharedUsersDialog = new Dialog(this);
-        sharedUsersDialog.setContentView(R.layout.shared_users_dialog);
+        sharedUsersDialog.setContentView(dialogLayoutId);
         sharedUsersDialog.setTitle(getString(R.string.shared_users_title) + " for " + list.getName());
 
         for(int i = 0; i < list.getSharedUsersList().size(); i++) {
@@ -148,48 +166,52 @@ public class ListsActivity extends Activity {
         }
 
 
-        final ListView listView = (ListView) sharedUsersDialog.findViewById(R.id.sharedUsersList);
+        final ListView listView = (ListView) sharedUsersDialog.findViewById(sharedUsersListId);
         listView.setAdapter(mSharedUsersAdapter);
 
-        final EditText shareEditText = (EditText) sharedUsersDialog.findViewById(R.id.sharedUsersEditText);
-        shareEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int keyCode, KeyEvent event) {
-                if (keyCode == KeyEvent.KEYCODE_ENTER || keyCode == KeyEvent.KEYCODE_ENDCALL ||
-                        keyCode == KeyEvent.ACTION_DOWN) {
-                    String emailToShareWith = shareEditText.getText().toString();
+        if(isListOwner) {
+            final EditText shareEditText = (EditText) sharedUsersDialog.findViewById(R.id.sharedUsersEditText);
+            shareEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                @Override
+                public boolean onEditorAction(TextView v, int keyCode, KeyEvent event) {
+                    if (keyCode == KeyEvent.KEYCODE_ENTER || keyCode == KeyEvent.KEYCODE_ENDCALL ||
+                            keyCode == KeyEvent.ACTION_DOWN) {
+                        String emailToShareWith = shareEditText.getText().toString();
 
-                    if(Validate.email(emailToShareWith)) {
-                        final SyncListsUser user = new SyncListsUser(-1, emailToShareWith);
-                        mSharedUsersAdapter.add(user);
-                        listView.smoothScrollToPosition(mSharedUsersAdapter.getCount());
-                        shareEditText.setText("");
+                        if (Validate.email(emailToShareWith)) {
+                            final SyncListsUser user = new SyncListsUser(-1, emailToShareWith);
+                            mSharedUsersAdapter.add(user);
+                            listView.smoothScrollToPosition(mSharedUsersAdapter.getCount());
+                            shareEditText.setText("");
 
-                        SyncListsApi.addSharedUserToList(new SyncListsRequestAsyncTaskCallback() {
-                            @Override
-                            public void onTaskComplete(SyncListsResponse syncListsResponse) {
-                                if(syncListsResponse == null) {
-                                    Toast.makeText(CONTEXT, "Something went wrong, please try again later", Toast.LENGTH_SHORT).show();
-                                    mSharedUsersAdapter.remove(user);
+                            SyncListsApi.addSharedUserToList(new SyncListsRequestAsyncTaskCallback() {
+                                @Override
+                                public void onTaskComplete(SyncListsResponse syncListsResponse) {
+                                    if (syncListsResponse == null) {
+                                        Toast.makeText(CONTEXT, "Something went wrong, please try again later", Toast.LENGTH_SHORT).show();
+                                        mSharedUsersAdapter.remove(user);
+                                    } else {
+                                        Toast.makeText(CONTEXT, "New shared user has been added", Toast.LENGTH_SHORT).show();
+                                        list.getSharedUsersList().add(user.getEmail());
+                                    }
                                 }
-                                else {
-                                    Toast.makeText(CONTEXT, "New shared user has been added", Toast.LENGTH_SHORT).show();
-                                    list.getSharedUsersList().add(user.getEmail());
-                                }
-                            }
-                        }, list.getId(), emailToShareWith, CONTEXT);
-                    }
-                    else {
-                        Toast.makeText(CONTEXT, "Invalid email",
-                                Toast.LENGTH_SHORT).show();
+                            }, list.getId(), emailToShareWith, CONTEXT);
+                        } else {
+                            Toast.makeText(CONTEXT, "Invalid email",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+
+                        return true;
                     }
 
-                    return true;
+                    return false;
                 }
-
-                return false;
-            }
-        });
+            });
+        }
+        else {
+            TextView textView = (TextView) sharedUsersDialog.findViewById(R.id.sharedUsersOwner);
+            textView.setText("Owner: " + list.getListOwner());
+        }
 
         sharedUsersDialog.show();
     }
