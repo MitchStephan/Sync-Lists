@@ -136,8 +136,29 @@ public class ListsActivity extends Activity {
 
     public void onClickedEditSharedUsers(View v) {
         final SyncListsList list = (SyncListsList) v.getTag();
-        ArrayList<SyncListsUser> users = new ArrayList<SyncListsUser>();
 
+        SyncListsApi.getList(new SyncListsRequestAsyncTaskCallback() {
+            @Override
+            public void onTaskComplete(SyncListsResponse syncListsResponse) {
+                String failureMessage = "Error loading shared users";
+                if(syncListsResponse == null) {
+                    Toast.makeText(CONTEXT, failureMessage, Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    try {
+                        SyncListsList list = SyncListsApi.parseList(syncListsResponse.getBody());
+                        showSharedUsersDialog(list);
+                    }
+                    catch(Exception e) {
+                        Toast.makeText(CONTEXT, failureMessage, Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+        }, list.getId(), this);
+    }
+
+    public void showSharedUsersDialog(final SyncListsList list) {
+        ArrayList<SyncListsUser> users = new ArrayList<SyncListsUser>();
         int rowLayoutId;
         int dialogLayoutId;
         int sharedUsersListId;

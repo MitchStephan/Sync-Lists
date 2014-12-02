@@ -182,6 +182,15 @@ public class SyncListsApi {
         }
     }
 
+    protected static void getList(SyncListsRequestAsyncTaskCallback callback, int listId, Context context) {
+        if (isNetworkAvailable(context)) {
+            SyncListsRequest request = new SyncListsRequest(
+                    SyncListsRequest.SyncListsRequestMethod.GET, "lists/" + listId);
+
+            new SyncListsGetListAsyncTask(callback, context).execute(request);
+        }
+    }
+
     protected static void getTasks(SyncListsRequestAsyncTaskCallback callback, int listId, Context context) {
         if (isNetworkAvailable(context)) {
             SyncListsRequest request = new SyncListsRequest(
@@ -215,20 +224,29 @@ public class SyncListsApi {
 
         for(int i = 0; i < jsonArray.length(); i++) {
             JSONObject jsonObject = jsonArray.getJSONObject(i);
-            JSONObject fields = jsonObject.getJSONObject("fields");
-            JSONArray sharedUsers = fields.getJSONArray("shared_users");
-            ArrayList<String> sharedUsersList = new ArrayList<String>();
-            for (int j = 0; j < sharedUsers.length(); j++) {
-                sharedUsersList.add(sharedUsers.get(j).toString());
-            }
-
-            //should handle Integer.parseInt in case error
-            SyncListsList list = new SyncListsList(Integer.parseInt(jsonObject.get("pk").toString()), fields.get("name").toString(), fields.get("list_owner").toString(), sharedUsersList);
-            lists.add(list);
+            lists.add(parseList(jsonObject));
         }
 
         return lists;
     }
+
+    protected static SyncListsList parseList(String json) throws Exception {
+        JSONObject jsonObject = new JSONObject(json);
+        return parseList(jsonObject);
+    }
+
+    protected static SyncListsList parseList(JSONObject jsonObject) throws Exception {
+        JSONObject fields = jsonObject.getJSONObject("fields");
+        JSONArray sharedUsers = fields.getJSONArray("shared_users");
+        ArrayList<String> sharedUsersList = new ArrayList<String>();
+        for (int j = 0; j < sharedUsers.length(); j++) {
+            sharedUsersList.add(sharedUsers.get(j).toString());
+        }
+
+        SyncListsList list = new SyncListsList(Integer.parseInt(jsonObject.get("pk").toString()), fields.get("name").toString(), fields.get("list_owner").toString(), sharedUsersList);
+        return list;
+    }
+
     // add shared user email parsing
     protected static Map<Integer, SyncListsList> parseListsAsMap(String json) throws Exception {
         HashMap<Integer, SyncListsList> lists = new HashMap<Integer, SyncListsList>();
