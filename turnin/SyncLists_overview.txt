@@ -10,23 +10,6 @@ Team member 2 eid: mjs4373
 Team member 3 name: Ethan Poulter
 Team member 3 eid: emp775
 
-Instructions
-============
-To get started using the app, you first must create an account.
-Launch the app and you will be taken to the login screen. There you can
-enter an email and password and hit sign up (a fake email and password are fine).
-Then you will be taken to the "Lists" screen. On the Lists screen you can see
-all lists you have created. To start, there is an example list so you can see how it works.
-You can click on the plus button in the action bar and an area will appear where you
-can type the name of the new list (hit enter to add the list). If you decide you no longer want to create
-that list, you can hit the red x button to cancel adding the list. If you click on a list name,
-you will be taken to the Tasks screen which displays the task for that list. The format on the Tasks
-screen is very similar to the Lists screen. In the action bar there is a plus button that you can click
-to add a new task, and it is handled the same way as adding a list. In the top right corner on the action
-bar, you can click the cog image to access the settings screen. On the settings screen, you can click
-"Logout". This will log you out of SyncLists and take you to the login screen. Once on the login screen,
-you can login with the account you created previously.
-
 2
 -
 
@@ -64,7 +47,7 @@ Completed Features
 
 - Users can view instructions on how to use the app on the settings activity
 
-- Users can toggle whether or not to allow sharing on the settings activity
+- Users can toggle whether or not to allow anyone to share future lists with them on the settings activity
 
 - Users can choose how often SyncLists will sync with the server to check for updates to lists or tasks on the settings activity
 
@@ -74,7 +57,7 @@ Completed Features
 
 - Users can view the email addresses of the people who the list have been shared with
 
-- Users can unshare a list with an email
+- Users can unshare a list with another user
 
 - Users can edit the name of a list
 
@@ -83,6 +66,12 @@ Completed Features
 - Users can see who last updated a task and at what time
 
 - An up button allows the user to go from the Tasks activity back to the Lists Activity.
+
+- User can refresh lists manually to see if there are any updates instead of waiting for SyncLists to sync
+
+- User can refresh tasks manually to see if there are any updates instead of waiting for SyncLists to sync
+
+- All changes on shared lists sync out to other users
 
 3
 -
@@ -102,6 +91,18 @@ Features Added that were not Part of Prototype
 
 - Users can see who last edited a task and at what time
 
+- Users can refresh their Lists and Tasks for a list to check manually if there have been any
+updates and don't have to wait for the app to sync any new changes for them.
+
+- Users can disable sharing for their account so that other users can share no new lists with them
+
+- Users can undo deleting a list
+
+- Users can undo deleting a task
+
+5
+-
+
 List of Classes and Major Chunks of Code from Other Sources
 ===========================================================
 
@@ -109,9 +110,16 @@ List of Classes and Major Chunks of Code from Other Sources
         Title: Android Custom Listview
         Url: https://looksok.wordpress.com/tag/listview-item-with-button/
 
-- onClickDeleteList() in ListsActivity.java uses a confirmation dialog that was obtained (and modified) from:
-        Title: Alert Dialog Box or Confirmation Box in Android
-        Url: http://www.androidhub4you.com/2012/09/alert-dialog-box-or-confirmation-box-in.html
+- ListArrayAdapter.java and TaskListAdapter.java
+    Title: Swipe to delete lists and tasks (with ability to undo deletion)
+    Url: http://nhaarman.github.io/ListViewAnimations/
+
+- We used Gson in SyncListsApi.java to decode JSON into Java objects
+    Title: Gson
+    Url: https://code.google.com/p/google-gson/
+
+6
+-
 
 List of Classes and Major Chunks of Code Completed by SyncLists Team Members
 ============================================================================
@@ -124,10 +132,15 @@ such as login.
 of classes include:
     
     + SyncListsApi.java
+    + SyncListsAddSharedUserAsyncTask.java
+    + SyncListsChangePasswordAsyncTask.java
     + SyncListsCreateListAsyncTask.java
     + SyncListsCreateTaskAsyncTask.java
     + SyncListsCreateUserAsyncTask.java
     + SyncListsDeleteListAsyncTask.java
+    + SyncListsDeleteSharedUserAsyncTask.java
+    + SyncListsDeleteTaskAsyncTask.java
+    + SyncListsGetListAsyncTask.java
     + SyncListsGetListsAsyncTask.java
     + SyncListsGetTasksAsyncTask.java
     + SyncListsLoginAsyncTask.java
@@ -136,13 +149,25 @@ of classes include:
     + SyncListsRequestAsyncTaskCallback.java
     + SyncListsRequestException.java
     + SyncListsResponse.java
-    + SyncListsList.java
+    + SyncListsUpdateListAsyncTask.java
+    + SyncListsUpdateSharingAsyncTask.java
+    + SyncListsUpdateTaskAsyncTask.java
+    + SyncListsUpdateUserAsyncTask.java
     + Task.java
 
-- All activities for the SyncLists app were created by the members:
+- All activities and the rest of the code for the SyncLists app were created by the members:
 
+    + Constants.java
     + ListsActivity.java
     + SettingsActivity.java
+    + SettingsArrayAdapter.java
+    + SharedUsersArrayAdapter.java
     + TaskListActivity.java
+    + SyncListsList.java
     + SyncListsLogin.java
-
+    + SyncListsSync.java
+    + SyncListsSyncTask.java
+    + SyncListsTask.java
+    + SyncListsUser.java
+    + Typefaces.java
+    + Validate.java
