@@ -1,44 +1,118 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+    android:layout_height="300dp"
     android:orientation="vertical"
     android:gravity="center">
 
-    <TextView
-        android:id="@+id/text1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/add_list_instruction"/>
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
     <TextView
-        android:id="@+id/text2"
+        android:id="@+id/instruction1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/remove_list_instruction"/>
+        android:text="@string/add_list_instruction"
+        style="@style/Instructions"/>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="2dp"
+        android:background="#ff33b5e5"/>
 
     <TextView
-        android:id="@+id/text3"
+        android:id="@+id/instruction2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/view_tasks_instruction"/>
+        android:text="@string/remove_list_instruction"
+        style="@style/Instructions"/>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="2dp"
+        android:background="#ff33b5e5"/>
 
     <TextView
-        android:id="@+id/text4"
+        android:id="@+id/instruction3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/create_task_instruction"/>
+        android:text="@string/view_tasks_instruction"
+        style="@style/Instructions"/>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="2dp"
+        android:background="#ff33b5e5"/>
 
     <TextView
-        android:id="@+id/text5"
+        android:id="@+id/instruction4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/remove_task_instruction"/>
+        android:text="@string/create_task_instruction"
+        style="@style/Instructions"/>
 
-    <Button
-        android:id="@+id/dialogButtonOK"
-        android:layout_height="wrap_content"
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="2dp"
+        android:background="#ff33b5e5"/>
+
+    <TextView
+        android:id="@+id/instruction5"
         android:layout_width="wrap_content"
-        android:text="@string/OK" />
+        android:layout_height="wrap_content"
+        android:text="@string/complete_task_instruction"
+        style="@style/Instructions"/>
 
-</LinearLayout>
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="2dp"
+        android:background="#ff33b5e5"/>
+
+    <TextView
+        android:id="@+id/instruction7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/share_list_instruction"
+        android:layout_gravity="center_horizontal"
+        style="@style/Instructions"/>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="2dp"
+        android:background="#ff33b5e5"/>
+
+    <TextView
+        android:id="@+id/instruction8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/view_share_list_instruction"
+        style="@style/Instructions"/>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="2dp"
+        android:background="#ff33b5e5"/>
+
+    <TextView
+        android:id="@+id/instruction9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/unshare_list_instruction"
+        style="@style/Instructions"/>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="2dp"
+        android:background="#ff33b5e5"/>
+
+    <TextView
+        android:id="@+id/instruction10"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/refresh_instruction"
+        style="@style/Instructions"/>
+
+    </LinearLayout>
+</ScrollView>

@@ -128,16 +128,6 @@ public class SettingsActivity extends Activity{
         final Dialog instructionsDialog = new Dialog(this);
         instructionsDialog.setContentView(R.layout.instructions_dialog);
         instructionsDialog.setTitle("Instructions");
-
-        Button dialogButton = (Button) instructionsDialog.findViewById(R.id.dialogButtonOK);
-        // if button is clicked, close the custom dialog
-        dialogButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                instructionsDialog.dismiss();
-            }
-        });
-
         instructionsDialog.show();
     }
 

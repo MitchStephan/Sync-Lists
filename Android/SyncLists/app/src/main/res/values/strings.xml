@@ -44,11 +44,15 @@
     <string name="fa_edit">&#xf044;</string>
     <string name="fa_share_alt">&#xf1e0;</string>
     <!-- Instruction text -->
-    <string name="add_list_instruction">&#8226;To add a list, simply click the plus button and add a name.</string>
-    <string name="remove_list_instruction">&#8226;Once you are done with a list, swipe the list left or right to remove.</string>
-    <string name="view_tasks_instruction">&#8226;Once you create a list, click on it to view that lists tasks.</string>
-    <string name="create_task_instruction">&#8226;To create a task in your list, hit the plus button and add a name.</string>
-    <string name="remove_task_instruction">&#8226;Once you have finished a task on the list, swipe the task left or right to remove it.</string>
+    <string name="add_list_instruction">To add a list, simply click the plus button and add a name.</string>
+    <string name="remove_list_instruction">Once you are done with a list, swipe the list to delete.</string>
+    <string name="view_tasks_instruction">Once you create a list, click on it to view its tasks.</string>
+    <string name="create_task_instruction">To create a task in your list, hit the plus button and add a name.</string>
+    <string name="complete_task_instruction">Once you have finished a task on the list, you can check it to mark it as completed or swipe it to delete it from the list.</string>
+    <string name="share_list_instruction">Click on the share icon on a list and  enter a friend\'s email to share the list.</string>
+    <string name="view_share_list_instruction">Click on the share icon to see who a list has been shared with.</string>
+    <string name="unshare_list_instruction">Click on the red \"x\" next to an email to unshare the list with that person.</string>
+    <string name="refresh_instruction">Click on the refresh button at the top to refresh lists or tasks manually.</string>
     <string name="OK">OK</string>
     <!-- Change Password Dialog -->
     <string name="new_password_hint">New Password</string>
