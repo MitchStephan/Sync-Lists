@@ -71,7 +71,7 @@ public class TaskListActivity extends Activity {
         mDynamicListView = (DynamicListView) findViewById(R.id.tasks_view_wrapper);
         final Context context = this;
 
-        TimedUndoAdapter timedUndoAdapter = new TimedUndoAdapter(mAdapter, this, mOnCompleteTaskCallback);
+        TimedUndoAdapter timedUndoAdapter = new TimedUndoAdapter(mAdapter, this, mOnDeleteTaskCallback);
         timedUndoAdapter.setAbsListView(mDynamicListView);
         mDynamicListView.setAdapter(timedUndoAdapter);
         mDynamicListView.enableSimpleSwipeUndo();
@@ -433,7 +433,7 @@ public class TaskListActivity extends Activity {
         return position > -1 && mAdapter.getItem(position).getIsTaskEdit();
     }
 
-    private OnDismissCallback mOnCompleteTaskCallback = new OnDismissCallback() {
+    private OnDismissCallback mOnDeleteTaskCallback = new OnDismissCallback() {
         @Override
         public void onDismiss(final ViewGroup listView, final int[] reverseSortedPositions) {
             for (int position : reverseSortedPositions) {
