@@ -30,6 +30,7 @@ import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.undo.TimedU
 import org.apache.http.HttpStatus;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -39,6 +40,7 @@ import java.util.Map;
 public class ListsActivity extends Activity {
 
     private List<SyncListsList> mLists;
+    private Map<Integer, Boolean> mIgnoreInSync;
     private ListArrayAdapter mAdapter;
     public boolean mCanAddList;
     private DynamicListView mDynamicListView;
@@ -55,6 +57,8 @@ public class ListsActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sync_lists_lists);
         mRefreshing = false;
+
+        mIgnoreInSync = new HashMap<Integer, Boolean>();
 
         mPrefs = getSharedPreferences(Constants.PREF_FILE_NAME, MODE_PRIVATE);
         mEmail = mPrefs.getString(Constants.PREF_EMAIL, Constants.DEFAULT_EMAIL);
@@ -408,7 +412,7 @@ public class ListsActivity extends Activity {
                             SyncListsList list = mAdapter.getItem(i);
                             i++;
 
-                            if(list.getId() < 0) {
+                            if(list.getId() < 0 || mIgnoreInSync.containsKey(list.getId())) {
                                 continue;
                             }
 
@@ -481,6 +485,7 @@ public class ListsActivity extends Activity {
             for (int position : reverseSortedPositions) {
 
                 final SyncListsList list = mAdapter.getItem(position);
+                mIgnoreInSync.put(list.getId(), true);
                 mAdapter.remove(list);
 
                 SyncListsApi.deleteList(new SyncListsRequestAsyncTaskCallback() {
@@ -489,6 +494,7 @@ public class ListsActivity extends Activity {
                         if (syncListsResponse == null) {
                             Toast.makeText(CONTEXT, "Error deleting list " + list.getName(),
                                     Toast.LENGTH_SHORT).show();
+                            mIgnoreInSync.remove(list.getId());
                         }
                         else {
                             Toast.makeText(CONTEXT, "List " + list.getName() + " successfully deleted",

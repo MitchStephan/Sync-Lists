@@ -30,6 +30,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
@@ -39,6 +40,7 @@ import java.util.TimeZone;
  */
 public class TaskListActivity extends Activity {
     private List<SyncListsTask> mTaskList;
+    private Map<Integer, Boolean> mIgnoreInSync;
     private TaskListAdapter mAdapter;
     private int mListId;
     private DynamicListView mDynamicListView;
@@ -52,6 +54,8 @@ public class TaskListActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sync_lists_tasks);
         mRefreshing = false;
+
+        mIgnoreInSync = new HashMap<Integer, Boolean>();
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
@@ -233,6 +237,7 @@ public class TaskListActivity extends Activity {
 
         task.setCompleted(isChecked);
 
+        mIgnoreInSync.put(task.getId(), true);
         SyncListsApi.updateTask(new SyncListsRequestAsyncTaskCallback() {
             @Override
             public void onTaskComplete(SyncListsResponse syncListsResponse) {
@@ -251,6 +256,8 @@ public class TaskListActivity extends Activity {
 
                     checkBox.setPaintFlags(strikeThroughFlags);
                 }
+
+                mIgnoreInSync.remove(task.getId());
             }
         }, mListId, task, CONTEXT);
 
@@ -349,6 +356,10 @@ public class TaskListActivity extends Activity {
                             if(task.getId() < 0) {
                                 continue;
                             }
+                            else if(mIgnoreInSync.containsKey(task.getId())) {
+                                tasks.remove(task.getId());
+                                continue;
+                            }
 
                             if(tasks.containsKey(task.getId())) {
                                 SyncListsTask updatedTask = tasks.get(task.getId());
@@ -428,6 +439,7 @@ public class TaskListActivity extends Activity {
             for (int position : reverseSortedPositions) {
 
                 final SyncListsTask task = mAdapter.getItem(position);
+                mIgnoreInSync.put(task.getId(), true);
                 mAdapter.remove(task);
 
                 SyncListsApi.deleteTask(new SyncListsRequestAsyncTaskCallback() {
@@ -436,6 +448,7 @@ public class TaskListActivity extends Activity {
                         if (syncListsResponse == null) {
                             Toast.makeText(CONTEXT, "Error deleting task " + task.getName(),
                                     Toast.LENGTH_SHORT).show();
+                            mIgnoreInSync.remove(task.getId());
                         }
                         else {
                             Toast.makeText(CONTEXT, "Task " + task.getName() + " successfully deleted",
