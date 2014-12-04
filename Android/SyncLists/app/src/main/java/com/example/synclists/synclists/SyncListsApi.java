@@ -117,7 +117,7 @@ public class SyncListsApi {
             SyncListsRequest request = new SyncListsRequest(
                     SyncListsRequest.SyncListsRequestMethod.POST, "user", json);
 
-            new SyncListsCreateUserAsyncTask(activity).execute(request);
+            new SyncListsCreateUserAsyncTask(activity, context).execute(request);
         }
     }
 

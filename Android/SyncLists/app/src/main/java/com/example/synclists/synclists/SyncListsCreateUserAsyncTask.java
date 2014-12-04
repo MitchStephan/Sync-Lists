@@ -1,6 +1,8 @@
 package com.example.synclists.synclists;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.widget.Toast;
@@ -12,8 +14,21 @@ import org.json.JSONObject;
  * Created by SirChickenHair on 10/26/14.
  */
 public class SyncListsCreateUserAsyncTask extends SyncListsRequestAsyncTask  {
-    public SyncListsCreateUserAsyncTask(Activity activity) {
+    private ProgressDialog mProgressDialog;
+
+    public SyncListsCreateUserAsyncTask(Activity activity, Context context) {
         super(activity);
+        mProgressDialog = new ProgressDialog(context);
+    }
+
+    @Override
+    protected void onPreExecute() {
+        super.onPreExecute();
+        mProgressDialog.setMessage("Creating account...");
+        mProgressDialog.setIndeterminate(false);
+        mProgressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        mProgressDialog.setCancelable(true);
+        mProgressDialog.show();
     }
 
     protected void onPostExecute(SyncListsResponse result) {
@@ -42,10 +57,14 @@ public class SyncListsCreateUserAsyncTask extends SyncListsRequestAsyncTask  {
             catch(Exception e) {
                 // if exception parsing json, then error logging in
             }
+            finally {
+                mProgressDialog.dismiss();
+            }
         }
         else {
             Toast.makeText(mActivity, "There was an error signing up",
                     Toast.LENGTH_SHORT).show();
+            mProgressDialog.dismiss();
         }
     }
 }
