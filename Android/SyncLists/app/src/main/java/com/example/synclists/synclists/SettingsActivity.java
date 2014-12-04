@@ -133,8 +133,8 @@ public class SettingsActivity extends Activity{
 
     public void onSyncEveryClicked(View v) {
         AlertDialog.Builder adb = new AlertDialog.Builder(this);
-        final CharSequence options[] = new CharSequence[] {"15 seconds", "30 seconds", "1 minute", "5 minutes"};
-        final int optionsInMilliseconds [] = {15000, 30000, 60000, 300000};
+        final CharSequence options[] = new CharSequence[] {"5 Seconds", "15 seconds", "30 seconds", "1 minute", "5 minutes"};
+        final int optionsInMilliseconds [] = {5000, 15000, 30000, 60000, 300000};
 
         int currentOption = 0;
         int syncEvery = mPrefs.getInt(Constants.PREF_SYNC_EVERY, Constants.DEFAULT_SYNC_EVERY);
