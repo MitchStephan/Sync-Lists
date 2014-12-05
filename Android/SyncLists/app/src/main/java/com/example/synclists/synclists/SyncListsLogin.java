@@ -54,14 +54,23 @@ public class SyncListsLogin extends Activity {
             SyncListsApi.createUser(this, mEmail.getText().toString(), mPassword.getText().toString(), this);
         }
         else {
-            Toast.makeText(this, "Invalid email", Toast.LENGTH_SHORT).show();
         }
     }
 
     private boolean validSignUp() {
         String email = mEmail.getText().toString();
+        String password = mPassword.getText().toString();
 
-        return Validate.email(email);
+        if(!Validate.email(email)) {
+            Toast.makeText(this, "Invalid email", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        else if(password == null || password.isEmpty()) {
+            Toast.makeText(this, "Password cannot be empty", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        return true;
     }
 
     protected static SharedPreferences.Editor getPreferencesEditor() {
