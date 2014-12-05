@@ -53,8 +53,6 @@ public class SyncListsLogin extends Activity {
         if(validSignUp()) {
             SyncListsApi.createUser(this, mEmail.getText().toString(), mPassword.getText().toString(), this);
         }
-        else {
-        }
     }
 
     private boolean validSignUp() {
