@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -346,6 +347,7 @@ public class TaskListActivity extends Activity {
                 if (syncListsResponse != null) {
                     try {
                         Map<Integer, SyncListsTask> tasks = SyncListsApi.parseTasksAsMap(syncListsResponse.getBody());
+                        ArrayList<SyncListsTask> tasksList = SyncListsApi.parseTasks(syncListsResponse.getBody());
                         Log.d(Constants.TAG, "tasks parsed as map");
 
                         int i = 0;
@@ -409,14 +411,15 @@ public class TaskListActivity extends Activity {
                         }
 
                         //any remaining lists are new and need to be added
-                        for(int newTaskId : tasks.keySet()) {
-                            SyncListsTask task = tasks.get(newTaskId);
-                            Log.d(Constants.TAG, "Adding new task " + task.getName() + " with id " + task.getId());
+                        for(SyncListsTask task : tasksList) {
+                            if(tasks.containsKey(task.getId())) {
+                                Log.d(Constants.TAG, "Adding new task " + task.getName() + " with id " + task.getId());
 
-                            Toast.makeText(CONTEXT, "New task " + task.getName() + " added",
-                                    Toast.LENGTH_SHORT).show();
+                                Toast.makeText(CONTEXT, "New task " + task.getName() + " added",
+                                        Toast.LENGTH_SHORT).show();
 
-                            mAdapter.add(tasks.get(newTaskId));
+                                mAdapter.add(task);
+                            }
                         }
                     }
                     catch (Exception e) {
