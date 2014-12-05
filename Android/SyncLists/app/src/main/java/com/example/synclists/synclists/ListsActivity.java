@@ -404,6 +404,7 @@ public class ListsActivity extends Activity {
                 if (syncListsResponse != null) {
                     try {
                         Map<Integer, SyncListsList> lists = SyncListsApi.parseListsAsMap(syncListsResponse.getBody());
+                        ArrayList<SyncListsList> listsList = SyncListsApi.parseLists(syncListsResponse.getBody());
                         Log.d(Constants.TAG, "lists parsed as map");
                         String email = mPrefs.getString(Constants.PREF_EMAIL, Constants.DEFAULT_EMAIL);
 
@@ -450,23 +451,23 @@ public class ListsActivity extends Activity {
                         }
 
                         //any remaining lists are new and need to be added
-                        for(int newListId : lists.keySet()) {
-                            SyncListsList list = lists.get(newListId);
-                            Log.d(Constants.TAG, "Adding new list " + list.getName() + " with id " + list.getId());
+                        for(SyncListsList list : listsList) {
+                            if(lists.containsKey(list.getId())) {
+                                Log.d(Constants.TAG, "Adding new list " + list.getName() + " with id " + list.getId());
 
-                            String newListMessage;
+                                String newListMessage;
 
-                            if(!list.getListOwner().equals(email)) {
-                                newListMessage = "List " + list.getName() + " shared by " + list.getListOwner();
+                                if (!list.getListOwner().equals(email)) {
+                                    newListMessage = "List " + list.getName() + " shared by " + list.getListOwner();
+                                } else {
+                                    newListMessage = "New list " + list.getName() + " added";
+                                }
+
+                                Toast.makeText(CONTEXT, newListMessage,
+                                        Toast.LENGTH_SHORT).show();
+
+                                mAdapter.add(list);
                             }
-                            else {
-                                newListMessage = "New list " + list.getName() + " added";
-                            }
-
-                            Toast.makeText(CONTEXT, newListMessage,
-                                    Toast.LENGTH_SHORT).show();
-
-                            mAdapter.add(lists.get(newListId));
                         }
                     }
                     catch (Exception e) {
